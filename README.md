@@ -22,6 +22,7 @@ Tietopankki on "sisältöallas": yksi totuuden lähde, josta nettisivun, myyntim
 | [docs/designjarjestelma.md](docs/designjarjestelma.md) | Värit, typografia, komponentit, liike (Wolverine-pohja) |
 | [docs/nettisivu.md](docs/nettisivu.md) | Sivuston stack, hosting, rakenne, TODO, koordinointi |
 | [docs/yhteystiedot.md](docs/yhteystiedot.md) | Yhteystiedot ja kanavat |
+| [docs/myynti/](docs/myynti/) | Myyntikitti: viestit, keskustelurunko, vastaväitteet, tarjous, LinkedIn, FAQ |
 
 ## Nettisivu
 
