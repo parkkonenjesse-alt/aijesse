@@ -69,11 +69,26 @@
   .mobile-menu a { color: #fff; font-size: clamp(2rem, 9vw, 3rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.05; }
   .mobile-menu a:last-child { margin-top: 1rem; font-size: 1.1rem; font-weight: 600; opacity: .8; }
   .mm-close { position: absolute; top: 1.5rem; right: var(--gutter); background: none; border: 0; color: #fff; font: inherit; font-weight: 600; cursor: pointer; min-height: 44px; }
+  /* ---- Wolverine-fidelity fixes (EI standoutia - toinen terminaali tekee galaxyn) ---- */
+  .c-header .c-button { --button-hocus-background: rgba(255,255,255,0.22); --button-hocus-text-color: #fff; }
+  .c-hero-card .c-icon { transition: transform .6s cubic-bezier(.19,1,.22,1); }
+  .c-hero-card:hover .c-icon { transform: scale(1.25); }
+  .c-hero-card .c-image_inner { transition: transform .6s cubic-bezier(.19,1,.22,1); }
+  .c-hero-card:hover .c-image_inner { transform: scale(1.05); }
+  .c-footer_logo { max-width: none; aspect-ratio: auto; height: auto; white-space: nowrap; }
+  .c-footer_menu-link .c-icon { opacity: 0; transform: translateX(-8px); transition: opacity .3s cubic-bezier(.19,1,.22,1), transform .3s cubic-bezier(.19,1,.22,1); }
+  .c-footer_menu-link:hover .c-icon { opacity: 1; transform: none; }
   /* ---- hero video + fade-in choreography ---- */
   .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   @keyframes heroIn { from { opacity: 0; transform: translateY(0.5em); } to { opacity: 1; transform: none; } }
   .hero-anim { opacity: 0; animation: heroIn .95s cubic-bezier(.19,1,.22,1) both; animation-delay: var(--hd, 0s); }
   @media (prefers-reduced-motion: reduce) { .hero-anim { opacity: 1 !important; animation: none !important; } }
+  /* ---- standout-image-galaxy: scattered photos (Wolverine) ---- */
+  .c-standout-image-galaxy { position: relative; }
+  .galaxy-scatter { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  .galaxy-scatter .g-img { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 8px; overflow: hidden; box-shadow: 0 18px 40px -18px rgba(0,0,0,.5); }
+  .c-standout-image-galaxy_inner { position: relative; z-index: 1; }
+  @media (max-width: 760px) { .galaxy-scatter .g-img { transform: scale(.58); opacity: .9; } }
 </style>
 </head>
 <body>
@@ -154,11 +169,25 @@
 
   <!-- ============ STANDOUT (staggered title) ============ -->
   <c-standout-image-galaxy class="c-standout-image-galaxy" id="ratkaisu">
+    <div class="galaxy-scatter" data-scroll data-scroll-offset="15%,0" data-anim-parent aria-hidden="true">
+      <div class="ph ph-1 g-img anim-up-scale" data-scroll style="--x:5%;--y:12%;--s:108px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-2 g-img anim-up-scale" data-scroll style="--x:78%;--y:9%;--s:120px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-3 g-img anim-up-scale" data-scroll style="--x:14%;--y:55%;--s:92px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-4 g-img anim-up-scale" data-scroll style="--x:69%;--y:60%;--s:128px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-5 g-img anim-up-scale" data-scroll style="--x:89%;--y:40%;--s:84px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-6 g-img anim-up-scale" data-scroll style="--x:41%;--y:7%;--s:80px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-2 g-img anim-up-scale" data-scroll style="--x:2%;--y:75%;--s:100px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-3 g-img anim-up-scale" data-scroll style="--x:90%;--y:75%;--s:96px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-1 g-img anim-up-scale" data-scroll style="--x:55%;--y:83%;--s:88px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-5 g-img anim-up-scale" data-scroll style="--x:28%;--y:84%;--s:76px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-4 g-img anim-up-scale" data-scroll style="--x:82%;--y:24%;--s:72px"><div class="c-image_inner"></div></div>
+      <div class="ph ph-6 g-img anim-up-scale" data-scroll style="--x:19%;--y:25%;--s:84px"><div class="c-image_inner"></div></div>
+    </div>
     <div class="c-standout-image-galaxy_inner" data-scroll data-scroll-offset="15%,0" data-anim-parent>
       <h2 class="c-standout-image-galaxy_title" data-standout-image-galaxy="title">
-        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:0;--pl-sm:0">Tekoäly taloon,</span>
-        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:2.5em;--pl-sm:1.5em">osaaminen jää</span>
-        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:3.75em;--pl-sm:2.25em">teille.</span>
+        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:0;--pl-sm:0">Opitaan rakentamalla,</span>
+        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:2.5em;--pl-sm:1.5em">ei kalvoja</span>
+        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:3.75em;--pl-sm:2.25em">katsomalla.</span>
       </h2>
       <a class="c-button c-standout-image-galaxy_button" href="#paketit"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Katso paketit</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
     </div>
