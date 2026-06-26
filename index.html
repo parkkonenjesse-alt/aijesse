@@ -109,7 +109,7 @@
             <li class="c-header_nav-item"><a class="c-header_nav-link" href="#paketit">Paketit</a></li>
           </ul>
         </nav>
-        <a class="c-button -small" href="#yhteys" data-book><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">+</span></div></a>
+        <a class="c-button -small" href="#yhteys" data-book><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">+</span><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">+</span></div></a>
         <button class="mobile-toggle" aria-expanded="false" aria-controls="mobilemenu" data-mm-open>Valikko <span aria-hidden="true">+</span></button>
       </div>
       <span class="c-header_bg" data-header-nav-bg></span>
@@ -328,6 +328,14 @@
           <li class="c-footer_socials-item"><a class="c-footer_socials-link" href="mailto:parkkonen.jesse@gmail.com">parkkonen.jesse@gmail.com</a></li>
         </ul></nav>
       </div>
+      <nav class="c-footer_brands" aria-label="Paketit ja osiot">
+        <ul class="c-footer_brands-list" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+          <li class="c-footer_brands-item"><a class="c-footer_brands-link" href="#paketit">Startti</a></li>
+          <li class="c-footer_brands-item"><a class="c-footer_brands-link" href="#paketit">Rakennusjakso</a></li>
+          <li class="c-footer_brands-item"><a class="c-footer_brands-link" href="#paketit">Kumppani</a></li>
+          <li class="c-footer_brands-item"><a class="c-footer_brands-link" href="#esimerkit">Esimerkit</a></li>
+        </ul>
+      </nav>
     </div>
     <div class="c-footer_bottom" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
       <div class="c-footer_bottom-item"><div class="c-footer_bottom-copyright">© 2026 · [ Yrityksen nimi ]</div></div>
@@ -407,7 +415,7 @@
   const prog = [...document.querySelectorAll('[data-scroll-css-progress]')];
   function updProg(){
     const vh = window.innerHeight;
-    prog.forEach(el=>{ const r = el.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height))); el.style.setProperty('--progress', p.toFixed(4)); });
+    prog.forEach(el=>{ const r = el.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (vh - r.top) / vh)); el.style.setProperty('--progress', p.toFixed(4)); });
   }
   updProg(); window.addEventListener('scroll', updProg, { passive: true });
 
