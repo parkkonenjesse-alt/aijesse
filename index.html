@@ -54,8 +54,21 @@
   .c-header_logo { margin-right: auto; }
   /* FIX: card image placeholder collapsed (no <img> = no intrinsic height) */
   .c-card_image.ph { aspect-ratio: 1.33; }
-  /* belt+suspenders: any placeholder c-image without an explicit aspect gets one */
-  .ph.c-image:not([class*="aspect-"]):not(.c-card_image) { min-height: 0; }
+  /* anchor targets clear the fixed header */
+  #ratkaisu, #esimerkit, #polku, #paketit, #yhteys { scroll-margin-top: 96px; }
+  /* header CTA min touch target */
+  .c-header .c-button { min-height: 44px; }
+  /* ---- mobile menu ---- */
+  .mobile-toggle { display: none; align-items: center; gap: .4rem; background: none; border: 0; color: inherit; font: inherit; font-weight: 600; font-size: .92rem; cursor: pointer; padding: .5rem .2rem; min-height: 44px; }
+  @media (max-width: 999px) {
+    .mobile-toggle { display: inline-flex; }
+    .c-header_head > .c-button { display: none; } /* CTA siirtyy mobiilivalikkoon */
+  }
+  .mobile-menu { position: fixed; inset: 0; z-index: 120; background: rgba(1,1,1,0.97); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); display: flex; flex-direction: column; justify-content: center; gap: 1.1rem; padding: 2rem var(--gutter); transform: translateY(-101%); transition: transform .55s cubic-bezier(.19,1,.22,1); visibility: hidden; }
+  .mobile-menu.open { transform: none; visibility: visible; }
+  .mobile-menu a { color: #fff; font-size: clamp(2rem, 9vw, 3rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.05; }
+  .mobile-menu a:last-child { margin-top: 1rem; font-size: 1.1rem; font-weight: 600; opacity: .8; }
+  .mm-close { position: absolute; top: 1.5rem; right: var(--gutter); background: none; border: 0; color: #fff; font: inherit; font-weight: 600; cursor: pointer; min-height: 44px; }
 </style>
 </head>
 <body>
@@ -77,11 +90,21 @@
           </ul>
         </nav>
         <a class="c-button -small" href="#yhteys" data-book><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">+</span></div></a>
+        <button class="mobile-toggle" aria-expanded="false" aria-controls="mobilemenu" data-mm-open>Valikko <span aria-hidden="true">+</span></button>
       </div>
       <span class="c-header_bg" data-header-nav-bg></span>
     </div>
   </c-header>
 </header>
+
+<div class="mobile-menu" id="mobilemenu" aria-hidden="true">
+  <button class="mm-close" data-mm-close aria-label="Sulje valikko">Sulje <span aria-hidden="true">✕</span></button>
+  <a href="#ratkaisu" data-mm-link>Ratkaisu</a>
+  <a href="#esimerkit" data-mm-link>Esimerkit</a>
+  <a href="#polku" data-mm-link>Polku</a>
+  <a href="#paketit" data-mm-link>Paketit</a>
+  <a href="#yhteys" data-mm-link data-book>Varaa keskustelu →</a>
+</div>
 
 <main id="main">
   <!-- ============ HERO ============ -->
@@ -190,7 +213,7 @@
   </div>
 
   <!-- ============ ESIMERKIT (cards carousel) ============ -->
-  <c-carousel data-slides-visible="3" id="esimerkit">
+  <c-carousel data-slides-visible="3" id="esimerkit" role="region" aria-label="Esimerkit mitä voit rakentaa">
     <div class="c-cards-carousel flex flex-col gap-fluid-lg my-fluid-2xl">
       <div class="container items-end sm:grid-layout">
         <div class="flex items-center justify-between gap-fluid-sm sm:col-span-6 sm:col-start-1 sm:items-end sm:justify-start" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
@@ -200,20 +223,20 @@
           </span>
         </div>
         <div class="col-span-1 col-start-11 hidden text-right body-md anim-fade sm:block" data-scroll data-scroll-offset="15%,0%">
-          <button class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400" data-carousel="prev"><span class="flex items-center gap-1">Edellinen</span></button>
+          <button class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400" data-carousel="prev" aria-controls="esim-track"><span class="flex items-center gap-1">Edellinen</span></button>
         </div>
         <div class="col-span-1 col-start-12 hidden text-right body-md anim-fade sm:block" data-scroll data-scroll-offset="15%,0%">
-          <button class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400" data-carousel="next"><span class="flex items-center gap-1">Seuraava</span></button>
+          <button class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400" data-carousel="next" aria-controls="esim-track"><span class="flex items-center gap-1">Seuraava</span></button>
         </div>
       </div>
       <div class="overflow-hidden">
-        <div class="flex cursor-grab snap-x snap-mandatory overflow-x-auto pl-unit-sm select-none sm:pl-unit-lg [&amp;::-webkit-scrollbar]:hidden" data-carousel="track" style="scrollbar-width:none">
-          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-1 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Myynti</span><h3 class="c-card_title">Tarjouslaskuri, joka tekee luonnoksen minuuteissa.</h3></div></article>
-          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-2 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Asiakaspalvelu</span><h3 class="c-card_title">Avustaja yleisimpiin kysymyksiin, joka oppii teidän tyylinne.</h3></div></article>
-          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-5 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Raportointi</span><h3 class="c-card_title">Raporttien ja palautteiden automaattinen kooste.</h3></div></article>
-          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-3 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Sisältö</span><h3 class="c-card_title">Sisällöntuotanto somen ja uutiskirjeen pohjiksi.</h3></div></article>
-          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-4 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Data</span><h3 class="c-card_title">Datan siirto ja siivous järjestelmien välillä.</h3></div></article>
-          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-6 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Tieto</span><h3 class="c-card_title">Sisäinen hakutyökalu omiin dokumentteihin.</h3></div></article>
+        <div class="flex cursor-grab snap-x snap-mandatory overflow-x-auto pl-unit-sm select-none sm:pl-unit-lg [&amp;::-webkit-scrollbar]:hidden" data-carousel="track" id="esim-track" role="list" tabindex="0" aria-label="Esimerkkikortit, vieritä nuolilla" style="scrollbar-width:none">
+          <article class="c-card snap-start" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-1 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Myynti</span><h3 class="c-card_title">Tarjouslaskuri, joka tekee luonnoksen minuuteissa.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-2 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Asiakaspalvelu</span><h3 class="c-card_title">Avustaja yleisimpiin kysymyksiin, joka oppii teidän tyylinne.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-5 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Raportointi</span><h3 class="c-card_title">Raporttien ja palautteiden automaattinen kooste.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-3 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Sisältö</span><h3 class="c-card_title">Sisällöntuotanto somen ja uutiskirjeen pohjiksi.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-4 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Data</span><h3 class="c-card_title">Datan siirto ja siivous järjestelmien välillä.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-6 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Tieto</span><h3 class="c-card_title">Sisäinen hakutyökalu omiin dokumentteihin.</h3></div></article>
         </div>
       </div>
     </div>
@@ -367,6 +390,17 @@
     track.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopPropagation();}},true);
     sync();
   });
+
+  /* mobile menu */
+  const mm = document.getElementById('mobilemenu');
+  const mmToggle = document.querySelector('[data-mm-open]');
+  if (mm && mmToggle) {
+    const setMM = (open)=>{ mm.classList.toggle('open', open); mm.setAttribute('aria-hidden', String(!open)); mmToggle.setAttribute('aria-expanded', String(open)); document.body.style.overflow = open ? 'hidden' : ''; if (lenis) { open ? lenis.stop() : lenis.start(); } };
+    mmToggle.addEventListener('click', ()=> setMM(!mm.classList.contains('open')));
+    const c = mm.querySelector('[data-mm-close]'); c && c.addEventListener('click', ()=> setMM(false));
+    mm.querySelectorAll('[data-mm-link]').forEach(a=> a.addEventListener('click', ()=> setMM(false)));
+    window.addEventListener('keydown', e=>{ if(e.key==='Escape') setMM(false); });
+  }
 
   /* Booking: Google Calendar appointment link. Tyhjä = mailto. */
   const BOOKING_URL = "";
