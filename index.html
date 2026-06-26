@@ -8,6 +8,16 @@
 <meta property="og:title" content="Hands-on Tekoälykoulutus · Jesse Parkkonen" />
 <meta property="og:description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Osaaminen jää taloon, ei kalvosarjaa." />
 <meta property="og:type" content="website" />
+<meta property="og:url" content="https://tekoalykoulutus-web.vercel.app/" />
+<meta property="og:image" content="https://tekoalykoulutus-web.vercel.app/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="fi_FI" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Hands-on Tekoälykoulutus · Jesse Parkkonen" />
+<meta name="twitter:description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Osaaminen jää taloon, ei kalvosarjaa." />
+<meta name="twitter:image" content="https://tekoalykoulutus-web.vercel.app/og.png" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -474,6 +484,20 @@
     <span class="mono kicker reveal">Miksi minä</span>
     <h2 class="section-title reveal">Rakennan tekoälyllä tuotteita päivittäin.</h2>
     <p class="lede reveal">En opeta teoriaa diaesityksestä. Tuon koulutukseen samat menetelmät, joilla itse teen tuotannossa olevia ratkaisuja. Opitte sen mikä toimii, ette sitä mikä kuulostaa hyvältä.</p>
+    <div class="cols cols-3">
+      <div class="col-item reveal">
+        <h3 class="col-head">Tuotannossa, ei teoriassa.</h3>
+        <p class="col-body">Rakennan tekoälyllä sovelluksia ja automaatioita oikeaan käyttöön. Koulutuksessa teette samaa, ette katso valmista demoa.</p>
+      </div>
+      <div class="col-item reveal">
+        <h3 class="col-head">Samat työkalut joka päivä.</h3>
+        <p class="col-body">Opetan täsmälleen ne menetelmät, joita käytän itse työssäni. Mukana se mikä kestää tuotannon, ei kalvojen kieli.</p>
+      </div>
+      <div class="col-item reveal">
+        <h3 class="col-head">Saman pöydän ääressä.</h3>
+        <p class="col-body">Koulutukset livenä Helsingissä, kädet näppäimistöllä. Etänä silloin kun se sopii teille paremmin.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -483,7 +507,7 @@
     <span class="mono kicker reveal">Seuraava askel</span>
     <h2 class="display reveal" style="max-width:14ch">Varataan 30 minuutin keskustelu.</h2>
     <p class="lede reveal">Katsotaan yhdessä, mistä teidän kannattaa aloittaa. Ei sitoumuksia.</p>
-    <a href="mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%20—%20keskustelu" class="cta-btn reveal">Varaa keskustelu <span class="arrow">→</span></a>
+    <a href="mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%2C%20keskustelu" class="cta-btn reveal" data-book>Varaa keskustelu <span class="arrow">→</span></a>
   </div>
 </section>
 
@@ -525,6 +549,17 @@
   const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Booking: set to your Google Calendar appointment schedule link.
+  // Empty string keeps the mailto fallback.
+  const BOOKING_URL = "";
+  if (BOOKING_URL) {
+    document.querySelectorAll('[data-book]').forEach((a) => {
+      a.href = BOOKING_URL;
+      a.target = '_blank';
+      a.rel = 'noopener';
+    });
+  }
 </script>
 </body>
 </html>
