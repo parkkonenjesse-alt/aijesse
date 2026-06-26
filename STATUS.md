@@ -30,3 +30,11 @@ Sivu on **uskollinen Wolverine Worldwide -replika** rakennettuna heidän **oikea
 - Repo: `parkkonenjesse-alt/aijesse` → Vercel auto-deploy.
 - Projektit: **parkkonen.vercel.app** + **tekoalykoulutus-web.vercel.app** (molemmat synkattu).
 - Hot reload paikallisesti: `npx live-server --port=5500` → http://localhost:5500
+
+## Motion-audit (27.6.) — TOISELLE TERMINAALILLE: standout-galaxy
+Motion-agentit mittasivat: reveal/hover/Lenis/header = identtisiä Wolverinen kanssa. Korjattu (parkkonen-terminaali): push-parallax, footer-parallaxin valmistuminen, page-load-peite.
+
+**JÄLJELLÄ sinun galaxy-osiossasi (suurin motion-harppaus):**
+- Wolverinen scattered-kuvat ovat **jatkuva 3D-scroll-parallax**: jokainen `.g-img` `translate3d(0, <scroll-linkattu Y>, <translateZ −200…+200px>)` + `perspective` parentilla → syvyys-eriytetty drift scrollatessa. Sinun `.g-img` tekevät vain kerta-`anim-up-scale`-revealin ja jäävät staattisiksi (identity-matriisi joka scroll-Y:llä).
+- Lisäksi kaikilla 12 kuvalla `--anim-delay:0s` → pop-paavat yhtä aikaa. Lisää nouseva `--anim-delay` (esim. .04s-portain) → porrastettu scatter-cascade.
+- Korjaus: aja `.g-img`-translateY (+ translateZ-syvyystaso) scroll-progressista (perspective parentilla), älä kerta-reveal-luokasta.
