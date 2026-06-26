@@ -2,414 +2,260 @@
 <html lang="fi">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Hands-on Tekoälykoulutus</title>
-<meta name="description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Tiimisi rakentaa oikeita ratkaisuja ja osaaminen jää taloon, ei kalvosarjaa." />
+<meta name="description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Osaaminen jää taloon, ei kalvosarjaa." />
 <meta property="og:title" content="Hands-on Tekoälykoulutus" />
 <meta property="og:description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Osaaminen jää taloon, ei kalvosarjaa." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://parkkonen.vercel.app/" />
 <meta property="og:image" content="https://parkkonen.vercel.app/og.png" />
-<meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" />
-<meta property="og:locale" content="fi_FI" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Hands-on Tekoälykoulutus" />
-<meta name="twitter:image" content="https://parkkonen.vercel.app/og.png" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<!-- WOLVERINE REAL CSS (base) -->
+<link rel="stylesheet" href="/wolv-base.css" />
+<link rel="stylesheet" href="/wolv-comp.css" />
 <style>
-  :root {
-    --black: #010101; --ink: #010101; --paper: #ffffff;
-    --gray-200: #cccccc; --gray-400: #9d9d9d; --gray-500: #737373; --gray-600: #757575; --gray-800: #4d4d4d;
-    --line: rgba(1,1,1,0.12);
-
-    /* type scale (Wolverine, verified) */
-    --display-xl: clamp(3.4rem, 1rem + 9vw, 10.5rem);
-    --display-lg: clamp(2.75rem, 0.9rem + 8.4vw, 8rem);
-    --heading-md: clamp(1.6rem, 0.8rem + 3.4vw, 3.4rem);
-    --heading-xs: clamp(1.25rem, 0.96rem + 1.4vw, 2.05rem);
-    --heading-2xs: 1.4rem;
-    --body-md: clamp(0.95rem, 0.86rem + 0.4vw, 1.18rem);
-    --body-sm: clamp(0.85rem, 0.83rem + 0.1vw, 0.94rem);
-    --label: clamp(0.66rem, 0.62rem + 0.1vw, 0.7rem);
-
-    --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px; --r-2xl: 24px;
-    --unit-sm: 12px; --unit-md: 20px; --unit-lg: 48px;
-    --gutter: clamp(1.2rem, 0.8rem + 2.6vw, var(--unit-lg));
-    --maxw: 1800px;
-    --fluid-2xl: clamp(3.5rem, 2.7rem + 3.7vw, 5.6rem);
-    --fluid-3xl: clamp(5rem, 4rem + 5vw, 9rem);
-
-    --ease-expo: cubic-bezier(.19, 1, .22, 1);
-    --ease-p2: cubic-bezier(.215, .61, .355, 1);
-    --ease-p4: cubic-bezier(.23, 1, .32, 1);
-    --dur-fast: .2s; --dur: .4s; --dur-slow: .6s; --dur-slower: .8s;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-  html.lenis, html.lenis body { height: auto; }
-  .lenis.lenis-smooth { scroll-behavior: auto !important; }
-  body { font-family: 'Archivo', system-ui, sans-serif; background: var(--paper); color: var(--ink); font-size: var(--body-md); line-height: 1.5; letter-spacing: -0.011em; overflow-x: hidden; }
-  a { color: inherit; text-decoration: none; }
-  img { display: block; max-width: 100%; }
-  :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
-  .container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
-
-  /* type */
-  .display-xl { font-weight: 700; font-size: var(--display-xl); line-height: 0.82; letter-spacing: -0.05em; }
-  .display-lg { font-weight: 700; font-size: var(--display-lg); line-height: 0.84; letter-spacing: -0.05em; }
-  .heading-md { font-weight: 500; font-size: var(--heading-md); line-height: 1.02; letter-spacing: -0.03em; }
-  .heading-xs { font-weight: 500; font-size: var(--heading-xs); line-height: 1.05; letter-spacing: -0.025em; }
-  .heading-2xs { font-weight: 700; font-size: var(--heading-2xs); line-height: 1.1; letter-spacing: -0.02em; }
-  .body-sm { font-size: var(--body-sm); }
-  .label { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: var(--label); text-transform: uppercase; letter-spacing: 0.08em; line-height: 1.4; color: var(--gray-600); font-weight: 400; }
-
-  .ico { display: inline-flex; width: 1.05em; height: 1.05em; flex: 0 0 auto; }
-  .ico svg { width: 100%; height: 100%; }
-
-  /* ---------- c-button engine ---------- */
-  .c-button { --bg: var(--gray-200); --fg: var(--ink); --bd: transparent; --hbg: #bdb8b0; --px: 20px; --py: 15px;
-    position: relative; display: inline-flex; align-items: center; border: 0; background: none; color: var(--fg); font: inherit; cursor: pointer; min-height: 44px; transition: color var(--dur) var(--ease-expo); }
-  .c-button_bg { position: absolute; inset: 0; border: 1px solid var(--bd); border-radius: 999px; background: var(--bg);
-    transition: transform var(--dur) var(--ease-p4), background-color var(--dur) var(--ease-p4), border-color var(--dur) var(--ease-p4); }
-  .c-button_inner { position: relative; display: inline-flex; align-items: center; gap: 0.6rem; padding: var(--py) var(--px); overflow: hidden; transition: transform var(--dur-fast) var(--ease-p4); }
-  .c-button_label { font-size: var(--body-sm); font-weight: 600; line-height: 1.1; white-space: nowrap; letter-spacing: -0.01em; transition: transform var(--dur) var(--ease-p4); }
-  .c-button_icon { display: inline-flex; transition: transform var(--dur) var(--ease-p4); }
-  .c-button_icon.lead { position: absolute; left: var(--px); transform: translateX(calc(-100% - var(--px))); }
-  .c-button:hover .c-button_bg { transform: scaleY(.94); background: var(--hbg); }
-  .c-button:hover .c-button_label { transform: translateX(18px); }
-  .c-button:hover .c-button_icon.lead { transform: translateX(0); }
-  .c-button:hover .c-button_icon.trail { transform: translateX(calc(100% + var(--px) + 8px)); }
-  .c-button:active .c-button_inner { transform: translateX(2px); }
-  .c-button:active .c-button_bg { transform: scaleY(.92); transition-duration: var(--dur-fast); }
-  .c-button.-small { --px: 12px; --py: 11px; }
-  .c-button.-white { --bg: var(--paper); --fg: var(--ink); --hbg: #efece6; }
-  .c-button.-outline { --bg: transparent; --fg: var(--ink); --bd: var(--line); --hbg: rgba(1,1,1,0.05); }
-  .c-button.-glass { --bg: rgba(255,255,255,0.1); --fg: var(--paper); --bd: rgba(255,255,255,0.16); --hbg: rgba(255,255,255,0.2); }
-  .c-button.-glass .c-button_bg { -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
-  .c-button.-unstyled { --bg: transparent; --fg: var(--gray-600); --px: 0; --py: 6px; min-height: 0; }
-  .c-button.-unstyled .c-button_label { font-weight: 500; }
-  .c-button.-unstyled:hover .c-button_label, .c-button.-unstyled:hover .c-button_icon { transform: none; }
-  .c-button.-unstyled:hover { color: var(--ink); }
-
-  /* ---------- header pill ---------- */
-  .c-header { position: fixed; top: 14px; left: 0; right: 0; z-index: 100; display: flex; justify-content: center; padding-inline: var(--gutter); pointer-events: none; }
-  .c-header_inner { pointer-events: auto; display: flex; align-items: center; gap: clamp(0.8rem, 1.6vw, 1.6rem); padding: 0.5rem 0.6rem 0.5rem 1.2rem; border-radius: 999px; color: var(--paper);
-    background: rgba(1,1,1,0.32); -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%); border: 1px solid rgba(255,255,255,0.12); transition: background var(--dur) var(--ease-expo), color var(--dur) var(--ease-expo); }
-  .c-header.scrolled .c-header_inner { background: rgba(255,255,255,0.86); color: var(--ink); border-color: var(--line); }
-  .c-header_logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.04em; padding-right: 0.4rem; }
-  .c-header_nav { display: flex; align-items: center; gap: clamp(0.8rem, 1.6vw, 1.5rem); }
-  .c-header_nav a { font-size: 0.9rem; font-weight: 500; opacity: 0.82; transition: opacity .25s var(--ease-expo); }
-  .c-header_nav a:hover { opacity: 1; }
-  @media (max-width: 820px) { .c-header_nav { display: none; } }
-
-  /* ---------- hero ---------- */
-  #hero { padding: 8px; }
-  @media (max-width: 700px) { #hero { padding: 6px; } }
-  .hero__frame { position: relative; height: calc(100svh - 16px); border-radius: var(--r-2xl); overflow: hidden; color: var(--paper);
-    display: flex; flex-direction: column; justify-content: flex-end; gap: 1.5rem; padding: clamp(1.4rem, 3vw, 3rem); }
-  @media (min-width: 700px) { .hero__frame { flex-direction: row; align-items: flex-end; justify-content: space-between; padding-bottom: 48px; } }
-  .hero__media { position: absolute; inset: 0; z-index: 0;
-    background: radial-gradient(120% 90% at 78% 6%, #3a2c1a 0%, rgba(58,44,26,0) 50%), radial-gradient(90% 80% at 6% 98%, #16261f 0%, rgba(22,38,31,0) 52%), linear-gradient(180deg, #16110a 0%, #060503 100%); }
-  .hero__scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(0,0,0,.3) 0%, transparent 22%), linear-gradient(0deg, rgba(0,0,0,.45) 0%, transparent 50%); }
-  .hero__title { position: relative; z-index: 2; display: flex; flex-direction: column; }
-  .hero__title span { display: block; }
-  .hero__card { position: relative; z-index: 2; width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 2.5rem; padding: 1rem; border-radius: var(--r-md);
-    background: rgba(0,0,0,0.15); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.14); color: var(--paper); transition: background var(--dur) var(--ease-expo); }
-  .hero__card:hover { background: rgba(0,0,0,0.28); }
-  .hero__card .label { color: rgba(255,255,255,0.72); }
-  .hero__card-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
-  .hero__card-foot strong { font-size: var(--heading-2xs); font-weight: 700; line-height: 1.1; max-width: 76%; }
-  .hero__card-foot .ico { transition: transform var(--dur-slow) var(--ease-expo); }
-  .hero__card:hover .hero__card-foot .ico { transform: translate(3px,-3px) scale(1.1); }
-
-  /* ---------- generic section spacing ---------- */
-  .sec { margin-block: var(--fluid-3xl); }
-  .two-col { display: grid; gap: 2.2rem; }
-  @media (min-width: 760px) { .two-col { grid-template-columns: repeat(12, 1fr); } .two-col .col-l { grid-column: 1 / 6; } .two-col .col-r { grid-column: 7 / 13; } }
-  .two-col .col-r { display: flex; flex-direction: column; align-items: flex-start; gap: clamp(1.6rem, 3vw, 2.2rem); }
-  .mini-list { display: flex; flex-direction: column; gap: 1.6rem; max-width: 46ch; }
-  .mini-list h3 { font-size: var(--heading-2xs); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
-  .mini-list p { color: var(--gray-500); }
-
-  /* staggered standout title */
-  .standout { text-align: left; }
-  .standout .display-lg span { display: block; }
-  .standout .display-lg span:nth-child(2) { padding-left: 1.5em; }
-  .standout .display-lg span:nth-child(3) { padding-left: 2.6em; }
-  @media (max-width: 700px) { .standout .display-lg span { padding-left: 0 !important; } }
-  .standout .c-button { margin-top: 2.5rem; }
-
-  /* large card */
-  .large-card { display: grid; gap: 0.6rem; background: var(--ink); color: var(--paper); padding: 6px; border-radius: var(--r-2xl); overflow: hidden; }
-  @media (min-width: 760px) { .large-card { grid-template-columns: 1fr 1fr; gap: 20px; padding: 6px; } }
-  .large-card__media { aspect-ratio: 1.6; border-radius: var(--r-lg); overflow: hidden; }
-  @media (min-width: 760px) { .large-card__media { aspect-ratio: 1; border-radius: var(--r-xl); } }
-  .large-card__body { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; padding: 1rem clamp(1rem,2vw,1.5rem) 1.5rem; }
-  .large-card__foot { display: flex; flex-direction: column; gap: 1.4rem; }
-  @media (min-width: 760px) { .large-card__foot { flex-direction: row; justify-content: space-between; align-items: flex-end; } }
-  .large-card__foot p { color: #c9c3ba; max-width: 34ch; font-size: var(--body-sm); }
-  .glass-mini { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.6rem; width: 100%; max-width: 240px; height: 150px; padding: 1rem; border-radius: var(--r-md); background: rgba(255,255,255,0.1); transition: background var(--dur) var(--ease-p2); }
-  .glass-mini:hover { background: rgba(255,255,255,0.18); }
-  .glass-mini .label { color: rgba(255,255,255,0.7); }
-  .glass-mini-foot { display: flex; align-items: end; justify-content: space-between; }
-  .glass-mini-foot strong { font-weight: 700; font-size: var(--body-md); }
-  .glass-mini-foot .ico { transition: transform var(--dur-slow) var(--ease-expo); }
-  .glass-mini:hover .glass-mini-foot .ico { transform: scale(1.2); }
-
-  /* snapshot (label left / data right) -> Paketit */
-  .snap { display: grid; gap: 2.5rem; }
-  @media (min-width: 760px) { .snap { grid-template-columns: 1fr 1fr; } }
-  .snap__l { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; gap: 2rem; }
-  .snap__l h2 { font-size: var(--heading-md); font-weight: 500; letter-spacing: -0.03em; }
-  .snap__r { border-top: 1px solid var(--line); padding-top: 1.5rem; }
-  .snap__head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .snap__head .name { font-size: var(--body-md); font-weight: 500; }
-  .snap__value { font-size: clamp(3.2rem, 2rem + 6vw, 8rem); font-weight: 700; letter-spacing: -0.05em; line-height: 1; margin: clamp(1.5rem,4vw,3rem) 0; }
-  .snap__value .unit { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 400; letter-spacing: 0.04em; color: var(--gray-500); }
-  .snap__foot { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; border-top: 1px solid var(--line); padding-top: 1.4rem; }
-  .snap__foot dt { font-family: 'JetBrains Mono', monospace; font-size: var(--label); text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-500); margin-bottom: 0.4rem; }
-  .snap__foot dd { font-size: 1.05rem; font-weight: 600; }
-
-  /* cards carousel */
-  .carousel__head { display: flex; align-items: end; gap: 1.4rem; }
-  .carousel__head h2 { font-size: var(--heading-xs); font-weight: 500; letter-spacing: -0.025em; }
-  .carousel__nav { margin-left: auto; display: inline-flex; gap: 1.2rem; }
-  .carousel__nav button { cursor: pointer; background: none; border: 0; color: var(--ink); font-size: var(--body-md); font-weight: 500; padding: 0.3rem 0.4rem; border-radius: 6px; transition: background var(--dur-fast) var(--ease-p2), color var(--dur-fast); }
-  .carousel__nav button:hover:not(:disabled) { background: rgba(1,1,1,0.08); }
-  .carousel__nav button:disabled { color: var(--gray-400); cursor: default; }
-  .carousel__track { display: flex; gap: clamp(1rem,1.6vw,1.4rem); overflow-x: auto; scroll-snap-type: x mandatory; cursor: grab; padding-bottom: 4px; scrollbar-width: none; margin-top: clamp(1.8rem,3vw,2.5rem); }
-  .carousel__track::-webkit-scrollbar { display: none; }
-  .carousel__track.dragging { cursor: grabbing; scroll-snap-type: none; }
-  .c-card { flex: 0 0 clamp(260px, 78vw, 33%); scroll-snap-align: start; }
-  .c-card_image { aspect-ratio: 1.33; border-radius: var(--r-md); overflow: hidden; outline: 1.5px solid transparent; outline-offset: 2px; transition: outline-color var(--dur-fast) var(--ease-p2); }
-  .c-card_image .label { position: absolute; left: 14px; bottom: 12px; color: #fff; z-index: 1; }
-  .c-card:hover .c-card_image { outline-color: var(--ink); }
-  .c-card_eyebrow { display: block; margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: var(--label); text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-600); }
-  .c-card_title { margin-top: 0.7rem; font-size: clamp(1.05rem,0.9rem+0.6vw,1.35rem); font-weight: 500; line-height: 1.18; letter-spacing: -0.02em; }
-  .c-card:hover .c-card_title { text-decoration: underline; text-underline-offset: 3px; }
-
-  /* timeline */
-  .timeline { margin-top: clamp(2.6rem,5vw,4rem); }
-  .tl-axis { border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4,1fr); }
-  .tl-node { position: relative; padding-top: 2.4rem; padding-right: 2rem; }
-  .tl-node::before { content:""; position:absolute; top:-6px; left:0; width:11px; height:11px; border-radius:50%; background:var(--ink); }
-  .tl-step { display:block; margin-bottom: 0.6rem; }
-  .tl-head { font-size: clamp(1.1rem,0.9rem+0.5vw,1.4rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.6rem; }
-  .tl-body { color: var(--gray-500); font-size: 0.98rem; max-width: 26ch; }
-  @media (max-width: 760px) { .tl-axis { border-top: 0; grid-template-columns: 1fr; } .tl-node { border-top: 1px solid var(--line); padding-top: 1.6rem; } .tl-node::before { display:none; } }
-
-  /* push */
-  .push { position: relative; min-height: 100svh; border-radius: var(--r-2xl) var(--r-2xl) 0 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--paper); gap: clamp(2rem,5vw,3.5rem); padding: var(--fluid-3xl) var(--gutter); margin-top: var(--fluid-3xl); }
-  .push__media { position: absolute; inset: 0; z-index: 0; background: radial-gradient(100% 100% at 50% 0%, #2a2018 0%, #0a0806 70%); }
-  .push__media::after { content:""; position:absolute; inset:0; background: rgba(0,0,0,0.5); }
-  .push .display-lg, .push p, .push .c-button { position: relative; z-index: 1; }
-  .push .display-lg span { display: block; }
-  .push p { max-width: 42ch; color: rgba(255,255,255,0.84); }
-
-  /* footer */
-  .footer { background: var(--ink); color: var(--paper); border-radius: var(--r-lg) var(--r-lg) 0 0; padding: clamp(3rem,5vw,5rem) var(--gutter) clamp(2rem,4vw,3rem); }
-  .footer__menu { display: flex; flex-wrap: wrap; gap: 1.4rem 2.4rem; margin: clamp(2rem,4vw,3rem) 0; border-top: 1px solid rgba(255,255,255,0.14); padding-top: clamp(2rem,4vw,3rem); }
-  .footer__menu a { display: inline-flex; align-items: center; gap: 0.4rem; font-size: clamp(1.4rem,1rem+1.4vw,2.2rem); font-weight: 500; letter-spacing: -0.03em; transition: opacity .3s; }
-  .footer__menu a .ico { opacity: 0; transform: translateX(-6px); transition: opacity .3s var(--ease-expo), transform .3s var(--ease-expo); }
-  .footer__menu a:hover .ico { opacity: 1; transform: translateX(0); }
-  .footer__content { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; }
-  .footer__text { max-width: 48ch; color: var(--gray-400); }
-  .footer__brand-big { font-size: clamp(2rem,1rem+3vw,3.6rem); font-weight: 800; letter-spacing: -0.04em; color: var(--paper); margin-bottom: 1rem; }
-  .footer__mail { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.04em; color: var(--gray-400); }
-  .footer__mail:hover { color: var(--paper); }
-  .footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-top: clamp(3rem,5vw,4rem); padding-top: 1.4rem; border-top: 1px solid rgba(255,255,255,0.14); }
-  .footer__bottom span, .footer__bottom a { color: var(--gray-400); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
-
-  /* media gradients (kuvan paikalla) */
-  .m-sand { background: linear-gradient(150deg,#d2c6b2,#8c7e6c); }
-  .m-slate { background: linear-gradient(150deg,#a3acb1,#59636a); }
-  .m-sage { background: linear-gradient(150deg,#b7c0a8,#6e7860); }
-  .m-clay { background: linear-gradient(150deg,#cda88f,#886851); }
-  .m-stone { background: linear-gradient(150deg,#c0bab0,#6c675e); }
-  .m-ink { background: linear-gradient(150deg,#3b3b3b,#0b0b0b); }
-
-  /* grain */
-  .grain { position: fixed; inset: 0; z-index: 300; pointer-events: none; opacity: 0.035; mix-blend-mode: multiply;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 160px; }
-
-  /* ---------- motion: reveal ---------- */
-  [data-anim] { opacity: 0; will-change: transform, opacity; }
-  [data-anim="fade"] { transform: translateY(8%); }
-  [data-anim="up"] { transform: translateY(40%); }
-  [data-anim="up-scale"] { transform: translateY(20%) scale(0.92); }
-  [data-anim].in { opacity: 1; transform: none; transition: opacity var(--dur-slower) var(--ease-expo) var(--d,0s), transform var(--dur-slower) var(--ease-expo) var(--d,0s); will-change: auto; }
-  .split .word { display: inline-block; opacity: 0; transform: translateY(0.7em); }
-  .split.in .word { opacity: 1; transform: none; transition: opacity var(--dur-slow) var(--ease-p2) var(--wd,0s), transform var(--dur-slower) var(--ease-expo) var(--wd,0s); }
-
-  @media (prefers-reduced-motion: reduce) { [data-anim], .split .word { opacity: 1 !important; transform: none !important; } }
+  /* font override (ABC Diatype -> Archivo, free) + image placeholders */
+  :root { --font-sans: "Archivo", system-ui, sans-serif; --font-mono: "JetBrains Mono", ui-monospace, monospace; }
+  body { font-family: var(--font-sans); background: #fff; }
+  /* gradient placeholders where brand photos go */
+  .ph { position: relative; overflow: hidden; }
+  .ph .c-image_img, .ph img { display: none !important; }
+  .ph .c-image_inner { position: absolute; inset: 0; }
+  .ph-1 .c-image_inner, .ph-1 { background: linear-gradient(150deg,#d2c6b2,#8c7e6c); }
+  .ph-2 .c-image_inner, .ph-2 { background: linear-gradient(150deg,#a3acb1,#59636a); }
+  .ph-3 .c-image_inner, .ph-3 { background: linear-gradient(150deg,#b7c0a8,#6e7860); }
+  .ph-4 .c-image_inner, .ph-4 { background: linear-gradient(150deg,#cda88f,#886851); }
+  .ph-5 .c-image_inner, .ph-5 { background: linear-gradient(150deg,#c0bab0,#6c675e); }
+  .ph-6 .c-image_inner, .ph-6 { background: linear-gradient(150deg,#3b3b3b,#0b0b0b); }
+  .ph-hero { background: radial-gradient(120% 90% at 78% 6%, #3a2c1a 0%, rgba(58,44,26,0) 50%), radial-gradient(90% 80% at 6% 98%, #16261f 0%, rgba(22,38,31,0) 52%), linear-gradient(180deg, #16110a 0%, #060503 100%); }
+  .ph-push { background: radial-gradient(100% 100% at 50% 0%, #2a2018 0%, #0a0806 70%); }
+  /* hide loader cover */
+  [data-page-cover] { display: none; }
 </style>
 </head>
 <body>
-<div class="grain" aria-hidden="true"></div>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
-  <symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7h8v8"/><path d="M17 7 7 17"/></symbol>
-  <symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
-</defs></svg>
+<div class="grain" aria-hidden="true" style="position:fixed;inset:0;z-index:300;pointer-events:none;opacity:.035;mix-blend-mode:multiply;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);background-size:160px"></div>
 
-<!-- HEADER -->
-<header class="c-header" id="header">
-  <div class="c-header_inner">
-    <a href="#hero" class="c-header_logo">[ yrityksen nimi ]</a>
-    <nav class="c-header_nav">
-      <a href="#ratkaisu">Ratkaisu</a><a href="#esimerkit">Esimerkit</a><a href="#polku">Polku</a><a href="#paketit">Paketit</a>
-    </nav>
-    <a href="#yhteys" class="c-button -small" data-book><span class="c-button_bg"></span><span class="c-button_inner"><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon trail"><span class="ico"><svg><use href="#i-plus"/></svg></span></span></span></a>
-  </div>
+<!-- ============ HEADER (pill) ============ -->
+<header>
+  <c-header class="c-header" id="header">
+    <div class="c-header_inner" data-header-inner>
+      <div class="c-header_head">
+        <a href="#hero" class="c-header_logo" style="font-weight:800;letter-spacing:-.04em">[ yrityksen nimi ]</a>
+        <nav class="c-header_nav" data-header-nav>
+          <ul class="contents">
+            <li class="c-header_nav-item"><a class="c-header_nav-link" href="#ratkaisu">Ratkaisu</a></li>
+            <li class="c-header_nav-item"><a class="c-header_nav-link" href="#esimerkit">Esimerkit</a></li>
+            <li class="c-header_nav-item"><a class="c-header_nav-link" href="#polku">Polku</a></li>
+            <li class="c-header_nav-item"><a class="c-header_nav-link" href="#paketit">Paketit</a></li>
+          </ul>
+        </nav>
+        <a class="c-button -small" href="#yhteys" data-book><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">+</span></div></a>
+      </div>
+      <span class="c-header_bg" data-header-nav-bg></span>
+    </div>
+  </c-header>
 </header>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero__frame">
-    <div class="hero__media" aria-hidden="true"></div>
-    <div class="hero__scrim" aria-hidden="true"></div>
-    <h1 class="hero__title split"><span class="display-xl">Tekoäly taloon.</span><span class="display-xl">Osaaminen jää teille.</span></h1>
-    <a href="#yhteys" class="hero__card" data-anim="up-scale" data-book>
-      <span class="label">Aloita tästä</span>
-      <span class="hero__card-foot"><strong>Varaa 30 min keskustelu</strong><span class="ico"><svg><use href="#i-ext"/></svg></span></span>
-    </a>
-  </div>
-</section>
-
-<!-- STATEMENT 1 -->
-<section class="container sec">
-  <div class="two-col">
-    <div class="col-l"></div>
-    <div class="col-r">
-      <p class="heading-md" data-anim="fade" style="--d:.15s">Opetan tiimisi rakentamaan itse. Istumme saman pöydän ääreen, kädet näppäimistöllä, ja rakennamme yhdessä juuri sen mitä arkenne tarvitsee. Kun lähden, taito jää teille.</p>
-      <a href="#esimerkit" class="c-button" data-anim="up-scale"><span class="c-button_bg"></span><span class="c-button_inner"><span class="c-button_icon lead"><span class="ico"><svg><use href="#i-right"/></svg></span></span><span class="c-button_label">Näin se toimii</span><span class="c-button_icon trail"><span class="ico"><svg><use href="#i-right"/></svg></span></span></span></a>
+<main>
+  <!-- ============ HERO ============ -->
+  <c-hero-home class="c-hero-home block h-full w-full md:px-2 md:pt-2">
+    <div class="relative flex h-svh w-full flex-col justify-between overflow-hidden px-3 pt-[40svh] pb-4 text-white md:flex-row md:items-end md:px-10 md:pt-0 md:pb-12" id="hero">
+      <h1 class="flex flex-col" data-hero-home="title">
+        <span class="display-lg md:display-xl">Tekoäly taloon.</span>
+        <span class="display-lg md:display-xl">Osaaminen jää teille.</span>
+      </h1>
+      <a class="c-hero-card group flex w-full flex-row gap-gutter rounded-lg bg-black/10 p-1 backdrop-blur-[18px] sm:w-70 sm:flex-col sm:gap-1" href="#yhteys" data-book>
+        <div class="ph ph-1 c-image aspect-[1.6] w-cols-2 sm:w-full overflow-hidden rounded-sm -cover"><div class="c-image_inner"></div></div>
+        <div class="flex w-cols-2 flex-col justify-between py-1 sm:w-full sm:gap-10 sm:p-2">
+          <span class="label">Aloita tästä</span>
+          <div class="flex items-end justify-between"><span class="max-w-[70%] body-md font-bold sm:heading-2xs">Varaa 30 min keskustelu</span><span class="c-icon" aria-hidden="true">↗</span></div>
+        </div>
+      </a>
+      <div class="absolute top-0 left-0 -z-1 h-full w-full overflow-hidden md:rounded-2xl ph-hero" data-hero-home="background">
+        <div class="absolute top-0 left-0 h-full w-full" style="background:linear-gradient(180deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0) 22%),linear-gradient(0deg,rgba(0,0,0,0.45) 0%,rgba(0,0,0,0) 50%)"></div>
+      </div>
     </div>
-  </div>
-</section>
+  </c-hero-home>
 
-<!-- STANDOUT (staggered title) -->
-<section id="ratkaisu" class="container sec standout">
-  <h2 class="display-lg split"><span>Tekoäly taloon,</span><span>osaaminen jää</span><span>teille.</span></h2>
-  <a href="#paketit" class="c-button" data-anim="up-scale"><span class="c-button_bg"></span><span class="c-button_inner"><span class="c-button_icon lead"><span class="ico"><svg><use href="#i-right"/></svg></span></span><span class="c-button_label">Katso paketit</span><span class="c-button_icon trail"><span class="ico"><svg><use href="#i-right"/></svg></span></span></span></a>
-</section>
-
-<!-- LARGE CARD -->
-<section class="container sec">
-  <div class="large-card">
-    <div class="large-card__media m-clay" data-anim="fade"></div>
-    <div class="large-card__body">
-      <h2 class="heading-md split" data-anim>Rakennan tekoälyllä tuotteita päivittäin.</h2>
-      <div class="large-card__foot">
-        <p data-anim="fade">En opeta teoriaa diaesityksestä. Tuon koulutukseen samat menetelmät, joilla itse teen tuotannossa olevia ratkaisuja. Opitte sen mikä toimii.</p>
-        <a href="#yhteys" class="glass-mini" data-anim="up-scale" data-book>
-          <span class="label">Aloita</span>
-          <span class="glass-mini-foot"><strong>Varaa keskustelu</strong><span class="ico"><svg><use href="#i-ext"/></svg></span></span>
-        </a>
+  <!-- ============ STATEMENT (two columns) ============ -->
+  <div class="c-text-two-columns container flex flex-col gap-fluid-lg my-fluid-3xl">
+    <div class="grid gap-fluid-4xl md:grid-cols-2 md:gap-gutter">
+      <div class="max-w-[grid-space(2/4)] md:max-w-[grid-space(4/12)]"></div>
+      <div class="flex flex-col items-start gap-fluid-md">
+        <div class="anim-fade heading-md sm:heading-xs md:w-cols-4" data-scroll data-scroll-offset="15%,0%" style="--anim-delay:0.2s">
+          <p>Opetan tiimisi rakentamaan itse. Istumme saman pöydän ääreen, kädet näppäimistöllä, ja rakennamme yhdessä juuri sen mitä arkenne tarvitsee. Kun lähden, taito jää teille.</p>
+        </div>
+        <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
+          <a class="c-button" href="#esimerkit"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Näin se toimii</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
+        </div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- STATEMENT 2 (mitä saatte) -->
-<section class="container sec">
-  <div class="two-col">
-    <div class="col-l"><h2 class="heading-md split" data-anim>Kolme asiaa jää käyttöön.</h2></div>
-    <div class="col-r">
-      <div class="mini-list">
-        <div data-anim="fade"><h3>Rutiinit automaatille.</h3><p>Toistuva käsityö pois. Raportit, tarjoukset ja yhteenvedot hoituvat tekoälyllä, ja tiimi näkee miten ne tehtiin.</p></div>
-        <div data-anim="fade" style="--d:.1s"><h3>Omat työkalut ja tuotteet.</h3><p>Rakennatte koulutuksen aikana oikean sovelluksen omaan tarpeeseenne, ette katso valmista demoa.</p></div>
-        <div data-anim="fade" style="--d:.2s"><h3>Osaaminen jää taloon.</h3><p>Tiimi osaa jatkaa itse uusilla ideoilla. Ette jää riippuvaiseksi yhdestäkään konsultista.</p></div>
+  <!-- ============ STANDOUT (staggered title) ============ -->
+  <c-standout-image-galaxy class="c-standout-image-galaxy" id="ratkaisu">
+    <div class="c-standout-image-galaxy_inner" data-scroll data-scroll-offset="15%,0" data-anim-parent>
+      <h2 class="c-standout-image-galaxy_title" data-standout-image-galaxy="title">
+        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:0;--pl-sm:0">Tekoäly taloon,</span>
+        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:2.5em;--pl-sm:1.5em">osaaminen jää</span>
+        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:3.75em;--pl-sm:2.25em">teille.</span>
+      </h2>
+      <a class="c-button c-standout-image-galaxy_button" href="#paketit"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Katso paketit</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
+    </div>
+  </c-standout-image-galaxy>
+
+  <!-- ============ LARGE CARD ============ -->
+  <div class="c-large-card sm:container my-fluid-2xl">
+    <div class="flex flex-col gap-4 overflow-hidden rounded-lg bg-black p-1 text-white sm:grid sm:grid-cols-2 sm:gap-gutter sm:rounded-2xl">
+      <div class="ph ph-4 c-image h-full w-full aspect-[1.6] sm:aspect-square rounded-sm sm:rounded-xl overflow-hidden -cover"><div class="c-image_inner"></div></div>
+      <div class="flex flex-col gap-2 px-2 sm:justify-between sm:gap-8 sm:px-0">
+        <h2 class="heading-md mt-4 sm:mt-unit-md anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split">Rakennan tekoälyllä tuotteita päivittäin.</h2>
+        <div class="flex flex-col gap-3.5 md:flex-row md:justify-between md:gap-gutter">
+          <p class="w-full body-sm anim-fade md:w-58" data-scroll data-scroll-offset="15%,0%">En opeta teoriaa diaesityksestä. Tuon koulutukseen samat menetelmät, joilla itse teen tuotannossa olevia ratkaisuja. Opitte sen mikä toimii.</p>
+          <a class="group relative w-cols-2 sm:w-cols-3 sm:min-w-55 h-40 flex flex-col justify-between rounded-xl bg-[rgba(255,255,255,0.1)] p-unit-sm ml-auto md:ml-0 anim-up-scale" href="#yhteys" data-scroll data-scroll-offset="15%,0%" data-book>
+            <span class="pointer-events-none absolute inset-0 rounded-xl bg-white/10 opacity-0 transition-opacity duration-(--transition-duration) ease-power2-out group-hover:opacity-100" aria-hidden="true"></span>
+            <span class="label uppercase">Aloita</span>
+            <div class="flex items-end justify-between"><span class="body-md font-bold sm:heading-2xs">Varaa keskustelu</span><span class="c-icon" aria-hidden="true">↗</span></div>
+          </a>
+        </div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- PAKETIT (snapshot layout) -->
-<section id="paketit" class="container sec">
-  <div class="snap">
-    <div class="snap__l">
-      <h2 class="split" data-anim>Valitse lähtötaso.</h2>
-      <a href="#yhteys" class="c-button -outline -small" data-anim="up-scale" data-book><span class="c-button_bg"></span><span class="c-button_inner"><span class="c-button_icon lead"><span class="ico"><svg><use href="#i-ext"/></svg></span></span><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon trail"><span class="ico"><svg><use href="#i-ext"/></svg></span></span></span></a>
-    </div>
-    <div class="snap__r">
-      <div class="snap__head" data-anim="fade"><span class="name">Rakennusjakso · suosituin</span><span class="label">4 viikkoa</span></div>
-      <div class="snap__value" data-anim="up-scale">8 900 € <span class="unit">+ alv</span></div>
-      <dl class="snap__foot">
-        <div data-anim="up" style="--d:.1s"><dt>Startti</dt><dd>1 900 €</dd></div>
-        <div data-anim="up" style="--d:.18s"><dt>Rakennusjakso</dt><dd>8 900 €</dd></div>
-        <div data-anim="up" style="--d:.26s"><dt>Kumppani</dt><dd>alk. 1 500 € / kk</dd></div>
-      </dl>
-    </div>
-  </div>
-</section>
-
-<!-- ESIMERKIT carousel -->
-<section id="esimerkit" class="sec" data-carousel>
-  <div class="container">
-    <div class="carousel__head" data-anim="fade">
-      <h2 class="split">Mitä voitte rakentaa</h2>
-      <a href="#yhteys" class="c-button -unstyled" data-book><span class="c-button_bg"></span><span class="c-button_inner"><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon trail"><span class="ico"><svg><use href="#i-ext"/></svg></span></span></span></a>
-      <div class="carousel__nav">
-        <button data-prev>Edellinen</button><button data-next>Seuraava</button>
+  <!-- ============ STATEMENT 2 ============ -->
+  <div class="c-text-two-columns container flex flex-col gap-fluid-lg my-fluid-3xl">
+    <div class="grid gap-fluid-4xl md:grid-cols-2 md:gap-gutter">
+      <div class="max-w-[grid-space(2/4)] md:max-w-[grid-space(4/12)]">
+        <h2 class="heading-md sm:heading-xs anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split">Kolme asiaa jää käyttöön.</h2>
+      </div>
+      <div class="flex flex-col items-start gap-fluid-md">
+        <div class="anim-fade heading-md sm:heading-xs md:w-cols-5" data-scroll data-scroll-offset="15%,0%" style="--anim-delay:0.2s">
+          <p>Rutiinit automaatille: toistuva käsityö pois. Omat työkalut ja tuotteet: rakennatte oikean sovelluksen omaan tarpeeseenne. Osaaminen jää taloon: tiimi jatkaa itse, ei riippuvuutta konsultista.</p>
+        </div>
       </div>
     </div>
   </div>
-  <div class="container" style="overflow:hidden">
-    <div class="carousel__track" data-track>
-      <article class="c-card" data-anim="fade"><div class="c-card_image m-sand" style="position:relative"><span class="label">Myynti</span></div><span class="c-card_eyebrow">Myynti</span><h3 class="c-card_title">Tarjouslaskuri, joka tekee luonnoksen minuuteissa.</h3></article>
-      <article class="c-card" data-anim="fade" style="--d:.06s"><div class="c-card_image m-slate" style="position:relative"><span class="label">Asiakaspalvelu</span></div><span class="c-card_eyebrow">Asiakaspalvelu</span><h3 class="c-card_title">Avustaja yleisimpiin kysymyksiin.</h3></article>
-      <article class="c-card" data-anim="fade" style="--d:.12s"><div class="c-card_image m-stone" style="position:relative"><span class="label">Raportointi</span></div><span class="c-card_eyebrow">Raportointi</span><h3 class="c-card_title">Raporttien ja palautteiden automaattinen kooste.</h3></article>
-      <article class="c-card" data-anim="fade"><div class="c-card_image m-sage" style="position:relative"><span class="label">Sisältö</span></div><span class="c-card_eyebrow">Sisältö</span><h3 class="c-card_title">Sisällöntuotanto somen ja uutiskirjeen pohjiksi.</h3></article>
-      <article class="c-card" data-anim="fade"><div class="c-card_image m-clay" style="position:relative"><span class="label">Data</span></div><span class="c-card_eyebrow">Data</span><h3 class="c-card_title">Datan siirto ja siivous järjestelmien välillä.</h3></article>
-      <article class="c-card" data-anim="fade"><div class="c-card_image m-ink" style="position:relative"><span class="label">Tieto</span></div><span class="c-card_eyebrow">Tieto</span><h3 class="c-card_title">Sisäinen hakutyökalu omiin dokumentteihin.</h3></article>
+
+  <!-- ============ PAKETIT (market snapshot layout) ============ -->
+  <div class="c-market-snapshot my-fluid-3xl" id="paketit">
+    <div class="c-market-snapshot_inner">
+      <div class="c-market-snapshot_summary">
+        <h2 class="c-market-snapshot_title anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split">Valitse lähtötaso.</h2>
+        <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
+          <a class="c-button -outline -small" href="#yhteys" data-book><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
+        </div>
+      </div>
+      <div class="c-market-snapshot_details">
+        <div class="c-market-snapshot_header" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+          <h3 class="c-market-snapshot_stock anim-fade">Rakennusjakso · suosituin</h3>
+          <span class="c-market-snapshot_type anim-fade" style="--anim-delay:0.15s">4 viikkoa</span>
+        </div>
+        <div class="c-market-snapshot_body anim-fade-scale" data-scroll data-scroll-offset="15%,0%">
+          <div><span class="c-market-snapshot_value">8 900</span> <span class="c-market-snapshot_unit">€ + alv</span></div>
+        </div>
+        <dl class="c-market-snapshot_footer" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+          <div class="c-market-snapshot_item anim-up" style="--anim-delay:0.15s"><dt>Startti</dt><dd>1 900 €</dd></div>
+          <div class="c-market-snapshot_item anim-up" style="--anim-delay:0.2s"><dt>Rakennusjakso</dt><dd>8 900 €</dd></div>
+          <div class="c-market-snapshot_item anim-up" style="--anim-delay:0.25s"><dt>Kumppani</dt><dd>alk. 1 500 € / kk</dd></div>
+        </dl>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- POLKU -->
-<section id="polku" class="container sec">
-  <span class="label" data-anim="fade">Miten etenemme</span>
-  <h2 class="heading-md split" data-anim style="margin-top:1rem">Selkeä polku alusta käyttöön.</h2>
-  <div class="timeline" data-anim="fade">
-    <div class="tl-axis">
-      <div class="tl-node"><span class="label tl-step">Kartoitus</span><h3 class="tl-head">Etsimme hyödyn</h3><p class="tl-body">Käymme arkenne läpi ja etsimme paikat, joissa tekoäly tuo eniten hyötyä.</p></div>
-      <div class="tl-node"><span class="label tl-step">Työpaja</span><h3 class="tl-head">Rakennamme yhdessä</h3><p class="tl-body">Kädet näppäimistöllä. Jokainen tekee itse, ei katso vierestä.</p></div>
-      <div class="tl-node"><span class="label tl-step">Käyttöönotto</span><h3 class="tl-head">Viemme tuotantoon</h3><p class="tl-body">Viemme ratkaisun oikeaan käyttöön ja varmistamme, että se pysyy pystyssä.</p></div>
-      <div class="tl-node"><span class="label tl-step">Jatko</span><h3 class="tl-head">Sparraan eteenpäin</h3><p class="tl-body">Sparraan tiimiä ja autan seuraavissa ratkaisuissa tarpeen mukaan.</p></div>
+  <!-- ============ ESIMERKIT (cards carousel) ============ -->
+  <c-carousel data-slides-visible="3" id="esimerkit">
+    <div class="c-cards-carousel flex flex-col gap-fluid-lg my-fluid-2xl">
+      <div class="container items-end sm:grid-layout">
+        <div class="flex items-center justify-between gap-fluid-sm sm:col-span-6 sm:col-start-1 sm:items-end sm:justify-start" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+          <h2 class="heading-xs anim-text" data-animation="split">Mitä voitte rakentaa</h2>
+          <span class="group relative inline-flex">
+            <a class="c-button -unstyled body-md text-gray-600 gap-fluid-2xs anim-fade" href="#yhteys" data-book style="--anim-delay:0.15s"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">↗</span></div></a>
+          </span>
+        </div>
+        <div class="col-span-1 col-start-11 hidden text-right body-md anim-fade sm:block" data-scroll data-scroll-offset="15%,0%">
+          <button class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400" data-carousel="prev"><span class="flex items-center gap-1">Edellinen</span></button>
+        </div>
+        <div class="col-span-1 col-start-12 hidden text-right body-md anim-fade sm:block" data-scroll data-scroll-offset="15%,0%">
+          <button class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400" data-carousel="next"><span class="flex items-center gap-1">Seuraava</span></button>
+        </div>
+      </div>
+      <div class="overflow-hidden">
+        <div class="flex cursor-grab snap-x snap-mandatory overflow-x-auto pl-unit-sm select-none sm:pl-unit-lg [&amp;::-webkit-scrollbar]:hidden" data-carousel="track" style="scrollbar-width:none">
+          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-1 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Myynti</span><h3 class="c-card_title">Tarjouslaskuri, joka tekee luonnoksen minuuteissa.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-2 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Asiakaspalvelu</span><h3 class="c-card_title">Avustaja yleisimpiin kysymyksiin, joka oppii teidän tyylinne.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-5 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Raportointi</span><h3 class="c-card_title">Raporttien ja palautteiden automaattinen kooste.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-3 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Sisältö</span><h3 class="c-card_title">Sisällöntuotanto somen ja uutiskirjeen pohjiksi.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-4 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Data</span><h3 class="c-card_title">Datan siirto ja siivous järjestelmien välillä.</h3></div></article>
+          <article class="c-card snap-start" data-carousel="slide"><div class="c-card_inner"><div class="ph ph-6 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Tieto</span><h3 class="c-card_title">Sisäinen hakutyökalu omiin dokumentteihin.</h3></div></article>
+        </div>
+      </div>
+    </div>
+  </c-carousel>
+
+  <!-- ============ POLKU ============ -->
+  <div class="container my-fluid-3xl" id="polku">
+    <span class="label anim-fade" data-scroll data-scroll-offset="15%,0%">Miten etenemme</span>
+    <h2 class="heading-md anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split" style="margin-top:1rem">Selkeä polku alusta käyttöön.</h2>
+    <div class="grid gap-fluid-lg sm:grid-cols-4" data-scroll data-scroll-offset="15%,0%" data-anim-parent style="margin-top:var(--spacing-fluid-2xl,3rem);border-top:1px solid var(--color-gray-200);padding-top:2rem">
+      <div class="anim-up"><span class="label">Kartoitus</span><h3 class="heading-2xs" style="margin:.6rem 0">Etsimme hyödyn</h3><p class="body-sm text-gray-500">Käymme arkenne läpi ja etsimme paikat, joissa tekoäly tuo eniten hyötyä.</p></div>
+      <div class="anim-up" style="--anim-delay:.1s"><span class="label">Työpaja</span><h3 class="heading-2xs" style="margin:.6rem 0">Rakennamme yhdessä</h3><p class="body-sm text-gray-500">Kädet näppäimistöllä. Jokainen tekee itse, ei katso vierestä.</p></div>
+      <div class="anim-up" style="--anim-delay:.2s"><span class="label">Käyttöönotto</span><h3 class="heading-2xs" style="margin:.6rem 0">Viemme tuotantoon</h3><p class="body-sm text-gray-500">Viemme ratkaisun oikeaan käyttöön ja varmistamme, että se pysyy pystyssä.</p></div>
+      <div class="anim-up" style="--anim-delay:.3s"><span class="label">Jatko</span><h3 class="heading-2xs" style="margin:.6rem 0">Sparraan eteenpäin</h3><p class="body-sm text-gray-500">Sparraan tiimiä ja autan seuraavissa ratkaisuissa tarpeen mukaan.</p></div>
     </div>
   </div>
-</section>
 
-<!-- PUSH / CTA -->
-<section id="yhteys" class="push">
-  <div class="push__media" aria-hidden="true"></div>
-  <h2 class="display-lg split"><span>Varataan</span><span>30 minuutin</span><span>keskustelu.</span></h2>
-  <p data-anim="fade">Katsotaan yhdessä, mistä teidän kannattaa aloittaa. Ei sitoumuksia.</p>
-  <a href="mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%2C%20keskustelu" class="c-button -white" data-anim="up-scale" data-book><span class="c-button_bg"></span><span class="c-button_inner"><span class="c-button_icon lead"><span class="ico"><svg><use href="#i-right"/></svg></span></span><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon trail"><span class="ico"><svg><use href="#i-right"/></svg></span></span></span></a>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <nav class="footer__menu">
-    <a href="#ratkaisu">Ratkaisu <span class="ico"><svg><use href="#i-right"/></svg></span></a>
-    <a href="#esimerkit">Esimerkit <span class="ico"><svg><use href="#i-right"/></svg></span></a>
-    <a href="#polku">Polku <span class="ico"><svg><use href="#i-right"/></svg></span></a>
-    <a href="#paketit">Paketit <span class="ico"><svg><use href="#i-right"/></svg></span></a>
-    <a href="#yhteys">Yhteys <span class="ico"><svg><use href="#i-right"/></svg></span></a>
-  </nav>
-  <div class="footer__content">
-    <div>
-      <div class="footer__brand-big">Tekoäly taloon.</div>
-      <a href="mailto:parkkonen.jesse@gmail.com" class="footer__mail">parkkonen.jesse@gmail.com</a>
+  <!-- ============ PUSH / CTA ============ -->
+  <div class="c-push relative pt-6 sm:pt-4 pb-32 sm:pb-50 min-h-svh rounded-t-2xl overflow-hidden mt-fluid-3xl ph-push" id="yhteys">
+    <div class="absolute inset-0 -z-1" style="background:linear-gradient(0deg,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.5) 100%)"></div>
+    <div class="flex flex-col items-center gap-32 text-center text-white md:gap-50">
+      <h2 class="flex flex-col justify-center display-lg anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split"><span>Varataan</span><span>30 minuutin</span><span>keskustelu.</span></h2>
+      <div data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+        <p class="w-82 body-md anim-fade" style="margin-inline:auto">Katsotaan yhdessä, mistä teidän kannattaa aloittaa. Ei sitoumuksia.</p>
+        <a class="c-button -white -small mt-fluid-xl anim-up-scale" href="mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%2C%20keskustelu" data-book><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
+      </div>
     </div>
-    <p class="footer__text">Hands-on tekoälykoulutuksia pk-yrityksille. Tiimisi rakentaa oikeita ratkaisuja, ja osaaminen jää taloon. Ei kalvosarjaa.</p>
   </div>
-  <div class="footer__bottom">
-    <span>[ Yrityksen nimi ] · Helsinki</span>
-    <span>© 2026</span>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="c-footer">
+  <div class="c-footer_inner">
+    <div class="c-footer_header">
+      <a class="c-footer_logo" href="#hero" style="font-weight:800;font-size:1.4rem;letter-spacing:-.04em" data-scroll data-scroll-offset="15%,0%">[ yrityksen nimi ]</a>
+      <nav class="c-footer_menu">
+        <ul class="c-footer_menu-list" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="#ratkaisu">Ratkaisu <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
+          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="#esimerkit">Esimerkit <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
+          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="#polku">Polku <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
+          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="#paketit">Paketit <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
+          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="#yhteys">Yhteys <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="c-footer_content">
+      <div class="c-footer_text">
+        <p class="c-footer_text-content anim-fade" data-scroll data-scroll-offset="15%,0%">Hands-on tekoälykoulutuksia pk-yrityksille. Tiimisi rakentaa oikeita ratkaisuja, ja osaaminen jää taloon. Ei kalvosarjaa.</p>
+        <nav class="c-footer_socials"><ul class="c-footer_socials-list" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+          <li class="c-footer_socials-item"><a class="c-footer_socials-link" href="mailto:parkkonen.jesse@gmail.com">parkkonen.jesse@gmail.com</a></li>
+        </ul></nav>
+      </div>
+    </div>
+    <div class="c-footer_bottom" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+      <div class="c-footer_bottom-item"><div class="c-footer_bottom-copyright">© 2026 · [ Yrityksen nimi ]</div></div>
+      <div class="c-footer_bottom-item"><span class="c-footer_bottom-link">Helsinki</span></div>
+    </div>
+  </div>
+  <!-- sticky parallax image reveal (Wolverine footer) -->
+  <div class="relative h-[80svh] w-full bg-black" data-scroll data-scroll-css-progress data-scroll-position="start,start" data-scroll-offset="0,20%" style="clip-path:inset(0 round 16px 16px 0 0)">
+    <div class="relative" style="top:-100svh;height:calc(80svh + 100svh)">
+      <div class="sticky overflow-hidden rounded-t-lg" style="top:20svh;height:80svh">
+        <div class="ph-3" style="position:absolute;inset:0;transform:scale(calc(1.3 - var(--progress,0)*0.3))"></div>
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.2)"></div>
+      </div>
+    </div>
   </div>
 </footer>
 
@@ -417,57 +263,89 @@
 <script>
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Lenis smooth scroll */
+  /* Lenis smooth scroll (real engine Wolverine uses) */
+  let lenis;
   if (!RM && window.Lenis) {
-    const lenis = new Lenis({ duration: 1.1, easing: (t)=>Math.min(1,1.001-Math.pow(2,-10*t)) });
+    lenis = new Lenis({ duration: 1.1, easing: (t)=>Math.min(1,1.001-Math.pow(2,-10*t)) });
     function raf(t){ lenis.raf(t); requestAnimationFrame(raf); } requestAnimationFrame(raf);
-    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',(e)=>{const el=document.querySelector(a.getAttribute('href')); if(el){e.preventDefault(); lenis.scrollTo(el,{offset:0});}}));
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const el=document.querySelector(a.getAttribute('href'));if(el){e.preventDefault();lenis.scrollTo(el,{offset:0});}}));
   }
 
-  /* split text into words */
-  document.querySelectorAll('.split').forEach(el => {
-    el.querySelectorAll('span').forEach(line => {
-      const words = line.textContent.trim().split(/\s+/);
-      line.textContent = '';
-      words.forEach((w,i)=>{ const s=document.createElement('span'); s.className='word'; s.textContent=w; s.style.setProperty('--wd',(i*55)+'ms'); line.append(s, document.createTextNode(' ')); });
-    });
-    if (!el.querySelector('span')) { // no line spans: split directly
-      const words = el.textContent.trim().split(/\s+/); el.textContent='';
-      words.forEach((w,i)=>{ const s=document.createElement('span'); s.className='word'; s.textContent=w; s.style.setProperty('--wd',(i*45)+'ms'); el.append(s, document.createTextNode(' ')); });
+  /* line-split for .anim-text[data-animation=split] -> .anim-text-item per line (Wolverine SplitText) */
+  function splitLines(el){
+    const txt = el.textContent.trim();
+    // honor explicit <span> lines if present
+    const explicit = [...el.querySelectorAll(':scope > span')];
+    let lines;
+    if (explicit.length) { lines = explicit.map(s=>s.textContent.trim()); }
+    else {
+      // measure words into visual lines
+      const words = txt.split(/\s+/);
+      el.textContent = '';
+      const spans = words.map(w=>{ const s=document.createElement('span'); s.textContent=w+' '; s.style.display='inline-block'; el.append(s); return s; });
+      const map = []; let curTop=null, cur=[];
+      spans.forEach(s=>{ const t=s.offsetTop; if(curTop===null||Math.abs(t-curTop)<2){cur.push(s.textContent);curTop=(curTop===null?t:curTop);} else {map.push(cur.join(''));cur=[s.textContent];curTop=t;} });
+      if(cur.length) map.push(cur.join(''));
+      lines = map.map(l=>l.trim());
     }
-  });
+    el.textContent='';
+    el.style.display = el.style.display || 'block';
+    lines.forEach((ln,i)=>{ const wrap=document.createElement('span'); wrap.style.display='block'; wrap.style.overflow='hidden'; const item=document.createElement('span'); item.className='anim-text-item'; item.style.display='block'; item.style.setProperty('--index',i); item.textContent=ln; wrap.appendChild(item); el.appendChild(wrap); });
+  }
+  document.querySelectorAll('.anim-text[data-animation="split"]').forEach(splitLines);
 
-  /* reveal observer */
-  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }); },{ threshold: 0.12, rootMargin:'0px 0px -8% 0px' });
-  document.querySelectorAll('[data-anim], .split').forEach(el=>io.observe(el));
+  /* is-inview trigger (replicate Locomotive data-scroll) */
+  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('is-inview'); io.unobserve(e.target); } }); }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
+  document.querySelectorAll('[data-scroll]').forEach(el=>io.observe(el));
+  document.querySelectorAll('.c-image').forEach(el=>el.classList.add('is-loaded'));
 
-  /* header bg on scroll */
-  const header = document.getElementById('header');
-  const hs = () => header.classList.toggle('scrolled', window.scrollY > 40);
-  hs(); window.addEventListener('scroll', hs, { passive: true });
+  const root = document.documentElement;
+  /* NOTE: älä aseta --vw:tä — CSS-fallbackit (100vw/1vw) hoitavat grid-matikan oikein */
 
-  /* carousel (drag + prev/next) */
-  document.querySelectorAll('[data-carousel]').forEach(root=>{
-    const track = root.querySelector('[data-track]');
-    const cards = [...track.children];
-    const prev = root.querySelector('[data-prev]'); const next = root.querySelector('[data-next]');
+  /* header (Wolverine): html.has-scrolled = pill shrinks + bg; html.has-passed-fold + is-scrolling-down = hide; up = show */
+  let lastY = window.scrollY;
+  function headerState(){
+    const y = window.scrollY;
+    root.classList.toggle('has-scrolled', y > 10);
+    root.classList.toggle('has-passed-fold', y > window.innerHeight * 0.85);
+    if (Math.abs(y - lastY) > 5) {
+      const down = y > lastY;
+      root.classList.toggle('is-scrolling-down', down);
+      root.classList.toggle('is-scrolling-up', !down);
+      lastY = y;
+    }
+  }
+  headerState(); window.addEventListener('scroll', headerState, { passive: true });
+
+  /* --progress parallax for [data-scroll-css-progress] (push + footer image scale) */
+  const prog = [...document.querySelectorAll('[data-scroll-css-progress]')];
+  function updProg(){
+    const vh = window.innerHeight;
+    prog.forEach(el=>{ const r = el.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height))); el.style.setProperty('--progress', p.toFixed(4)); });
+  }
+  updProg(); window.addEventListener('scroll', updProg, { passive: true });
+
+  /* carousel (drag + prev/next), Wolverine c-carousel */
+  document.querySelectorAll('c-carousel').forEach(root=>{
+    const track = root.querySelector('[data-carousel="track"]');
+    const cards = [...track.querySelectorAll('[data-carousel="slide"]')];
+    const prev = root.querySelector('[data-carousel="prev"]'); const next = root.querySelector('[data-carousel="next"]');
     let active = 0;
-    function upd(){ prev.disabled = active===0; next.disabled = active>=cards.length-1; }
-    function go(i){ active=Math.max(0,Math.min(cards.length-1,i)); cards[active].scrollIntoView({behavior:RM?'auto':'smooth',inline:'start',block:'nearest'}); upd(); }
-    const io2 = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ active=cards.indexOf(e.target); upd(); } }),{root:track,threshold:0.6});
+    const upd = ()=>{ if(prev)prev.disabled=active===0; if(next)next.disabled=active>=cards.length-1; };
+    const go = i=>{ active=Math.max(0,Math.min(cards.length-1,i)); cards[active].scrollIntoView({behavior:RM?'auto':'smooth',inline:'start',block:'nearest'}); upd(); };
+    const io2 = new IntersectionObserver(en=>en.forEach(e=>{ if(e.isIntersecting){active=cards.indexOf(e.target);upd();} }),{root:track,threshold:0.6});
     cards.forEach(c=>io2.observe(c));
-    prev.addEventListener('click',()=>go(active-1)); next.addEventListener('click',()=>go(active+1));
-    /* pointer drag */
+    prev&&prev.addEventListener('click',()=>go(active-1)); next&&next.addEventListener('click',()=>go(active+1));
     let down=false,sx=0,sl=0,moved=false;
-    track.addEventListener('pointerdown',e=>{down=true;moved=false;sx=e.clientX;sl=track.scrollLeft;track.classList.add('dragging');track.setPointerCapture(e.pointerId);});
+    track.addEventListener('pointerdown',e=>{down=true;moved=false;sx=e.clientX;sl=track.scrollLeft;track.classList.add('is-dragging');track.setPointerCapture(e.pointerId);});
     track.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-sx;if(Math.abs(dx)>4)moved=true;track.scrollLeft=sl-dx;});
-    const end=e=>{if(!down)return;down=false;track.classList.remove('dragging');try{track.releasePointerCapture(e.pointerId);}catch(_){}};
-    track.addEventListener('pointerup',end); track.addEventListener('pointercancel',end);
+    const end=e=>{if(!down)return;down=false;track.classList.remove('is-dragging');try{track.releasePointerCapture(e.pointerId);}catch(_){}};
+    track.addEventListener('pointerup',end);track.addEventListener('pointercancel',end);
     track.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopPropagation();}},true);
     upd();
   });
 
-  /* Booking: Google Calendar appointment link (calendar.app.google/...). Tyhjä = mailto. */
+  /* Booking: Google Calendar appointment link. Tyhjä = mailto. */
   const BOOKING_URL = "";
   if (BOOKING_URL) document.querySelectorAll('[data-book]').forEach(a=>{a.href=BOOKING_URL;a.target='_blank';a.rel='noopener';});
 </script>
