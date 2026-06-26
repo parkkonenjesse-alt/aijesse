@@ -49,9 +49,6 @@
     .anim-fade, .anim-up, .anim-up-scale, .anim-fade-scale { opacity: 1 !important; transform: none !important; transition: none !important; }
     .anim-text-item { transform: none !important; transition: none !important; }
   }
-  /* FIX: header_head on 2-col grid -> 3rd child (CTA) wrapped to row 2. Make it flex, one row. */
-  .c-header_head { display: flex; align-items: center; gap: clamp(1rem, 2vw, 1.8rem); }
-  .c-header_logo { margin-right: auto; }
   /* FIX: card image placeholder collapsed (no <img> = no intrinsic height) */
   .c-card_image.ph { aspect-ratio: 1.33; }
   /* anchor targets clear the fixed header */
@@ -75,6 +72,7 @@
   .c-hero-card:hover .c-icon { transform: scale(1.25); }
   .c-hero-card .c-image_inner { transition: transform .6s cubic-bezier(.19,1,.22,1); }
   .c-hero-card:hover .c-image_inner { transform: scale(1.05); }
+  @media (min-width: 640px) { .c-hero-card { width: 17.5rem; } } /* Wolverine sm:w-70 = 280px (luokka ei määritelty wolv-CSS:ssä) */
   .c-footer_logo { max-width: none; aspect-ratio: auto; height: auto; white-space: nowrap; }
   .c-footer_menu-link .c-icon { opacity: 0; transform: translateX(-8px); transition: opacity .3s cubic-bezier(.19,1,.22,1), transform .3s cubic-bezier(.19,1,.22,1); }
   .c-footer_menu-link:hover .c-icon { opacity: 1; transform: none; }
@@ -107,9 +105,9 @@
             <li class="c-header_nav-item"><a class="c-header_nav-link" href="#esimerkit">Esimerkit</a></li>
             <li class="c-header_nav-item"><a class="c-header_nav-link" href="#polku">Polku</a></li>
             <li class="c-header_nav-item"><a class="c-header_nav-link" href="#paketit">Paketit</a></li>
+            <li class="c-header_nav-item"><a class="c-header_nav-link" href="#yhteys" data-book>Varaa keskustelu</a></li>
           </ul>
         </nav>
-        <a class="c-button -small" href="#yhteys" data-book><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">+</span><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">+</span></div></a>
         <button class="mobile-toggle" aria-expanded="false" aria-controls="mobilemenu" data-mm-open>Valikko <span aria-hidden="true">+</span></button>
       </div>
       <span class="c-header_bg" data-header-nav-bg></span>
@@ -219,7 +217,10 @@
       </div>
       <div class="flex flex-col items-start gap-fluid-md">
         <div class="anim-fade heading-md sm:heading-xs md:w-cols-5" data-scroll data-scroll-offset="15%,0%" style="--anim-delay:0.2s">
-          <p>Rutiinit automaatille: toistuva käsityö pois. Omat työkalut ja tuotteet: rakennatte oikean sovelluksen omaan tarpeeseenne. Osaaminen jää taloon: tiimi jatkaa itse, ei riippuvuutta konsultista.</p>
+          <p>Toistuvat rutiinit siirtyvät automaatille, tiimi rakentaa omat työkalunsa ja tuotteensa, ja osaaminen jää taloon. Ei riippuvuutta yhdestäkään konsultista.</p>
+        </div>
+        <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
+          <a class="c-button" href="#esimerkit"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Katso esimerkit</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
         </div>
       </div>
     </div>
@@ -389,7 +390,7 @@
   document.querySelectorAll('.anim-text[data-animation="split"]').forEach(splitLines);
 
   /* is-inview trigger (replicate Locomotive data-scroll) */
-  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('is-inview'); io.unobserve(e.target); } }); }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
+  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('is-inview'); io.unobserve(e.target); } }); }, { threshold: 0, rootMargin: '0px 0px -15% 0px' });
   document.querySelectorAll('[data-scroll]').forEach(el=>io.observe(el));
   document.querySelectorAll('.c-image').forEach(el=>el.classList.add('is-loaded'));
 
