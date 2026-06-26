@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hands-on Tekoälykoulutus · Jesse Parkkonen</title>
+<meta name="description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Tiimisi rakentaa oikeita ratkaisuja ja osaaminen jää taloon, ei kalvosarjaa." />
+<meta property="og:title" content="Hands-on Tekoälykoulutus · Jesse Parkkonen" />
+<meta property="og:description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Osaaminen jää taloon, ei kalvosarjaa." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f4f4f1;
+    --ink: #111110;
+    --paper: #ffffff;
+    --muted: #6b6b66;
+    --muted-dark: #8a8a85;
+    --line: rgba(17,17,16,0.12);
+    --line-dark: rgba(255,255,255,0.10);
+
+    --text-eyebrow: 0.78rem;
+    --text-body: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem);
+    --text-display: clamp(2.7rem, 1rem + 7.6vw, 7.4rem);
+    --text-section: clamp(2.1rem, 1rem + 4.4vw, 4.6rem);
+
+    --space-section: clamp(5rem, 4rem + 7vw, 12rem);
+    --gutter: clamp(1.4rem, 1rem + 4vw, 6rem);
+    --nav-h: 4.6rem;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--nav-h);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; }
+
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-eyebrow);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  /* ---------- Navigation ---------- */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--gutter);
+    z-index: 50;
+    color: var(--white);
+    transition: background .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+  .nav.scrolled {
+    background: rgba(255,255,255,0.82);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-brand { font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; text-decoration: none; }
+  .nav-links { display: flex; align-items: center; gap: clamp(1.4rem, 2.5vw, 2.8rem); }
+  .nav-links a { text-decoration: none; font-size: 0.92rem; font-weight: 500; opacity: 0.78; transition: opacity .25s var(--ease); }
+  .nav-links a:hover { opacity: 1; }
+  .nav-cta {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1px solid currentColor;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.9rem; font-weight: 600; text-decoration: none;
+    transition: background .3s var(--ease), color .3s var(--ease);
+    opacity: 1;
+  }
+  .nav-cta:hover { background: currentColor; }
+  .nav-cta:hover span { color: var(--paper); }
+  .nav.scrolled .nav-cta:hover span { color: var(--paper); }
+  .nav:not(.scrolled) .nav-cta:hover span { color: var(--black); }
+
+  /* ---------- Section scaffolding ---------- */
+  section {
+    position: relative;
+    padding: var(--space-section) var(--gutter);
+  }
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: calc(var(--nav-h) + 3rem);
+  }
+
+  .dark { background: var(--black); color: var(--white); }
+  .cream { background: var(--white); }
+  .dark .mono { color: var(--muted-dark); }
+  .light .mono, .cream .mono { color: var(--muted); }
+
+  /* grid texture on dark sections */
+  .grid-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line-dark) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
+    background-size: clamp(48px, 6vw, 96px) clamp(48px, 6vw, 96px);
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse 120% 100% at 50% 40%, #000 55%, transparent 100%);
+  }
+  .grid-bg-light::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 42%;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: clamp(48px, 6vw, 96px) clamp(48px, 6vw, 96px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.45;
+    mask-image: linear-gradient(90deg, transparent, #000 60%);
+  }
+
+  .inner { position: relative; z-index: 1; width: 100%; max-width: 1600px; margin: 0 auto; }
+
+  .kicker { display: block; margin-bottom: clamp(1.6rem, 3vw, 2.4rem); }
+
+  /* ---------- Typography ---------- */
+  .display {
+    font-size: var(--text-display);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.038em;
+    max-width: 16ch;
+  }
+  .section-title {
+    font-size: var(--text-section);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    max-width: 18ch;
+  }
+  .lede {
+    font-size: var(--text-body);
+    max-width: 44ch;
+    margin-top: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 400;
+  }
+  .dark .lede { color: #cfcfca; }
+  .light .lede, .cream .lede { color: #3a3a36; }
+
+  /* ---------- Columns ---------- */
+  .cols {
+    display: grid;
+    gap: clamp(2rem, 4vw, 4.5rem);
+    margin-top: clamp(3rem, 6vw, 6rem);
+  }
+  .cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+  .col-item { border-top: 1.5px solid var(--ink); padding-top: 1.4rem; }
+  .dark .col-item { border-top: 1.5px solid var(--white); }
+  .col-head { font-size: clamp(1.2rem, 0.9rem + 0.9vw, 1.6rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.8rem; line-height: 1.1; }
+  .col-body { color: var(--muted); font-size: 1.04rem; max-width: 34ch; }
+  .dark .col-body { color: var(--muted-dark); }
+
+  /* ---------- Examples list ---------- */
+  .list-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 clamp(3rem, 6vw, 7rem);
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .list-row {
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--line);
+    font-size: clamp(1.08rem, 0.95rem + 0.55vw, 1.4rem);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    transition: padding-left .4s var(--ease);
+  }
+  .list-row:hover { padding-left: 0.6rem; }
+
+  /* ---------- Timeline ---------- */
+  .timeline { margin-top: clamp(3rem, 6vw, 5rem); }
+  .tl-axis { position: relative; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr); }
+  .tl-node { position: relative; padding-top: 2.4rem; padding-right: 2rem; }
+  .tl-node::before {
+    content: ""; position: absolute; top: -6px; left: 0;
+    width: 11px; height: 11px; border-radius: 50%; background: var(--ink);
+  }
+  .tl-step { display: block; margin-bottom: 0.6rem; }
+  .tl-head { font-size: clamp(1.15rem, 0.9rem + 0.6vw, 1.5rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.7rem; }
+  .tl-body { color: var(--muted); font-size: 1rem; max-width: 26ch; }
+
+  /* ---------- Pricing ---------- */
+  .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 2vw, 1.6rem); margin-top: clamp(3rem, 6vw, 5rem); }
+  .price-card {
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: clamp(1.9rem, 2.5vw, 2.8rem);
+    display: flex; flex-direction: column;
+    background: var(--paper);
+    transition: transform .5s var(--ease), border-color .5s var(--ease);
+  }
+  .price-card:hover { transform: translateY(-4px); border-color: var(--ink); }
+  .price-card.featured { background: var(--black); color: var(--white); border-color: var(--black); }
+  .price-card.featured:hover { border-color: var(--black); }
+  .price-card .pc-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .pc-tag { font-size: 0.95rem; }
+  .pc-pill { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; background: var(--white); color: var(--ink); padding: 0.4rem 0.8rem; border-radius: 999px; font-weight: 500; }
+  .pc-price { font-size: clamp(1.9rem, 1.2rem + 1.7vw, 2.7rem); font-weight: 700; letter-spacing: -0.03em; }
+  .pc-price .unit { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.04em; font-weight: 400; color: var(--muted); }
+  .featured .pc-price .unit { color: var(--muted-dark); }
+  .pc-rule { height: 1px; background: var(--line); margin: 1.6rem 0; }
+  .featured .pc-rule { background: var(--line-dark); }
+  .pc-desc { color: var(--muted); font-size: 1.0rem; }
+  .featured .pc-desc { color: #cfcfca; }
+
+  /* ---------- Chips ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: clamp(2rem, 4vw, 3rem); }
+  .chip {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.7rem 1.5rem;
+    font-size: 1.02rem;
+    font-weight: 500;
+    transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+    cursor: default;
+  }
+  .chip:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* ---------- CTA button ---------- */
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 0.8rem;
+    background: var(--white); color: var(--ink);
+    padding: 1.05rem 1.9rem; border-radius: 999px;
+    font-weight: 600; font-size: 1.05rem; text-decoration: none;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    transition: transform .4s var(--ease), background .3s var(--ease);
+  }
+  .cta-btn.invert { background: var(--ink); color: var(--paper); }
+  .cta-btn .arrow { transition: transform .4s var(--ease); }
+  .cta-btn:hover { transform: translateY(-2px); }
+  .cta-btn:hover .arrow { transform: translateX(5px); }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    background: var(--black);
+    color: var(--white);
+    padding: clamp(4rem, 6vw, 7rem) var(--gutter) clamp(2.5rem, 4vw, 3.5rem);
+  }
+  .footer .inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2.5rem; align-items: flex-start; }
+  .footer-brand { font-size: clamp(1.6rem, 1rem + 2vw, 2.4rem); font-weight: 700; letter-spacing: -0.03em; }
+  .footer-mail { display: inline-block; margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.04em; color: var(--muted-dark); text-decoration: none; transition: color .3s var(--ease); }
+  .footer-mail:hover { color: var(--white); }
+  .footer-nav { display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-nav a { text-decoration: none; color: var(--muted-dark); font-size: 0.95rem; transition: color .3s var(--ease); }
+  .footer-nav a:hover { color: var(--white); }
+  .footer-base { max-width: 1600px; margin: clamp(3rem, 5vw, 4.5rem) auto 0; padding-top: 1.6rem; border-top: 1px solid var(--line-dark); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-base span { color: var(--muted-dark); font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ---------- reveal animation ---------- */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 860px) {
+    section { padding-top: clamp(4rem, 12vw, 6rem); padding-bottom: clamp(4rem, 12vw, 6rem); }
+    .cols-2, .cols-3, .list-grid, .tl-axis, .pricing { grid-template-columns: 1fr; }
+    .display { max-width: 14ch; }
+    .tl-axis { border-top: 0; }
+    .tl-node { border-top: 1px solid var(--line); padding-top: 1.6rem; }
+    .tl-node::before { display: none; }
+    .nav-links .nav-link { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#hero" class="nav-brand">Jesse Parkkonen</a>
+  <div class="nav-links">
+    <a href="#ratkaisu" class="nav-link">Ratkaisu</a>
+    <a href="#esimerkit" class="nav-link">Esimerkit</a>
+    <a href="#polku" class="nav-link">Polku</a>
+    <a href="#paketit" class="nav-link">Paketit</a>
+    <a href="#yhteys" class="nav-cta"><span>Varaa keskustelu</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="dark grid-bg">
+  <div class="inner">
+    <span class="mono kicker reveal">Hands·on Tekoälykoulutus · PK-yrityksille</span>
+    <h1 class="display reveal">Tekoäly taloon.<br />Osaaminen jää teille.</h1>
+    <p class="lede reveal">Hands-on koulutuksia, joissa tiimisi rakentaa oikeita ratkaisuja ja lähtee mukanaan toimiva tulos. Ei kalvosarjaa.</p>
+    <a href="#yhteys" class="cta-btn reveal">Varaa keskustelu <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<!-- LÄHTÖTILANNE -->
+<section class="light">
+  <div class="inner">
+    <span class="mono kicker reveal">Lähtötilanne</span>
+    <h2 class="section-title reveal">Moni haluaa hyödyntää tekoälyä. Harva tietää mistä aloittaa.</h2>
+    <div class="cols cols-2">
+      <div class="col-item reveal">
+        <h3 class="col-head">Kokeilut jäävät yksittäisiksi.</h3>
+        <p class="col-body">Yksi ihminen osaa, muu tiimi katsoo sivusta. Tieto ei leviä eikä jää taloon.</p>
+      </div>
+      <div class="col-item reveal">
+        <h3 class="col-head">Ulkoa ostettu tuo riippuvuuden.</h3>
+        <p class="col-body">Lasku juoksee, mutta talon oma kyky tehdä ei kasva. Seuraavakin asia pitää ostaa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOINEN TAPA -->
+<section id="ratkaisu" class="dark grid-bg">
+  <div class="inner">
+    <span class="mono kicker reveal">Toinen tapa</span>
+    <h2 class="section-title reveal">Opetan tiimisi rakentamaan itse.</h2>
+    <p class="lede reveal">Istumme saman pöydän ääreen, kädet näppäimistöllä. Rakennamme yhdessä juuri sen, mitä teidän arkenne tarvitsee. Kun lähden, taito jää teille.</p>
+  </div>
+</section>
+
+<!-- MITÄ SAATTE -->
+<section class="light">
+  <div class="inner">
+    <span class="mono kicker reveal">Mitä saatte</span>
+    <h2 class="section-title reveal">Kolme asiaa jää käyttöön.</h2>
+    <div class="cols cols-3">
+      <div class="col-item reveal">
+        <h3 class="col-head">Rutiinit automaatille.</h3>
+        <p class="col-body">Toistuva käsityö pois. Raportit, tarjoukset ja yhteenvedot hoituvat tekoälyllä, ja tiimi näkee miten ne tehtiin.</p>
+      </div>
+      <div class="col-item reveal">
+        <h3 class="col-head">Omat työkalut ja tuotteet.</h3>
+        <p class="col-body">Rakennatte koulutuksen aikana oikean sovelluksen omaan tarpeeseenne. Ette katso valmista demoa.</p>
+      </div>
+      <div class="col-item reveal">
+        <h3 class="col-head">Osaaminen jää taloon.</h3>
+        <p class="col-body">Tiimi osaa jatkaa itse uusilla ideoilla. Ette jää riippuvaiseksi yhdestäkään konsultista, ette minustakaan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ESIMERKKEJÄ -->
+<section id="esimerkit" class="cream grid-bg-light">
+  <div class="inner">
+    <span class="mono kicker reveal">Esimerkkejä</span>
+    <h2 class="section-title reveal">Mitä voitte rakentaa.</h2>
+    <div class="list-grid">
+      <div class="list-row reveal">Tarjouslaskuri, joka tekee luonnoksen minuuteissa.</div>
+      <div class="list-row reveal">Asiakaspalvelun avustaja yleisimpiin kysymyksiin.</div>
+      <div class="list-row reveal">Raporttien ja palautteiden automaattinen kooste.</div>
+      <div class="list-row reveal">Sisällöntuotanto somen ja uutiskirjeen pohjiksi.</div>
+      <div class="list-row reveal">Datan siirto ja siivous järjestelmien välillä.</div>
+      <div class="list-row reveal">Sisäinen hakutyökalu omiin dokumentteihin.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MITEN ETENEMME -->
+<section id="polku" class="light">
+  <div class="inner">
+    <span class="mono kicker reveal">Miten etenemme</span>
+    <h2 class="section-title reveal">Selkeä polku alusta käyttöön.</h2>
+    <div class="timeline reveal">
+      <div class="tl-axis">
+        <div class="tl-node">
+          <span class="mono tl-step">Kartoitus</span>
+          <h3 class="tl-head">Etsimme hyödyn</h3>
+          <p class="tl-body">Käymme arkenne läpi ja etsimme paikat, joissa tekoäly tuo eniten hyötyä.</p>
+        </div>
+        <div class="tl-node">
+          <span class="mono tl-step">Työpaja</span>
+          <h3 class="tl-head">Rakennamme yhdessä</h3>
+          <p class="tl-body">Kädet näppäimistöllä. Jokainen tekee itse, ei katso vierestä.</p>
+        </div>
+        <div class="tl-node">
+          <span class="mono tl-step">Käyttöönotto</span>
+          <h3 class="tl-head">Viemme tuotantoon</h3>
+          <p class="tl-body">Viemme ratkaisun oikeaan käyttöön ja varmistamme, että se pysyy pystyssä.</p>
+        </div>
+        <div class="tl-node">
+          <span class="mono tl-step">Jatko</span>
+          <h3 class="tl-head">Sparraan eteenpäin</h3>
+          <p class="tl-body">Sparraan tiimiä ja autan seuraavissa ratkaisuissa tarpeen mukaan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAKETIT -->
+<section id="paketit" class="cream">
+  <div class="inner">
+    <span class="mono kicker reveal">Paketit</span>
+    <h2 class="section-title reveal">Valitse lähtötaso.</h2>
+    <div class="pricing">
+      <div class="price-card reveal">
+        <div class="pc-top"><span class="mono pc-tag">Startti</span><span class="mono" style="color:var(--muted)">Yhden päivän työpaja</span></div>
+        <div class="pc-price">1 900 € <span class="unit">+ alv</span></div>
+        <div class="pc-rule"></div>
+        <p class="pc-desc">Koko tiimi pääsee alkuun ja vie ensimmäisen automaation käyttöön saman päivän aikana.</p>
+      </div>
+      <div class="price-card featured reveal">
+        <div class="pc-top"><span class="mono pc-tag">Rakennusjakso</span><span class="pc-pill">Suosituin</span></div>
+        <div class="pc-price">8 900 € <span class="unit">+ alv</span></div>
+        <div class="pc-rule"></div>
+        <p class="pc-desc">Neljän viikon ohjelma. Valitsemme yhden oikean ongelman ja rakennamme ratkaisun tuotantoon asti.</p>
+      </div>
+      <div class="price-card reveal">
+        <div class="pc-top"><span class="mono pc-tag">Kumppani</span><span class="mono" style="color:var(--muted)">Jatkuva kuukausimalli</span></div>
+        <div class="pc-price">alk. 1 500 € <span class="unit">/ kk + alv</span></div>
+        <div class="pc-rule"></div>
+        <p class="pc-desc">Pidän tiimin kehityksessä mukana. Uudet ratkaisut ja tuki silloin kun tarvitsette.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KENELLE -->
+<section class="light">
+  <div class="inner">
+    <span class="mono kicker reveal">Kenelle</span>
+    <h2 class="section-title reveal">Oikeasti käyttöön,<br />ei vain puhetta.</h2>
+    <p class="lede reveal">Pk-yrityksille, jotka haluavat ottaa tekoälyn oikeasti käyttöön. Ei vaadi teknistä taustaa, sopii jokaiselle oman työnsä kautta.</p>
+    <div class="chips reveal">
+      <span class="chip">Myynti</span>
+      <span class="chip">Toimisto</span>
+      <span class="chip">Tuotanto</span>
+      <span class="chip">Johto</span>
+    </div>
+  </div>
+</section>
+
+<!-- MIKSI MINÄ -->
+<section class="dark grid-bg">
+  <div class="inner">
+    <span class="mono kicker reveal">Miksi minä</span>
+    <h2 class="section-title reveal">Rakennan tekoälyllä tuotteita päivittäin.</h2>
+    <p class="lede reveal">En opeta teoriaa diaesityksestä. Tuon koulutukseen samat menetelmät, joilla itse teen tuotannossa olevia ratkaisuja. Opitte sen mikä toimii, ette sitä mikä kuulostaa hyvältä.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="yhteys" class="dark grid-bg">
+  <div class="inner">
+    <span class="mono kicker reveal">Seuraava askel</span>
+    <h2 class="display reveal" style="max-width:14ch">Varataan 30 minuutin keskustelu.</h2>
+    <p class="lede reveal">Katsotaan yhdessä, mistä teidän kannattaa aloittaa. Ei sitoumuksia.</p>
+    <a href="mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%20—%20keskustelu" class="cta-btn reveal">Varaa keskustelu <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="inner">
+    <div>
+      <div class="footer-brand">Tekoäly taloon.</div>
+      <a href="mailto:parkkonen.jesse@gmail.com" class="footer-mail">parkkonen.jesse@gmail.com</a>
+    </div>
+    <nav class="footer-nav">
+      <a href="#ratkaisu">Ratkaisu</a>
+      <a href="#esimerkit">Esimerkit</a>
+      <a href="#polku">Polku</a>
+      <a href="#paketit">Paketit</a>
+      <a href="#yhteys">Varaa keskustelu</a>
+    </nav>
+  </div>
+  <div class="footer-base">
+    <span>Jesse Parkkonen · Hands-on Tekoälykoulutus</span>
+    <span>Helsinki</span>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (Math.min(i % 6, 5) * 70) + 'ms';
+    io.observe(el);
+  });
+
+  // Nav background on scroll
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+</body>
+</html>
