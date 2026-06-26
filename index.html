@@ -49,6 +49,13 @@
     .anim-fade, .anim-up, .anim-up-scale, .anim-fade-scale { opacity: 1 !important; transform: none !important; transition: none !important; }
     .anim-text-item { transform: none !important; transition: none !important; }
   }
+  /* FIX: header_head on 2-col grid -> 3rd child (CTA) wrapped to row 2. Make it flex, one row. */
+  .c-header_head { display: flex; align-items: center; gap: clamp(1rem, 2vw, 1.8rem); }
+  .c-header_logo { margin-right: auto; }
+  /* FIX: card image placeholder collapsed (no <img> = no intrinsic height) */
+  .c-card_image.ph { aspect-ratio: 1.33; }
+  /* belt+suspenders: any placeholder c-image without an explicit aspect gets one */
+  .ph.c-image:not([class*="aspect-"]):not(.c-card_image) { min-height: 0; }
 </style>
 </head>
 <body>
