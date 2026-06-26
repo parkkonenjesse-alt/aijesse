@@ -15,7 +15,6 @@
 <meta property="og:locale" content="fi_FI" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Hands-on Tekoälykoulutus" />
-<meta name="twitter:description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Osaaminen jää taloon, ei kalvosarjaa." />
 <meta name="twitter:image" content="https://parkkonen.vercel.app/og.png" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,295 +22,227 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root {
-    /* palette — Wolverine-tinted, lämmin lähes-musta */
-    --black: #0b0a09;
-    --black-2: #131110;
-    --white: #f4f1ec;
-    --ink: #14110e;
+    /* Wolverine palette — light site */
+    --black: #010101;
+    --ink: #010101;
     --paper: #ffffff;
-    --cream: #f4f1ec;
-    --muted: #6b6660;
-    --muted-dark: #8f8a82;
-    --line: rgba(20,17,14,0.12);
-    --line-dark: rgba(255,255,255,0.10);
+    --gray-200: #cccccc;
+    --gray-400: #9d9d9d;
+    --gray-500: #737373;
+    --gray-600: #757575;
+    --gray-800: #4d4d4d;
+    --line: rgba(1,1,1,0.12);
+    --line-dark: rgba(255,255,255,0.16);
 
-    /* type scale (Archivo) */
     --text-eyebrow: clamp(0.66rem, 0.62rem + 0.18vw, 0.74rem);
-    --text-body: clamp(1.02rem, 0.94rem + 0.42vw, 1.28rem);
-    --text-display: clamp(2.9rem, 0.9rem + 8.6vw, 8.6rem);
-    --text-section: clamp(2.2rem, 1rem + 4.8vw, 5rem);
+    --text-body: clamp(1.02rem, 0.94rem + 0.4vw, 1.22rem);
+    --text-display: clamp(2.9rem, 0.9rem + 8.4vw, 8.4rem);
+    --text-section: clamp(2.1rem, 1rem + 4.6vw, 4.8rem);
 
-    /* radius (Wolverine) */
     --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
 
-    --space-section: clamp(5rem, 4rem + 7vw, 12rem);
-    --gutter: clamp(1.4rem, 1rem + 4vw, 6rem);
-    --nav-h: 4.6rem;
+    --space-section: clamp(4.5rem, 3.5rem + 6vw, 10rem);
+    --gutter: clamp(1.2rem, 0.8rem + 3vw, 3rem);
+    --maxw: 1600px;
+    --nav-h: 4.4rem;
 
-    /* eases (Wolverine-verified) */
     --ease: cubic-bezier(.19, 1, .22, 1);
-    --ease-p2: cubic-bezier(.215, .61, .355, 1);
     --ease-p4: cubic-bezier(.23, 1, .32, 1);
     --dur-fast: .2s; --dur: .4s; --dur-slow: .6s; --dur-slower: .8s;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: var(--nav-h);
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-
-  body {
-    font-family: 'Archivo', system-ui, sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.5;
-    letter-spacing: -0.011em;
-    overflow-x: hidden;
-  }
-
+  html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body { font-family: 'Archivo', system-ui, sans-serif; background: var(--paper); color: var(--ink); line-height: 1.45; letter-spacing: -0.011em; overflow-x: hidden; }
   a { color: inherit; }
   :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 4px; }
 
-  /* global film grain */
-  .grain-global {
-    position: fixed; inset: 0; z-index: 200; pointer-events: none;
-    opacity: 0.05; mix-blend-mode: overlay;
+  .grain-global { position: fixed; inset: 0; z-index: 200; pointer-events: none; opacity: 0.035; mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 160px 160px;
-  }
+    background-size: 160px 160px; }
 
-  .mono {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: var(--text-eyebrow);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    font-weight: 400;
-  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: var(--text-eyebrow); letter-spacing: 0.16em; text-transform: uppercase; font-weight: 400; color: var(--gray-600); }
 
-  /* ---------- Icons ---------- */
   .ico { width: 1.05em; height: 1.05em; flex: 0 0 auto; display: inline-block; vertical-align: -0.08em; }
   .ico svg { width: 100%; height: 100%; display: block; }
 
-  /* ---------- Button engine (Wolverine c-button) ---------- */
-  .btn {
-    --bg: var(--ink); --fg: var(--paper); --bd: transparent; --hbg: #2a2620;
-    position: relative; display: inline-flex; align-items: center;
-    border: 0; background: none; color: var(--fg); font: inherit; cursor: pointer;
-    text-decoration: none; min-height: 46px;
-    transition: color var(--dur) var(--ease);
-  }
-  .btn__bg {
-    position: absolute; inset: 0; border: 1px solid var(--bd);
-    border-radius: var(--r-lg); background: var(--bg);
-    transition: transform var(--dur) var(--ease-p4), background-color var(--dur) var(--ease-p4), border-color var(--dur) var(--ease-p4);
-  }
-  .btn__inner {
-    position: relative; display: inline-flex; align-items: center; gap: 0.7rem;
-    padding: 0.95rem 1.5rem; transition: transform var(--dur-fast) var(--ease-p4);
-  }
-  .btn__label { font-size: 0.98rem; font-weight: 600; line-height: 1.1; white-space: nowrap; letter-spacing: -0.01em; }
+  /* ---------- Button engine (Wolverine c-button: scaleY squash) ---------- */
+  .btn { --bg: var(--ink); --fg: var(--paper); --bd: transparent; --hbg: #2a2620;
+    position: relative; display: inline-flex; align-items: center; border: 0; background: none; color: var(--fg);
+    font: inherit; cursor: pointer; text-decoration: none; min-height: 46px; transition: color var(--dur) var(--ease); }
+  .btn__bg { position: absolute; inset: 0; border: 1px solid var(--bd); border-radius: var(--r-lg); background: var(--bg);
+    transition: transform var(--dur) var(--ease-p4), background-color var(--dur) var(--ease-p4), border-color var(--dur) var(--ease-p4); }
+  .btn__inner { position: relative; display: inline-flex; align-items: center; gap: 0.7rem; padding: 0.9rem 1.4rem; transition: transform var(--dur-fast) var(--ease-p4); }
+  .btn__label { font-size: 0.96rem; font-weight: 600; line-height: 1.1; white-space: nowrap; letter-spacing: -0.01em; }
   .btn:hover .btn__bg { transform: scaleY(.94); background: var(--hbg); }
   .btn:active .btn__bg { transform: scaleY(.92); transition-duration: var(--dur-fast); }
   .btn:active .btn__inner { transform: translateX(2px); }
-
-  .btn--white { --bg: var(--white); --fg: var(--ink); --hbg: #ffffff; }
-  .btn--white .btn__bg { border-color: transparent; }
-  .btn--glass { --bg: rgba(255,255,255,0.10); --fg: var(--white); --bd: rgba(255,255,255,0.16); --hbg: rgba(255,255,255,0.2); }
+  .btn--white { --bg: var(--paper); --fg: var(--ink); --hbg: #efece6; }
+  .btn--glass { --bg: rgba(255,255,255,0.10); --fg: var(--paper); --bd: rgba(255,255,255,0.18); --hbg: rgba(255,255,255,0.22); }
   .btn--glass .btn__bg { -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
-  .btn--outline { --bg: transparent; --fg: inherit; --bd: var(--line); --hbg: rgba(20,17,14,0.06); }
-  .dark .btn--outline, .glasscard .btn--outline { --bd: rgba(255,255,255,0.22); --hbg: rgba(255,255,255,0.1); }
-  .btn--sm .btn__inner { padding: 0.6rem 1rem; }
-  .btn--sm .btn__label { font-size: 0.86rem; }
+  .btn--outline { --bg: transparent; --fg: var(--ink); --bd: var(--line); --hbg: rgba(1,1,1,0.05); }
+  .btn--sm .btn__inner { padding: 0.58rem 1rem; }
+  .btn--sm .btn__label { font-size: 0.85rem; }
 
-  /* ---------- Navigation ---------- */
-  .nav {
-    position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 var(--gutter); z-index: 100; color: var(--white);
-    transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
-    border-bottom: 1px solid transparent;
-  }
-  .nav.scrolled {
-    background: rgba(11,10,9,0.72);
-    -webkit-backdrop-filter: saturate(160%) blur(16px); backdrop-filter: saturate(160%) blur(16px);
-    color: var(--white); border-bottom: 1px solid var(--line-dark);
-  }
+  /* ---------- Nav ---------- */
+  .nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); display: flex; align-items: center; justify-content: space-between;
+    padding: 0 calc(var(--gutter) + 8px); z-index: 100; color: var(--paper);
+    transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease); border-bottom: 1px solid transparent; }
+  .nav.scrolled { background: rgba(255,255,255,0.82); -webkit-backdrop-filter: saturate(160%) blur(16px); backdrop-filter: saturate(160%) blur(16px); color: var(--ink); border-bottom: 1px solid var(--line); }
   .nav-brand { font-weight: 800; font-size: 1.02rem; letter-spacing: -0.03em; text-decoration: none; }
-  .nav-links { display: flex; align-items: center; gap: clamp(1.4rem, 2.5vw, 2.6rem); }
-  .nav-links a.nav-link { text-decoration: none; font-size: 0.92rem; font-weight: 500; opacity: 0.74; transition: opacity .25s var(--ease); }
+  .nav-links { display: flex; align-items: center; gap: clamp(1.3rem, 2.2vw, 2.4rem); }
+  .nav-links a.nav-link { text-decoration: none; font-size: 0.92rem; font-weight: 500; opacity: 0.78; transition: opacity .25s var(--ease); }
   .nav-links a.nav-link:hover { opacity: 1; }
+  .nav-cta { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid currentColor; padding: 0.5rem 1.05rem; border-radius: 999px; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: background .3s var(--ease), color .3s var(--ease); }
+  .nav-cta:hover { background: currentColor; }
+  .nav-cta:hover .nav-cta-l { color: var(--ink); }
+  .nav.scrolled .nav-cta:hover .nav-cta-l { color: var(--paper); }
 
-  /* ---------- Section scaffolding ---------- */
-  section { position: relative; padding: var(--space-section) var(--gutter); }
-  #hero {
-    min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
-    padding-top: calc(var(--nav-h) + 3rem);
-    overflow: hidden;
-  }
-
-  .dark { background: var(--black); color: var(--white); }
-  .cream { background: var(--cream); }
-  .dark .mono { color: var(--muted-dark); }
-  .light .mono, .cream .mono { color: var(--muted); }
-
-  /* hero atmospheric backdrop (kuvan paikalla — vaihda valokuvaksi myöhemmin) */
-  .hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none;
-    background:
-      radial-gradient(120% 90% at 78% 12%, #2a241c 0%, rgba(42,36,28,0) 52%),
-      radial-gradient(90% 80% at 12% 92%, #1a2622 0%, rgba(26,38,34,0) 55%),
-      linear-gradient(180deg, #100e0c 0%, #0b0a09 100%);
-  }
-  .grid-bg::before {
-    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  /* ---------- Hero: full-bleed dark frame on white page ---------- */
+  #hero { padding: 8px; background: var(--paper); }
+  @media (max-width: 699px) { #hero { padding: 6px; } }
+  .hero__frame { position: relative; min-height: calc(100svh - 16px); border-radius: var(--r-lg); overflow: hidden; color: var(--paper);
+    display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(1.5rem, 3.5vw, 3.4rem); padding-top: calc(var(--nav-h) + 2rem); }
+  .hero__media { position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(120% 90% at 80% 6%, #34291b 0%, rgba(52,41,27,0) 50%),
+      radial-gradient(90% 85% at 6% 98%, #15241f 0%, rgba(21,36,31,0) 52%),
+      linear-gradient(180deg, #141008 0%, #060504 100%); }
+  .hero__grid { position: absolute; inset: 0; z-index: 0; pointer-events: none;
     background-image: linear-gradient(var(--line-dark) 1px, transparent 1px), linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
-    background-size: clamp(48px, 6vw, 96px) clamp(48px, 6vw, 96px);
-    mask-image: radial-gradient(ellipse 120% 100% at 50% 40%, #000 55%, transparent 100%);
-  }
+    background-size: clamp(56px, 6vw, 104px) clamp(56px, 6vw, 104px); mask-image: radial-gradient(ellipse 120% 100% at 50% 60%, #000 50%, transparent 100%); opacity: .7; }
+  .hero__scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,.3) 0%, rgba(0,0,0,0) 22%), linear-gradient(0deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,0) 55%); }
+  .hero__row { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; width: 100%; max-width: var(--maxw); margin: 0 auto; }
+  .hero__title-wrap { max-width: 62ch; }
+  .hero__title { font-weight: 800; font-size: clamp(3rem, 1rem + 9vw, 9.2rem); line-height: 0.82; letter-spacing: -0.05em; }
+  .hero__title span { display: block; }
+  .hero__lede { margin-top: clamp(1.2rem, 2.5vw, 1.8rem); font-size: var(--text-body); color: rgba(255,255,255,0.82); max-width: 40ch; }
+  .hero__card { flex: 0 0 auto; width: min(330px, 100%); display: flex; flex-direction: column; gap: clamp(2rem, 4vw, 3rem); padding: 1.4rem; border-radius: var(--r-md); color: var(--paper); text-decoration: none;
+    background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.16); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+    transition: background var(--dur) var(--ease), transform var(--dur) var(--ease); }
+  .hero__card .mono { color: rgba(255,255,255,0.7); }
+  .hero__card:hover { background: rgba(255,255,255,0.15); transform: translateY(-3px); }
+  .hero__card-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+  .hero__card-foot strong { font-weight: 700; font-size: 1.08rem; letter-spacing: -0.02em; line-height: 1.15; max-width: 80%; }
+  .hero__card-foot .ico { transition: transform var(--dur-slow) var(--ease); }
+  .hero__card:hover .hero__card-foot .ico { transform: translate(3px,-3px); }
 
-  .inner { position: relative; z-index: 1; width: 100%; max-width: 1600px; margin: 0 auto; }
-  .kicker { display: block; margin-bottom: clamp(1.6rem, 3vw, 2.4rem); }
+  /* ---------- Sections (white) ---------- */
+  section { position: relative; padding: var(--space-section) var(--gutter); }
+  .inner { width: 100%; max-width: var(--maxw); margin: 0 auto; }
+  .kicker { display: block; margin-bottom: clamp(1.4rem, 2.6vw, 2rem); }
+  .section-head { max-width: 22ch; }
+  .display, .section-title { font-weight: 700; letter-spacing: -0.04em; }
+  .section-title { font-size: var(--text-section); line-height: 0.96; max-width: 18ch; text-wrap: balance; }
+  .lede { font-size: var(--text-body); max-width: 48ch; margin-top: clamp(1.4rem, 2.6vw, 2rem); color: #3a352f; }
 
-  /* ---------- Typography ---------- */
-  .display {
-    font-family: 'Archivo', sans-serif;
-    font-size: var(--text-display); font-weight: 800;
-    line-height: 0.84; letter-spacing: -0.05em; max-width: 15ch; text-wrap: balance;
-  }
-  .section-title {
-    font-size: var(--text-section); font-weight: 700;
-    line-height: 0.96; letter-spacing: -0.04em; max-width: 18ch; text-wrap: balance;
-  }
-  .lede { font-size: var(--text-body); max-width: 46ch; margin-top: clamp(1.6rem, 3vw, 2.4rem); font-weight: 400; }
-  .dark .lede { color: #cdc8c0; }
-  .light .lede, .cream .lede { color: #3a352f; }
-  .cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: clamp(2rem, 4vw, 3rem); }
+  /* statement section (big text on white) */
+  .statement .section-title { max-width: 20ch; }
+  .statement .lede { max-width: 54ch; }
 
-  /* ---------- Columns ---------- */
-  .cols { display: grid; gap: clamp(2rem, 4vw, 4.5rem); margin-top: clamp(3rem, 6vw, 6rem); }
+  /* feature columns */
+  .cols { display: grid; gap: clamp(1.4rem, 2.4vw, 2.2rem); margin-top: clamp(2.6rem, 5vw, 4.5rem); }
   .cols-2 { grid-template-columns: repeat(2, 1fr); }
   .cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .col-item { border-top: 1.5px solid var(--ink); padding-top: 1.4rem; }
-  .dark .col-item { border-top: 1.5px solid var(--white); }
-  .col-head { font-size: clamp(1.2rem, 0.9rem + 0.9vw, 1.6rem); font-weight: 700; letter-spacing: -0.025em; margin-bottom: 0.8rem; line-height: 1.08; }
-  .col-body { color: var(--muted); font-size: 1.04rem; max-width: 34ch; }
-  .dark .col-body { color: var(--muted-dark); }
 
-  /* ---------- Esimerkit: glass card carousel ---------- */
-  .carousel { margin-top: clamp(2.5rem, 5vw, 4rem); }
-  .carousel__track {
-    display: flex; gap: clamp(1rem, 1.6vw, 1.4rem); overflow-x: auto;
-    scroll-snap-type: x mandatory; scroll-padding-left: 0;
-    padding-bottom: 0.5rem; scrollbar-width: none;
-  }
+  /* media card (rounded gradient stands in for photo) */
+  .card { display: flex; flex-direction: column; text-decoration: none; }
+  .card__media { position: relative; aspect-ratio: 1.4; border-radius: var(--r-lg); overflow: hidden; outline: 1.5px solid transparent; outline-offset: 2px; transition: outline-color var(--dur-fast) var(--ease), transform var(--dur-slow) var(--ease); }
+  .card:hover .card__media { transform: translateY(-4px); outline-color: var(--ink); }
+  .card__media .tag { position: absolute; left: 14px; bottom: 12px; z-index: 2; color: #fff; }
+  .card__media .corner { position: absolute; right: 12px; top: 12px; z-index: 2; color: #fff; transition: transform var(--dur-slow) var(--ease); }
+  .card:hover .card__media .corner { transform: translate(3px,-3px); }
+  .card__title { margin-top: 1.1rem; font-size: clamp(1.15rem, 0.9rem + 0.9vw, 1.6rem); font-weight: 700; letter-spacing: -0.025em; line-height: 1.12; }
+  .card__body { margin-top: 0.6rem; color: var(--gray-500); font-size: 1rem; max-width: 36ch; }
+
+  /* muted gradient media fills (kuvan paikalla — vaihda valokuvaksi) */
+  .m-sand  { background: linear-gradient(150deg, #d2c6b2, #8c7e6c); }
+  .m-slate { background: linear-gradient(150deg, #a3acb1, #59636a); }
+  .m-sage  { background: linear-gradient(150deg, #b7c0a8, #6e7860); }
+  .m-clay  { background: linear-gradient(150deg, #cda88f, #886851); }
+  .m-stone { background: linear-gradient(150deg, #c0bab0, #6c675e); }
+  .m-ink   { background: linear-gradient(150deg, #3b3b3b, #0b0b0b); }
+
+  /* ---------- Carousel ---------- */
+  .carousel { margin-top: clamp(2.6rem, 5vw, 4rem); }
+  .carousel__track { display: flex; gap: clamp(1rem, 1.6vw, 1.4rem); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 0.5rem; scrollbar-width: none; }
   .carousel__track::-webkit-scrollbar { display: none; }
-  .glasscard {
-    flex: 0 0 clamp(260px, 78vw, 380px); scroll-snap-align: start;
-    position: relative; min-height: 300px; padding: 1.6rem;
-    display: flex; flex-direction: column; justify-content: space-between; gap: 2.2rem;
-    border-radius: var(--r-xl); overflow: hidden; color: var(--white);
-    background:
-      linear-gradient(165deg, rgba(58,46,34,0.55) 0%, rgba(20,17,14,0.7) 60%),
-      rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.12);
-    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-    transition: transform var(--dur-slow) var(--ease), border-color var(--dur) var(--ease);
-  }
-  @media (min-width: 700px) { .glasscard { flex-basis: 360px; } }
-  .glasscard:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.26); }
-  .glasscard__title { font-size: clamp(1.3rem, 1rem + 1vw, 1.7rem); font-weight: 700; letter-spacing: -0.025em; line-height: 1.1; }
-  .glasscard__foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-  .glasscard__foot .ico { transition: transform var(--dur-slow) var(--ease); }
-  .glasscard:hover .glasscard__foot .ico { transform: translate(3px,-3px); }
-
-  /* slide bottom-bar (numeroton: nuolet + pisteet) */
+  .carousel .card { flex: 0 0 clamp(248px, 74vw, 350px); scroll-snap-align: start; }
   .slidebar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: clamp(1.6rem, 3vw, 2.2rem); flex-wrap: wrap; }
   .dots { display: inline-flex; gap: 8px; }
-  .dots button { width: 8px; height: 8px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: var(--line-dark); transition: transform var(--dur-fast) var(--ease), background var(--dur-fast); }
-  .dark .dots button { background: rgba(255,255,255,0.25); }
-  .dots button[aria-current="true"] { background: currentColor; transform: scaleX(2.4); border-radius: 4px; }
+  .dots button { width: 8px; height: 8px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: var(--gray-200); transition: transform var(--dur-fast) var(--ease), background var(--dur-fast); }
+  .dots button[aria-current="true"] { background: var(--ink); transform: scaleX(2.4); border-radius: 4px; }
   .navbtns { display: inline-flex; gap: 8px; }
-  .navbtn { width: 46px; height: 46px; display: inline-grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; transition: transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease); }
-  .navbtn:hover { transform: scale(1.06); }
-  .navbtn:active { transform: scale(.94); }
+  .navbtn { width: 46px; height: 46px; display: inline-grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--ink); cursor: pointer; transition: transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), border-color var(--dur-fast); }
+  .navbtn:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); transform: scale(1.05); }
+  .navbtn:active { transform: scale(.93); }
   .navbtn:disabled { opacity: 0.3; cursor: default; }
+  .navbtn:disabled:hover { background: transparent; color: var(--ink); border-color: var(--line); }
   .navbtn .ico { width: 18px; height: 18px; }
 
   /* ---------- Timeline ---------- */
-  .timeline { margin-top: clamp(3rem, 6vw, 5rem); }
+  .timeline { margin-top: clamp(2.6rem, 5vw, 4.5rem); }
   .tl-axis { position: relative; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr); }
   .tl-node { position: relative; padding-top: 2.4rem; padding-right: 2rem; }
   .tl-node::before { content: ""; position: absolute; top: -6px; left: 0; width: 11px; height: 11px; border-radius: 50%; background: var(--ink); }
   .tl-step { display: block; margin-bottom: 0.6rem; }
   .tl-head { font-size: clamp(1.15rem, 0.9rem + 0.6vw, 1.5rem); font-weight: 700; letter-spacing: -0.025em; margin-bottom: 0.7rem; }
-  .tl-body { color: var(--muted); font-size: 1rem; max-width: 26ch; }
+  .tl-body { color: var(--gray-500); font-size: 1rem; max-width: 26ch; }
 
   /* ---------- Pricing ---------- */
-  .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 2vw, 1.6rem); margin-top: clamp(3rem, 6vw, 5rem); }
-  .price-card {
-    position: relative; overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.10); border-radius: var(--r-xl);
-    padding: clamp(1.9rem, 2.5vw, 2.8rem); display: flex; flex-direction: column;
-    color: var(--white);
-    background: linear-gradient(160deg, #241c14 0%, #16130f 58%, #100e0c 100%);
-    transition: transform var(--dur-slow) var(--ease), border-color var(--dur) var(--ease);
-  }
-  .price-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.26); }
-  .price-card.featured { background: linear-gradient(160deg, #3a2718 0%, #1d160f 60%, #120f0c 100%); border-color: rgba(255,255,255,0.18); }
+  .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 2vw, 1.6rem); margin-top: clamp(2.6rem, 5vw, 4.5rem); }
+  .price-card { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: var(--r-xl); padding: clamp(1.8rem, 2.4vw, 2.6rem); display: flex; flex-direction: column; background: var(--paper);
+    transition: transform var(--dur-slow) var(--ease), border-color var(--dur) var(--ease); }
+  .price-card:hover { transform: translateY(-6px); border-color: var(--ink); }
+  .price-card.featured { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .price-card.featured .mono { color: var(--gray-400); }
   .pc-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; }
-  .pc-tag { font-size: 0.95rem; color: var(--white); }
-  .pc-sub { color: var(--muted-dark); }
-  .pc-pill { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; background: var(--white); color: var(--ink); padding: 0.4rem 0.8rem; border-radius: 999px; font-weight: 500; }
+  .pc-tag { font-size: 0.95rem; }
+  .pc-pill { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; background: var(--paper); color: var(--ink); padding: 0.4rem 0.8rem; border-radius: 999px; font-weight: 500; }
   .pc-price { font-size: clamp(1.9rem, 1.2rem + 1.7vw, 2.7rem); font-weight: 800; letter-spacing: -0.04em; }
-  .pc-price .unit { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.04em; font-weight: 400; color: var(--muted-dark); }
-  .pc-rule { height: 1px; background: rgba(255,255,255,0.12); margin: 1.6rem 0; }
-  .pc-desc { color: #c9c3ba; font-size: 1.0rem; }
+  .pc-price .unit { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.04em; font-weight: 400; color: var(--gray-500); }
+  .featured .pc-price .unit { color: var(--gray-400); }
+  .pc-rule { height: 1px; background: var(--line); margin: 1.5rem 0; }
+  .featured .pc-rule { background: rgba(255,255,255,0.16); }
+  .pc-desc { color: var(--gray-500); font-size: 1rem; }
+  .featured .pc-desc { color: #cfcac2; }
 
   /* ---------- Chips ---------- */
-  .chips { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: clamp(2rem, 4vw, 3rem); }
-  .chip { border: 1px solid var(--line); border-radius: 999px; padding: 0.7rem 1.5rem; font-size: 1.02rem; font-weight: 500; transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease); cursor: default; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: clamp(1.8rem, 3.5vw, 2.6rem); }
+  .chip { border: 1px solid var(--line); border-radius: 999px; padding: 0.65rem 1.4rem; font-size: 1rem; font-weight: 500; transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease); cursor: default; }
   .chip:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
   /* ---------- Footer ---------- */
-  .footer { background: var(--black); color: var(--white); padding: clamp(4rem, 6vw, 7rem) var(--gutter) clamp(2.5rem, 4vw, 3.5rem); position: relative; }
+  .footer { background: var(--ink); color: var(--paper); padding: clamp(4rem, 6vw, 7rem) var(--gutter) clamp(2.5rem, 4vw, 3.5rem); margin: 8px; border-radius: var(--r-lg); }
   .footer .inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2.5rem; align-items: flex-start; }
   .footer-brand { font-size: clamp(1.8rem, 1rem + 2.4vw, 3rem); font-weight: 800; letter-spacing: -0.04em; }
-  .footer-mail { display: inline-block; margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.04em; color: var(--muted-dark); text-decoration: none; transition: color .3s var(--ease); }
-  .footer-mail:hover { color: var(--white); }
+  .footer-mail { display: inline-block; margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.04em; color: var(--gray-400); text-decoration: none; transition: color .3s var(--ease); }
+  .footer-mail:hover { color: var(--paper); }
   .footer-nav { display: flex; flex-direction: column; gap: 0.7rem; }
-  .footer-nav a { text-decoration: none; color: var(--muted-dark); font-size: 0.95rem; transition: color .3s var(--ease); }
-  .footer-nav a:hover { color: var(--white); }
-  .footer-base { max-width: 1600px; margin: clamp(3rem, 5vw, 4.5rem) auto 0; padding-top: 1.6rem; border-top: 1px solid var(--line-dark); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-  .footer-base span { color: var(--muted-dark); font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .footer-nav a { text-decoration: none; color: var(--gray-400); font-size: 0.95rem; transition: color .3s var(--ease); }
+  .footer-nav a:hover { color: var(--paper); }
+  .footer-base { max-width: var(--maxw); margin: clamp(3rem, 5vw, 4.5rem) auto 0; padding-top: 1.6rem; border-top: 1px solid rgba(255,255,255,0.16); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-base span { color: var(--gray-400); font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
-  /* ---------- reveal animation ---------- */
-  .reveal { opacity: 0; transform: translate3d(0, 20%, 0) scale(0.96); will-change: transform, opacity; }
+  /* ---------- reveal ---------- */
+  .reveal { opacity: 0; transform: translate3d(0, 16%, 0) scale(0.98); will-change: transform, opacity; }
   .reveal.in { opacity: 1; transform: none; transition: transform var(--dur-slower) var(--ease), opacity var(--dur-slower) var(--ease); will-change: auto; }
 
   @media (max-width: 860px) {
-    section { padding-top: clamp(4rem, 12vw, 6rem); padding-bottom: clamp(4rem, 12vw, 6rem); }
+    section { padding-top: clamp(3.5rem, 11vw, 5.5rem); padding-bottom: clamp(3.5rem, 11vw, 5.5rem); }
     .cols-2, .cols-3, .tl-axis, .pricing { grid-template-columns: 1fr; }
-    .display { max-width: 13ch; }
     .tl-axis { border-top: 0; }
     .tl-node { border-top: 1px solid var(--line); padding-top: 1.6rem; }
     .tl-node::before { display: none; }
     .nav-links .nav-link { display: none; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .reveal { opacity: 1; transform: none; }
-    html { scroll-behavior: auto; }
-    * { transition-duration: 0.001ms !important; }
-  }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } html { scroll-behavior: auto; } * { transition-duration: 0.001ms !important; } }
 </style>
 </head>
 <body>
 
 <div class="grain-global" aria-hidden="true"></div>
 
-<!-- icon sprite -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7h8v8"/><path d="M17 7 7 17"/></symbol>
@@ -327,39 +258,44 @@
     <a href="#esimerkit" class="nav-link">Esimerkit</a>
     <a href="#polku" class="nav-link">Polku</a>
     <a href="#paketit" class="nav-link">Paketit</a>
-    <a href="#yhteys" class="btn btn--glass btn--sm" data-book><span class="btn__bg"></span><span class="btn__inner"><span class="btn__label">Varaa keskustelu</span><span class="ico"><svg><use href="#i-plus"/></svg></span></span></a>
+    <a href="#yhteys" class="nav-cta" data-book><span class="nav-cta-l">Varaa keskustelu</span></a>
   </div>
 </nav>
 
 <!-- HERO -->
-<section id="hero" class="dark">
-  <div class="hero-bg" aria-hidden="true"></div>
-  <div class="grid-bg" aria-hidden="true" style="position:absolute;inset:0;z-index:0"></div>
-  <div class="inner">
-    <span class="mono kicker reveal">Hands·on Tekoälykoulutus · PK-yrityksille</span>
-    <h1 class="display reveal" data-split>Tekoäly taloon. Osaaminen jää teille.</h1>
-    <p class="lede reveal">Hands-on koulutuksia, joissa tiimisi rakentaa oikeita ratkaisuja ja lähtee mukanaan toimiva tulos. Ei kalvosarjaa.</p>
-    <div class="cta-row reveal">
-      <a href="#yhteys" class="btn btn--white" data-book><span class="btn__bg"></span><span class="btn__inner"><span class="btn__label">Varaa keskustelu</span><span class="ico"><svg><use href="#i-right"/></svg></span></span></a>
-      <a href="#ratkaisu" class="btn btn--glass"><span class="btn__bg"></span><span class="btn__inner"><span class="btn__label">Miten se toimii</span></span></a>
+<section id="hero">
+  <div class="hero__frame">
+    <div class="hero__media" aria-hidden="true"></div>
+    <div class="hero__grid" aria-hidden="true"></div>
+    <div class="hero__scrim" aria-hidden="true"></div>
+    <div class="hero__row">
+      <div class="hero__title-wrap">
+        <span class="mono kicker reveal">Hands·on Tekoälykoulutus · PK-yrityksille</span>
+        <h1 class="hero__title reveal"><span>Tekoäly taloon.</span><span>Osaaminen jää teille.</span></h1>
+        <p class="hero__lede reveal">Tiimisi rakentaa oikeita ratkaisuja, ei kalvosarjaa. Osaaminen jää taloon.</p>
+      </div>
+      <a href="#yhteys" class="hero__card reveal" data-book>
+        <span class="mono">Aloita tästä</span>
+        <span class="hero__card-foot"><strong>Varaa 30 min keskustelu</strong><span class="ico"><svg><use href="#i-ext"/></svg></span></span>
+      </a>
     </div>
   </div>
 </section>
 
 <!-- LÄHTÖTILANNE -->
-<section class="light">
+<section class="statement">
   <div class="inner">
     <span class="mono kicker reveal">Lähtötilanne</span>
     <h2 class="section-title reveal">Moni haluaa hyödyntää tekoälyä. Harva tietää mistä aloittaa.</h2>
     <div class="cols cols-2">
-      <div class="col-item reveal"><h3 class="col-head">Kokeilut jäävät yksittäisiksi.</h3><p class="col-body">Yksi ihminen osaa, muu tiimi katsoo sivusta. Tieto ei leviä eikä jää taloon.</p></div>
-      <div class="col-item reveal"><h3 class="col-head">Ulkoa ostettu tuo riippuvuuden.</h3><p class="col-body">Lasku juoksee, mutta talon oma kyky tehdä ei kasva. Seuraavakin asia pitää ostaa.</p></div>
+      <div class="reveal"><h3 class="card__title">Kokeilut jäävät yksittäisiksi.</h3><p class="card__body">Yksi ihminen osaa, muu tiimi katsoo sivusta. Tieto ei leviä eikä jää taloon.</p></div>
+      <div class="reveal"><h3 class="card__title">Ulkoa ostettu tuo riippuvuuden.</h3><p class="card__body">Lasku juoksee, mutta talon oma kyky tehdä ei kasva. Seuraavakin asia pitää ostaa.</p></div>
     </div>
   </div>
 </section>
 
-<!-- TOINEN TAPA -->
-<section id="ratkaisu" class="dark grid-bg">
+<!-- RATKAISU (statement) -->
+<section id="ratkaisu" class="statement">
   <div class="inner">
     <span class="mono kicker reveal">Toinen tapa</span>
     <h2 class="section-title reveal">Opetan tiimisi rakentamaan itse.</h2>
@@ -367,32 +303,32 @@
   </div>
 </section>
 
-<!-- MITÄ SAATTE -->
-<section class="light">
+<!-- MITÄ SAATTE (media cards) -->
+<section>
   <div class="inner">
     <span class="mono kicker reveal">Mitä saatte</span>
     <h2 class="section-title reveal">Kolme asiaa jää käyttöön.</h2>
     <div class="cols cols-3">
-      <div class="col-item reveal"><h3 class="col-head">Rutiinit automaatille.</h3><p class="col-body">Toistuva käsityö pois. Raportit, tarjoukset ja yhteenvedot hoituvat tekoälyllä, ja tiimi näkee miten ne tehtiin.</p></div>
-      <div class="col-item reveal"><h3 class="col-head">Omat työkalut ja tuotteet.</h3><p class="col-body">Rakennatte koulutuksen aikana oikean sovelluksen omaan tarpeeseenne. Ette katso valmista demoa.</p></div>
-      <div class="col-item reveal"><h3 class="col-head">Osaaminen jää taloon.</h3><p class="col-body">Tiimi osaa jatkaa itse uusilla ideoilla. Ette jää riippuvaiseksi yhdestäkään konsultista, ette minustakaan.</p></div>
+      <div class="card reveal"><div class="card__media m-clay"><span class="mono tag">Automaatio</span></div><h3 class="card__title">Rutiinit automaatille.</h3><p class="card__body">Toistuva käsityö pois. Raportit, tarjoukset ja yhteenvedot hoituvat tekoälyllä, ja tiimi näkee miten ne tehtiin.</p></div>
+      <div class="card reveal"><div class="card__media m-slate"><span class="mono tag">Tuotteet</span></div><h3 class="card__title">Omat työkalut ja tuotteet.</h3><p class="card__body">Rakennatte koulutuksen aikana oikean sovelluksen omaan tarpeeseenne. Ette katso valmista demoa.</p></div>
+      <div class="card reveal"><div class="card__media m-sage"><span class="mono tag">Osaaminen</span></div><h3 class="card__title">Osaaminen jää taloon.</h3><p class="card__body">Tiimi osaa jatkaa itse uusilla ideoilla. Ette jää riippuvaiseksi yhdestäkään konsultista, ette minustakaan.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ESIMERKKEJÄ — glass card carousel -->
-<section id="esimerkit" class="dark grid-bg">
+<!-- ESIMERKIT (carousel of media cards) -->
+<section id="esimerkit">
   <div class="inner">
     <span class="mono kicker reveal">Esimerkkejä</span>
     <h2 class="section-title reveal">Mitä voitte rakentaa.</h2>
     <div class="carousel reveal" data-carousel>
       <div class="carousel__track" data-track>
-        <article class="glasscard"><span class="mono">Myynti</span><div><h3 class="glasscard__title">Tarjouslaskuri, joka tekee luonnoksen minuuteissa.</h3></div><div class="glasscard__foot"><span class="mono">Työkalu</span><span class="ico"><svg><use href="#i-ext"/></svg></span></div></article>
-        <article class="glasscard"><span class="mono">Asiakaspalvelu</span><div><h3 class="glasscard__title">Avustaja, joka vastaa yleisimpiin kysymyksiin.</h3></div><div class="glasscard__foot"><span class="mono">Työkalu</span><span class="ico"><svg><use href="#i-ext"/></svg></span></div></article>
-        <article class="glasscard"><span class="mono">Raportointi</span><div><h3 class="glasscard__title">Raporttien ja palautteiden automaattinen kooste.</h3></div><div class="glasscard__foot"><span class="mono">Työkalu</span><span class="ico"><svg><use href="#i-ext"/></svg></span></div></article>
-        <article class="glasscard"><span class="mono">Sisältö</span><div><h3 class="glasscard__title">Sisällöntuotanto somen ja uutiskirjeen pohjiksi.</h3></div><div class="glasscard__foot"><span class="mono">Työkalu</span><span class="ico"><svg><use href="#i-ext"/></svg></span></div></article>
-        <article class="glasscard"><span class="mono">Data</span><div><h3 class="glasscard__title">Datan siirto ja siivous järjestelmien välillä.</h3></div><div class="glasscard__foot"><span class="mono">Työkalu</span><span class="ico"><svg><use href="#i-ext"/></svg></span></div></article>
-        <article class="glasscard"><span class="mono">Tieto</span><div><h3 class="glasscard__title">Sisäinen hakutyökalu omiin dokumentteihin.</h3></div><div class="glasscard__foot"><span class="mono">Työkalu</span><span class="ico"><svg><use href="#i-ext"/></svg></span></div></article>
+        <a class="card" href="#yhteys" data-book><div class="card__media m-sand"><span class="mono tag">Myynti</span><span class="ico corner"><svg><use href="#i-ext"/></svg></span></div><h3 class="card__title">Tarjouslaskuri, joka tekee luonnoksen minuuteissa.</h3></a>
+        <a class="card" href="#yhteys" data-book><div class="card__media m-slate"><span class="mono tag">Asiakaspalvelu</span><span class="ico corner"><svg><use href="#i-ext"/></svg></span></div><h3 class="card__title">Avustaja yleisimpiin kysymyksiin.</h3></a>
+        <a class="card" href="#yhteys" data-book><div class="card__media m-stone"><span class="mono tag">Raportointi</span><span class="ico corner"><svg><use href="#i-ext"/></svg></span></div><h3 class="card__title">Raporttien ja palautteiden automaattinen kooste.</h3></a>
+        <a class="card" href="#yhteys" data-book><div class="card__media m-clay"><span class="mono tag">Sisältö</span><span class="ico corner"><svg><use href="#i-ext"/></svg></span></div><h3 class="card__title">Sisällöntuotanto somen ja uutiskirjeen pohjiksi.</h3></a>
+        <a class="card" href="#yhteys" data-book><div class="card__media m-sage"><span class="mono tag">Data</span><span class="ico corner"><svg><use href="#i-ext"/></svg></span></div><h3 class="card__title">Datan siirto ja siivous järjestelmien välillä.</h3></a>
+        <a class="card" href="#yhteys" data-book><div class="card__media m-ink"><span class="mono tag">Tieto</span><span class="ico corner"><svg><use href="#i-ext"/></svg></span></div><h3 class="card__title">Sisäinen hakutyökalu omiin dokumentteihin.</h3></a>
       </div>
       <div class="slidebar">
         <div class="dots" data-dots role="tablist" aria-label="Esimerkit"></div>
@@ -405,8 +341,8 @@
   </div>
 </section>
 
-<!-- MITEN ETENEMME -->
-<section id="polku" class="light">
+<!-- POLKU -->
+<section id="polku">
   <div class="inner">
     <span class="mono kicker reveal">Miten etenemme</span>
     <h2 class="section-title reveal">Selkeä polku alusta käyttöön.</h2>
@@ -422,50 +358,45 @@
 </section>
 
 <!-- PAKETIT -->
-<section id="paketit" class="cream">
+<section id="paketit">
   <div class="inner">
     <span class="mono kicker reveal">Paketit</span>
     <h2 class="section-title reveal">Valitse lähtötaso.</h2>
     <div class="pricing">
-      <div class="price-card reveal"><div class="pc-top"><span class="mono pc-tag">Startti</span><span class="mono pc-sub">Yhden päivän työpaja</span></div><div class="pc-price">1 900 € <span class="unit">+ alv</span></div><div class="pc-rule"></div><p class="pc-desc">Koko tiimi pääsee alkuun ja vie ensimmäisen automaation käyttöön saman päivän aikana.</p></div>
+      <div class="price-card reveal"><div class="pc-top"><span class="mono pc-tag">Startti</span><span class="mono">Yhden päivän työpaja</span></div><div class="pc-price">1 900 € <span class="unit">+ alv</span></div><div class="pc-rule"></div><p class="pc-desc">Koko tiimi pääsee alkuun ja vie ensimmäisen automaation käyttöön saman päivän aikana.</p></div>
       <div class="price-card featured reveal"><div class="pc-top"><span class="mono pc-tag">Rakennusjakso</span><span class="pc-pill">Suosituin</span></div><div class="pc-price">8 900 € <span class="unit">+ alv</span></div><div class="pc-rule"></div><p class="pc-desc">Neljän viikon ohjelma. Valitsemme yhden oikean ongelman ja rakennamme ratkaisun tuotantoon asti.</p></div>
-      <div class="price-card reveal"><div class="pc-top"><span class="mono pc-tag">Kumppani</span><span class="mono pc-sub">Jatkuva kuukausimalli</span></div><div class="pc-price">alk. 1 500 € <span class="unit">/ kk + alv</span></div><div class="pc-rule"></div><p class="pc-desc">Pidän tiimin kehityksessä mukana. Uudet ratkaisut ja tuki silloin kun tarvitsette.</p></div>
+      <div class="price-card reveal"><div class="pc-top"><span class="mono pc-tag">Kumppani</span><span class="mono">Jatkuva kuukausimalli</span></div><div class="pc-price">alk. 1 500 € <span class="unit">/ kk + alv</span></div><div class="pc-rule"></div><p class="pc-desc">Pidän tiimin kehityksessä mukana. Uudet ratkaisut ja tuki silloin kun tarvitsette.</p></div>
     </div>
   </div>
 </section>
 
 <!-- KENELLE -->
-<section class="light">
+<section class="statement">
   <div class="inner">
     <span class="mono kicker reveal">Kenelle</span>
-    <h2 class="section-title reveal">Oikeasti käyttöön,<br />ei vain puhetta.</h2>
+    <h2 class="section-title reveal">Oikeasti käyttöön, ei vain puhetta.</h2>
     <p class="lede reveal">Pk-yrityksille, jotka haluavat ottaa tekoälyn oikeasti käyttöön. Ei vaadi teknistä taustaa, sopii jokaiselle oman työnsä kautta.</p>
     <div class="chips reveal"><span class="chip">Myynti</span><span class="chip">Toimisto</span><span class="chip">Tuotanto</span><span class="chip">Johto</span></div>
   </div>
 </section>
 
 <!-- MIKSI MINÄ -->
-<section class="dark grid-bg">
+<section class="statement">
   <div class="inner">
     <span class="mono kicker reveal">Miksi minä</span>
     <h2 class="section-title reveal">Rakennan tekoälyllä tuotteita päivittäin.</h2>
     <p class="lede reveal">En opeta teoriaa diaesityksestä. Tuon koulutukseen samat menetelmät, joilla itse teen tuotannossa olevia ratkaisuja. Opitte sen mikä toimii, ette sitä mikä kuulostaa hyvältä.</p>
-    <div class="cols cols-3">
-      <div class="col-item reveal"><h3 class="col-head">Tuotannossa, ei teoriassa.</h3><p class="col-body">Rakennan tekoälyllä sovelluksia ja automaatioita oikeaan käyttöön. Koulutuksessa teette samaa.</p></div>
-      <div class="col-item reveal"><h3 class="col-head">Samat työkalut joka päivä.</h3><p class="col-body">Opetan täsmälleen ne menetelmät, joita käytän itse työssäni. Mukana se mikä kestää tuotannon.</p></div>
-      <div class="col-item reveal"><h3 class="col-head">Saman pöydän ääressä.</h3><p class="col-body">Koulutukset livenä Helsingissä, kädet näppäimistöllä. Etänä silloin kun se sopii teille paremmin.</p></div>
-    </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section id="yhteys" class="dark grid-bg">
+<section id="yhteys" class="statement">
   <div class="inner">
     <span class="mono kicker reveal">Seuraava askel</span>
-    <h2 class="display reveal" style="max-width:14ch">Varataan 30 minuutin keskustelu.</h2>
+    <h2 class="section-title reveal" style="font-size:var(--text-display);line-height:.86;max-width:14ch">Varataan 30 minuutin keskustelu.</h2>
     <p class="lede reveal">Katsotaan yhdessä, mistä teidän kannattaa aloittaa. Ei sitoumuksia.</p>
-    <div class="cta-row reveal">
-      <a href="mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%2C%20keskustelu" class="btn btn--white" data-book><span class="btn__bg"></span><span class="btn__inner"><span class="btn__label">Varaa keskustelu</span><span class="ico"><svg><use href="#i-right"/></svg></span></span></a>
+    <div class="reveal" style="margin-top:clamp(1.8rem,3.5vw,2.6rem)">
+      <a href="mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%2C%20keskustelu" class="btn" data-book><span class="btn__bg"></span><span class="btn__inner"><span class="btn__label">Varaa keskustelu</span><span class="ico"><svg><use href="#i-right"/></svg></span></span></a>
     </div>
   </div>
 </section>
@@ -489,33 +420,15 @@
 
 <script>
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* split hero display into words */
-  document.querySelectorAll('[data-split]').forEach((el) => {
-    const words = el.textContent.trim().split(/\s+/);
-    el.textContent = '';
-    words.forEach((w, i) => {
-      const s = document.createElement('span');
-      s.textContent = w; s.style.display = 'inline-block';
-      el.append(s, document.createTextNode(' '));
-    });
-  });
-
-  /* reveal on scroll */
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }
   }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-  document.querySelectorAll('.reveal').forEach((el, i) => {
-    el.style.transitionDelay = (Math.min(i % 6, 5) * 70) + 'ms';
-    io.observe(el);
-  });
+  document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = (Math.min(i % 6, 5) * 70) + 'ms'; io.observe(el); });
 
-  /* nav background on scroll */
   const nav = document.getElementById('nav');
   const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
   onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
 
-  /* carousel */
   document.querySelectorAll('[data-carousel]').forEach((root) => {
     const track = root.querySelector('[data-track]');
     const cards = [...track.children];
@@ -523,35 +436,19 @@
     const prev = root.querySelector('[data-prev]');
     const next = root.querySelector('[data-next]');
     let active = 0;
-    const dots = cards.map((_, i) => {
-      const b = document.createElement('button');
-      b.setAttribute('role', 'tab'); b.setAttribute('aria-label', 'Kortti ' + (i + 1));
-      b.addEventListener('click', () => go(i)); dotsC.append(b); return b;
-    });
-    function render() {
-      dots.forEach((d, j) => d.setAttribute('aria-current', j === active ? 'true' : 'false'));
-      prev.disabled = active === 0; next.disabled = active === cards.length - 1;
-    }
-    function go(i) {
-      active = Math.max(0, Math.min(cards.length - 1, i));
-      cards[active].scrollIntoView({ behavior: RM ? 'auto' : 'smooth', inline: 'start', block: 'nearest' });
-      render();
-    }
-    const io2 = new IntersectionObserver((es) => {
-      es.forEach((e) => { if (e.isIntersecting) { active = cards.indexOf(e.target); render(); } });
-    }, { root: track, threshold: 0.6 });
+    const dots = cards.map((_, i) => { const b = document.createElement('button'); b.setAttribute('role','tab'); b.setAttribute('aria-label','Kortti ' + (i+1)); b.addEventListener('click', () => go(i)); dotsC.append(b); return b; });
+    function render() { dots.forEach((d,j) => d.setAttribute('aria-current', j===active ? 'true':'false')); prev.disabled = active===0; next.disabled = active===cards.length-1; }
+    function go(i) { active = Math.max(0, Math.min(cards.length-1, i)); cards[active].scrollIntoView({ behavior: RM ? 'auto':'smooth', inline:'start', block:'nearest' }); render(); }
+    const io2 = new IntersectionObserver((es) => { es.forEach((e) => { if (e.isIntersecting) { active = cards.indexOf(e.target); render(); } }); }, { root: track, threshold: 0.6 });
     cards.forEach((c) => io2.observe(c));
-    prev.addEventListener('click', () => go(active - 1));
-    next.addEventListener('click', () => go(active + 1));
+    prev.addEventListener('click', () => go(active-1));
+    next.addEventListener('click', () => go(active+1));
     render();
   });
 
-  /* Booking: aseta Google Calendar -ajanvarauslinkki (Appointment schedule, esim. https://calendar.app.google/XXXX).
-     Tyhjä = pidetään mailto-fallback. */
+  /* Booking: aseta Google Calendar -ajanvarauslinkki (calendar.app.google/...). Tyhjä = mailto-fallback. */
   const BOOKING_URL = "";
-  if (BOOKING_URL) {
-    document.querySelectorAll('[data-book]').forEach((a) => { a.href = BOOKING_URL; a.target = '_blank'; a.rel = 'noopener'; });
-  }
+  if (BOOKING_URL) { document.querySelectorAll('[data-book]').forEach((a) => { a.href = BOOKING_URL; a.target = '_blank'; a.rel = 'noopener'; }); }
 </script>
 </body>
 </html>
