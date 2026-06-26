@@ -13,7 +13,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <!-- WOLVERINE REAL CSS (base) -->
-<link rel="stylesheet" href="/wolv-base.css" />
 <link rel="stylesheet" href="/wolv-comp.css" />
 <style>
   /* font override (ABC Diatype -> Archivo, free) + image placeholders */
@@ -33,10 +32,28 @@
   .ph-push { background: radial-gradient(100% 100% at 50% 0%, #2a2018 0%, #0a0806 70%); }
   /* hide loader cover */
   [data-page-cover] { display: none; }
+
+  /* ---- fixes & a11y ---- */
+  /* header CTA readable on dark header (hero + scrolled dark pill) */
+  .c-header .c-button .c-button_label, .c-header .c-button .c-button_icon { color: #fff; }
+  .c-header .c-button .c-button_bg { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.36); }
+  .c-header .c-button:hover .c-button_bg { background: rgba(255,255,255,0.22); }
+  .c-header_logo { white-space: nowrap; }
+  /* focus-visible for unstyled buttons */
+  .c-button.-unstyled:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+  /* skip link */
+  .skip-link { position: fixed; left: 12px; top: 12px; z-index: 9999; background: #010101; color: #fff; padding: .7rem 1.1rem; border-radius: 8px; font-weight: 600; transform: translateY(-160%); transition: transform .2s ease; }
+  .skip-link:focus { transform: none; }
+  /* reduced motion: reveal instantly */
+  @media (prefers-reduced-motion: reduce) {
+    .anim-fade, .anim-up, .anim-up-scale, .anim-fade-scale { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .anim-text-item { transform: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>
-<div class="grain" aria-hidden="true" style="position:fixed;inset:0;z-index:300;pointer-events:none;opacity:.035;mix-blend-mode:multiply;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);background-size:160px"></div>
+<a href="#main" class="skip-link">Siirry pääsisältöön</a>
+<div class="grain" aria-hidden="true" style="position:fixed;inset:0;z-index:300;pointer-events:none;opacity:.045;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);background-size:160px"></div>
 
 <!-- ============ HEADER (pill) ============ -->
 <header>
@@ -44,7 +61,7 @@
     <div class="c-header_inner" data-header-inner>
       <div class="c-header_head">
         <a href="#hero" class="c-header_logo" style="font-weight:800;letter-spacing:-.04em">[ yrityksen nimi ]</a>
-        <nav class="c-header_nav" data-header-nav>
+        <nav class="c-header_nav" data-header-nav aria-label="Päävalikko">
           <ul class="contents">
             <li class="c-header_nav-item"><a class="c-header_nav-link" href="#ratkaisu">Ratkaisu</a></li>
             <li class="c-header_nav-item"><a class="c-header_nav-link" href="#esimerkit">Esimerkit</a></li>
@@ -59,7 +76,7 @@
   </c-header>
 </header>
 
-<main>
+<main id="main">
   <!-- ============ HERO ============ -->
   <c-hero-home class="c-hero-home block h-full w-full md:px-2 md:pt-2">
     <div class="relative flex h-svh w-full flex-col justify-between overflow-hidden px-3 pt-[40svh] pb-4 text-white md:flex-row md:items-end md:px-10 md:pt-0 md:pb-12" id="hero">
@@ -86,7 +103,7 @@
       <div class="max-w-[grid-space(2/4)] md:max-w-[grid-space(4/12)]"></div>
       <div class="flex flex-col items-start gap-fluid-md">
         <div class="anim-fade heading-md sm:heading-xs md:w-cols-4" data-scroll data-scroll-offset="15%,0%" style="--anim-delay:0.2s">
-          <p>Opetan tiimisi rakentamaan itse. Istumme saman pöydän ääreen, kädet näppäimistöllä, ja rakennamme yhdessä juuri sen mitä arkenne tarvitsee. Kun lähden, taito jää teille.</p>
+          <p>Tiimisi oppii rakentamaan itse. Istutaan saman pöydän ääreen, kädet näppäimistöllä, ja rakennetaan juuri se mitä arkenne tarvitsee. Kun koulutus päättyy, taito jää teille.</p>
         </div>
         <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
           <a class="c-button" href="#esimerkit"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Näin se toimii</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
@@ -112,9 +129,9 @@
     <div class="flex flex-col gap-4 overflow-hidden rounded-lg bg-black p-1 text-white sm:grid sm:grid-cols-2 sm:gap-gutter sm:rounded-2xl">
       <div class="ph ph-4 c-image h-full w-full aspect-[1.6] sm:aspect-square rounded-sm sm:rounded-xl overflow-hidden -cover"><div class="c-image_inner"></div></div>
       <div class="flex flex-col gap-2 px-2 sm:justify-between sm:gap-8 sm:px-0">
-        <h2 class="heading-md mt-4 sm:mt-unit-md anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split">Rakennan tekoälyllä tuotteita päivittäin.</h2>
+        <h2 class="heading-md mt-4 sm:mt-unit-md anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split">Tekoälyllä rakennetaan tuotteita joka päivä.</h2>
         <div class="flex flex-col gap-3.5 md:flex-row md:justify-between md:gap-gutter">
-          <p class="w-full body-sm anim-fade md:w-58" data-scroll data-scroll-offset="15%,0%">En opeta teoriaa diaesityksestä. Tuon koulutukseen samat menetelmät, joilla itse teen tuotannossa olevia ratkaisuja. Opitte sen mikä toimii.</p>
+          <p class="w-full body-sm anim-fade md:w-58" data-scroll data-scroll-offset="15%,0%">Ei teoriaa diaesityksestä. Koulutuksessa käytetään samoja menetelmiä, joilla rakennetaan tuotannossa olevia ratkaisuja. Opitte sen mikä toimii.</p>
           <a class="group relative w-cols-2 sm:w-cols-3 sm:min-w-55 h-40 flex flex-col justify-between rounded-xl bg-[rgba(255,255,255,0.1)] p-unit-sm ml-auto md:ml-0 anim-up-scale" href="#yhteys" data-scroll data-scroll-offset="15%,0%" data-book>
             <span class="pointer-events-none absolute inset-0 rounded-xl bg-white/10 opacity-0 transition-opacity duration-(--transition-duration) ease-power2-out group-hover:opacity-100" aria-hidden="true"></span>
             <span class="label uppercase">Aloita</span>
@@ -200,10 +217,10 @@
     <span class="label anim-fade" data-scroll data-scroll-offset="15%,0%">Miten etenemme</span>
     <h2 class="heading-md anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split" style="margin-top:1rem">Selkeä polku alusta käyttöön.</h2>
     <div class="grid gap-fluid-lg sm:grid-cols-4" data-scroll data-scroll-offset="15%,0%" data-anim-parent style="margin-top:var(--spacing-fluid-2xl,3rem);border-top:1px solid var(--color-gray-200);padding-top:2rem">
-      <div class="anim-up"><span class="label">Kartoitus</span><h3 class="heading-2xs" style="margin:.6rem 0">Etsimme hyödyn</h3><p class="body-sm text-gray-500">Käymme arkenne läpi ja etsimme paikat, joissa tekoäly tuo eniten hyötyä.</p></div>
-      <div class="anim-up" style="--anim-delay:.1s"><span class="label">Työpaja</span><h3 class="heading-2xs" style="margin:.6rem 0">Rakennamme yhdessä</h3><p class="body-sm text-gray-500">Kädet näppäimistöllä. Jokainen tekee itse, ei katso vierestä.</p></div>
-      <div class="anim-up" style="--anim-delay:.2s"><span class="label">Käyttöönotto</span><h3 class="heading-2xs" style="margin:.6rem 0">Viemme tuotantoon</h3><p class="body-sm text-gray-500">Viemme ratkaisun oikeaan käyttöön ja varmistamme, että se pysyy pystyssä.</p></div>
-      <div class="anim-up" style="--anim-delay:.3s"><span class="label">Jatko</span><h3 class="heading-2xs" style="margin:.6rem 0">Sparraan eteenpäin</h3><p class="body-sm text-gray-500">Sparraan tiimiä ja autan seuraavissa ratkaisuissa tarpeen mukaan.</p></div>
+      <div class="anim-up"><span class="label">Kartoitus</span><h3 class="heading-2xs" style="margin:.6rem 0">Etsitään hyöty</h3><p class="body-sm text-gray-500">Käydään arkenne läpi ja etsitään paikat, joissa tekoäly tuo eniten hyötyä.</p></div>
+      <div class="anim-up" style="--anim-delay:.1s"><span class="label">Työpaja</span><h3 class="heading-2xs" style="margin:.6rem 0">Rakennetaan yhdessä</h3><p class="body-sm text-gray-500">Kädet näppäimistöllä. Jokainen tekee itse, ei katso vierestä.</p></div>
+      <div class="anim-up" style="--anim-delay:.2s"><span class="label">Käyttöönotto</span><h3 class="heading-2xs" style="margin:.6rem 0">Viedään tuotantoon</h3><p class="body-sm text-gray-500">Ratkaisu viedään oikeaan käyttöön ja varmistetaan, että se pysyy pystyssä.</p></div>
+      <div class="anim-up" style="--anim-delay:.3s"><span class="label">Jatko</span><h3 class="heading-2xs" style="margin:.6rem 0">Sparrataan eteenpäin</h3><p class="body-sm text-gray-500">Tiimiä sparrataan ja tuetaan seuraavissa ratkaisuissa tarpeen mukaan.</p></div>
     </div>
   </div>
 
@@ -225,7 +242,7 @@
   <div class="c-footer_inner">
     <div class="c-footer_header">
       <a class="c-footer_logo" href="#hero" style="font-weight:800;font-size:1.4rem;letter-spacing:-.04em" data-scroll data-scroll-offset="15%,0%">[ yrityksen nimi ]</a>
-      <nav class="c-footer_menu">
+      <nav class="c-footer_menu" aria-label="Sivun osiot">
         <ul class="c-footer_menu-list" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
           <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="#ratkaisu">Ratkaisu <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
           <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="#esimerkit">Esimerkit <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
@@ -238,7 +255,7 @@
     <div class="c-footer_content">
       <div class="c-footer_text">
         <p class="c-footer_text-content anim-fade" data-scroll data-scroll-offset="15%,0%">Hands-on tekoälykoulutuksia pk-yrityksille. Tiimisi rakentaa oikeita ratkaisuja, ja osaaminen jää taloon. Ei kalvosarjaa.</p>
-        <nav class="c-footer_socials"><ul class="c-footer_socials-list" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+        <nav class="c-footer_socials" aria-label="Yhteystiedot"><ul class="c-footer_socials-list" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
           <li class="c-footer_socials-item"><a class="c-footer_socials-link" href="mailto:parkkonen.jesse@gmail.com">parkkonen.jesse@gmail.com</a></li>
         </ul></nav>
       </div>
@@ -330,19 +347,18 @@
     const track = root.querySelector('[data-carousel="track"]');
     const cards = [...track.querySelectorAll('[data-carousel="slide"]')];
     const prev = root.querySelector('[data-carousel="prev"]'); const next = root.querySelector('[data-carousel="next"]');
-    let active = 0;
-    const upd = ()=>{ if(prev)prev.disabled=active===0; if(next)next.disabled=active>=cards.length-1; };
-    const go = i=>{ active=Math.max(0,Math.min(cards.length-1,i)); cards[active].scrollIntoView({behavior:RM?'auto':'smooth',inline:'start',block:'nearest'}); upd(); };
-    const io2 = new IntersectionObserver(en=>en.forEach(e=>{ if(e.isIntersecting){active=cards.indexOf(e.target);upd();} }),{root:track,threshold:0.6});
-    cards.forEach(c=>io2.observe(c));
-    prev&&prev.addEventListener('click',()=>go(active-1)); next&&next.addEventListener('click',()=>go(active+1));
+    const step = ()=> (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : (cards[0]?cards[0].offsetWidth:300));
+    const sync = ()=>{ const max = track.scrollWidth - track.clientWidth; if(prev)prev.disabled = track.scrollLeft <= 1; if(next)next.disabled = track.scrollLeft >= max - 1; };
+    const go = dir=>{ track.scrollBy({ left: dir*step(), behavior: RM?'auto':'smooth' }); };
+    track.addEventListener('scroll', sync, { passive:true });
+    prev&&prev.addEventListener('click',()=>go(-1)); next&&next.addEventListener('click',()=>go(1));
     let down=false,sx=0,sl=0,moved=false;
     track.addEventListener('pointerdown',e=>{down=true;moved=false;sx=e.clientX;sl=track.scrollLeft;track.classList.add('is-dragging');track.setPointerCapture(e.pointerId);});
     track.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-sx;if(Math.abs(dx)>4)moved=true;track.scrollLeft=sl-dx;});
     const end=e=>{if(!down)return;down=false;track.classList.remove('is-dragging');try{track.releasePointerCapture(e.pointerId);}catch(_){}};
     track.addEventListener('pointerup',end);track.addEventListener('pointercancel',end);
     track.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopPropagation();}},true);
-    upd();
+    sync();
   });
 
   /* Booking: Google Calendar appointment link. Tyhjä = mailto. */
