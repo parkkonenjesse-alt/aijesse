@@ -2,7 +2,7 @@
 
 Henkilökohtainen repository. Sisältää kaksi asiaa:
 
-1. **Nettisivu** — `index.html` (staattinen sivu, deployataan Verceliin → [aijesse-bay.vercel.app](https://aijesse-bay.vercel.app))
+1. **Nettisivu** — `index.html` (staattinen sivu, deployataan Verceliin → [parkkonen.vercel.app](https://parkkonen.vercel.app))
 2. **Yrityksen tietopankki** — `docs/`-kansion markdown-tiedostot: kaikki yrityksen tiedot, viestintä, palvelut, hinnoittelu ja design-järjestelmä yhdessä versioidussa paikassa.
 
 Tietopankki on "sisältöallas": yksi totuuden lähde, josta nettisivun, myyntimateriaalien ja tarjousten sisältö johdetaan. Kun jokin muuttuu (esim. hinta), se päivitetään tänne ensin.
@@ -19,24 +19,23 @@ Tietopankki on "sisältöallas": yksi totuuden lähde, josta nettisivun, myyntim
 | [docs/kohderyhma.md](docs/kohderyhma.md) | Kenelle, ihanneasiakas |
 | [docs/esimerkit.md](docs/esimerkit.md) | Esimerkit mitä asiakas voi rakentaa |
 | [docs/brandi-ja-viestinta.md](docs/brandi-ja-viestinta.md) | Äänensävy, ydinviestit, sanasto |
-| [docs/designjarjestelma.md](docs/designjarjestelma.md) | Värit, typografia, layout-periaatteet |
+| [docs/designjarjestelma.md](docs/designjarjestelma.md) | Värit, typografia, komponentit, liike (Wolverine-pohja) |
+| [docs/nettisivu.md](docs/nettisivu.md) | Sivuston stack, hosting, rakenne, TODO, koordinointi |
 | [docs/yhteystiedot.md](docs/yhteystiedot.md) | Yhteystiedot ja kanavat |
 
 ## Nettisivu
 
-Tyyli: Swiss / International Typographic Style. Musta/valkoinen, Inter + JetBrains Mono, grid-tekstuuri, hiusviivat. Ei dekki-numerointia, ei varjoja, ei koristeita. Tarkat tokenit: [docs/designjarjestelma.md](docs/designjarjestelma.md).
+Tyyli: **Wolverine Worldwiden visuaalinen kieli** — full-bleed valokuva/video, iso Archivo-display, kelluva pilleri-navi, lasipaneelit, scroll-vetoinen liike. Rakennettu Wolverinen oikealla CSS:llä (`wolv-comp.css`). Tarkat tokenit + komponentit: [docs/designjarjestelma.md](docs/designjarjestelma.md), tekninen tila: [docs/nettisivu.md](docs/nettisivu.md).
 
-Paikallinen esikatselu:
+Live: **[parkkonen.vercel.app](https://parkkonen.vercel.app)** + tekoalykoulutus-web.vercel.app. Deploy: push `main` → Vercel auto-deploy.
 
-```bash
-# avaa index.html selaimessa, tai aja kevyt palvelin:
-python3 -m http.server 8000   # → http://localhost:8000
-```
+Paikallinen esikatselu: `npx live-server --port=5500` → http://localhost:5500 (hot reload).
 
-Deploy: push `main`-haaraan → Vercel rakentaa automaattisesti.
+> **Koordinointi:** kaksi Claude-terminaalia muokkasi `index.html`:ää yhtä aikaa ja ylikirjoitti toistensa työtä. Sääntö: vain yksi terminaali muokkaa `index.html`:ää kerrallaan. Ks. `STATUS.md`.
 
 ## TODO
 
-- [ ] Yrityksen virallinen nimi ja Y-tunnus (jos toiminimi/oy perustetaan)
-- [ ] Puhelinnumero ja mahdollinen erillinen domain
-- [ ] Varauskalenterin linkki (esim. Cal.com) "Varaa keskustelu" -napille
+- [ ] **Oikeat valokuvat** placeholder-gradienttien tilalle (suurin visuaalinen harppaus)
+- [ ] **Yrityksen nimi** placeholderin `[ yrityksen nimi ]` tilalle
+- [ ] **Google Calendar -ajanvarauslinkki** `BOOKING_URL`-vakioon
+- [ ] Yrityksen virallinen muoto + Y-tunnus, puhelinnumero, oma domain

@@ -1,47 +1,63 @@
 # Design-järjestelmä
 
-Tyylisuunta: **Swiss / International Typographic Style.** Grid, groteski, objektiivisuus, valkoinen tila, väri vain funktiolla. Musta/valkoinen pohja, mono-aksentit. Ei varjoja, ei koristeita (ympyröitä/glowja/blobeja), ei dekki-numerointia.
+> Päivitetty 27.6. — nettisivu rakennettu **Wolverine Worldwiden visuaalisen kielen** pohjalle.
+> (Aiempi Swiss-mustavalkoinen suunta hylätty.)
 
-Nämä tokenit vastaavat `index.html`:n CSS-muuttujia. Päivitä molemmat yhdessä.
+## Lähtökohta
 
-## Värit
+Sivu käyttää **Wolverine Worldwiden oikeaa käännettyä CSS:ää** (`wolv-comp.css`) ja heidän oikeita komponenttiluokkiaan + animaatiomekanismiaan. Tämä antaa pikselitarkan komponentti-CSS:n (spacing, typo, radius, easet). Poikkeamat tästä ovat tarkoituksellisia substituutioita:
+- **Fontti:** Archivo (ABC Diatype on lisensoitu) — override `--font-sans`/`--font-mono`.
+- **Kuvat:** gradientti-placeholderit (`.ph-*`) — TODO: oikeat valokuvat.
+- **Sisältö:** suomenkielinen, asiakaskeskeinen.
+
+Tyylisuunta: **full-bleed valokuva/video + lasipaneelit, valkoinen sivu, iso groteski-display, kelluva pilleri-navi, scroll-vetoinen liike.**
+
+## Väripaletti (Wolverine)
 
 | Token | Hex | Käyttö |
 |-------|-----|--------|
-| `--black` | `#0a0a0a` | Tummat osiot, footer |
-| `--white` | `#f4f4f1` | Teksti tummalla, vaalea osio (cream) |
-| `--ink` | `#111110` | Päämusta teksti vaalealla |
-| `--paper` | `#ffffff` | Vaalea pohja |
-| `--muted` | `#6b6b66` | Toissijainen teksti vaalealla |
-| `--muted-dark` | `#8a8a85` | Toissijainen teksti tummalla |
-| `--line` | `rgba(17,17,16,0.12)` | Hiusviivat vaalealla |
-| `--line-dark` | `rgba(255,255,255,0.10)` | Hiusviivat tummalla |
+| `--color-black` | `#010101` | Teksti, tummat pinnat, footer, push |
+| `--color-white` | `#ffffff` | Sivun pohja, teksti tummalla |
+| `--color-gray-200` | `#cccccc` | Hiusviivat, disabloitu |
+| `--color-gray-400` | `#9d9d9d` | Toissijainen |
+| `--color-gray-500` | `#737373` | Leipäteksti-meta |
+| `--color-gray-600` | `#757575` | Eyebrow / mono-labelit |
+| `--color-gray-800` | `#4d4d4d` | Tumma harmaa |
 
-Väriä ei käytetä koristeena. Korostus syntyy kontrastista (musta/valkoinen) ja tyhjästä tilasta.
+Valkoinen sivu, musta teksti. Tummat pinnat (hero-kehys, push, footer) ovat full-bleed-osioita.
 
 ## Typografia
 
-- **Display & body:** Inter (400, 500, 600, 700). Isot otsikot lihavalla (700), tiivis kirjainväli (`-0.03…-0.038em`).
-- **Utility / labelit:** JetBrains Mono (400, 500). Versaalit, väljä kirjainväli (`0.22em`), pieni koko. Käytä osion eyebrow-labeleihin ja teknisiin merkintöihin.
-- Tyyppiskaala `clamp()`-pohjainen, responsiivinen.
+- **Display / heading / body:** Archivo (400–800). Display-otsikot paino **700**, `letter-spacing -0.05em`, `line-height 0.79–0.82`.
+- **Mono-labelit / eyebrowt:** JetBrains Mono (400, 500), versaalit, ~11px, `letter-spacing 0.08–0.16em`.
+- Type-skaala (Wolverinen clamp-arvot): `display-xl` ~168px, `display-lg`, `heading-md`, `heading-xs`, `heading-2xs`, `body-md`, `body-sm`, `label`.
 
-## Layout
+## Komponentit (Wolverinen luokat)
 
-- Maksimi sisältöleveys 1600 px, keskitetty. Gutter `clamp(1.4rem, 1rem + 4vw, 6rem)`.
-- Osiot pystyrytmillä `--space-section` `clamp(5rem, 4rem + 7vw, 12rem)`. Hero koko ruutu, muut luonnollinen korkeus.
-- Tummat ja vaaleat osiot vuorottelevat "lukuina": tummat = väittämät (hero, ratkaisu, miksi minä, CTA), vaaleat = skannattava tieto.
-- Grid-tekstuuri taustalla hienovaraisena (mask-fade), ei dominoi.
+- **`c-header`** — kelluva pilleri-navi: koko levyinen ylhäällä, kutistuu pilleriksi scrollatessa (`html.has-scrolled`), piiloutuu alas-scrollatessa / palaa ylös (`has-passed-fold` + `is-scrolling-down/up`).
+- **`c-hero-home`** — full-bleed video (8px inset, 16–20px pyöristys), otsikko alavasen, lasikortti alaoikea (`c-hero-card`, 280px), scrim. Tekstit feidaa porrastetusti.
+- **`c-button`** — bg-kerros (`c-button_bg`) + `scaleY(.94)`-squash + nuoli-swap (lead-ikoni sisään, label +25px, trail ulos). Variantit: `-white`, `-outline`, `-glass`, `-small`, `-unstyled`.
+- **`c-text-two-columns`** — statement: otsikko + kappale + nappi, 12-col grid.
+- **`c-standout-image-galaxy`** — porrastettu otsikko + siroteltu kuvagalaxy (`height:125svh`).
+- **`c-large-card`** — musta paneeli, kuva vasen (aspect-square) + heading + glass-minikortti.
+- **`c-market-snapshot`** — label vasen / data oikea, iso arvo (128px), mono-labelit, hiusviivat. (Sivulla = Paketit.)
+- **`c-cards-carousel` / `c-card`** — kuva (aspect 1.33) + eyebrow + otsikko, vapaa scroll + drag + Edellinen/Seuraava. Ei snap.
+- **`c-push`** — full-bleed parallax-tausta (scale 1.15→1.0 + translateY), keskitetty display + valkoinen pilleri.
+- **`c-footer`** — logo + iso menu, sisältösarakkeet, alapalkki + sticky parallax-kuva (scale 1.3→1.1).
 
 ## Liike
 
-- Scroll-reveal: pehmeä nousu + häivytys, `cubic-bezier(0.16, 1, 0.3, 1)`. Porrastus max 6 elementtiä.
-- Navi kirkastuu (blur + paperitausta) kun scrollataan yli 40 px.
-- Hover: napit nousevat 2 px, nuoli liukuu, chipit invertoituvat. Hillittyä.
-- `prefers-reduced-motion`: kaikki liike pois.
+- **Lenis** smooth scroll (`duration 1.2`, expo-out).
+- **Reveal:** `anim-fade` (.6s power2-out), `anim-up` / `anim-up-scale` (.8s expo-out), `anim-fade-scale` (.6s), `anim-text` (rivi riviltä, 1s, --index×0.1s stagger). Trigger `is-inview` kun ~15% viewportissa (`data-scroll-offset="15%,0%"`, shim `rootMargin -15%`).
+- **Parallax:** `data-scroll-css-progress` → `--progress` (push + footer-kuva).
+- **Page-load:** valkoinen peite feidaa pois.
+- **Easet:** `--ease-expo-out cubic-bezier(.19,1,.22,1)`, `--ease-power2-out (.215,.61,.355,1)`, `--ease-power4-out (.23,1,.32,1)`.
+- `prefers-reduced-motion`: reveal heti, Lenis pois.
 
-## Kiellot
+## Radiukset
 
-- Ei drop shadow / elevation.
-- Ei koriste-elementtejä (ympyrät, glowt, blobit, partikkelit).
-- Ei järjestysnumeroita UI:ssa.
-- Ei em-dasheja teksteissä.
+`4 / 6 / 8 / 10 / 12 / 16 / 20px` (`--radius-2xs … 2xl`). Lasi-blur `18px`.
+
+## Suurin jäljellä oleva harppaus
+
+**Oikeat valokuvat** gradientti-placeholderien tilalle. Wolverine on ~90 % valokuvavetoinen; tämä on suurin visuaalinen ero. Pudota kuvat `.ph-*` / `.c-image_inner` -paikkoihin.

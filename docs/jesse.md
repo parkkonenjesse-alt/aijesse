@@ -1,5 +1,7 @@
 # Jesse Parkkonen
 
+> Tämä on sisäinen **tekijäprofiili**. Yritys on yhden hengen, mutta julkinen sivu puhuu **yrityksen äänellä (passiivi)**, ei henkilönä — ks. [brandi-ja-viestinta.md](brandi-ja-viestinta.md). Jesse näkyy taustalla uskottavuutena ("miksi minä"), brändi-wordmark on yrityksen nimi.
+
 ## Lyhyesti
 
 Rakentaa tekoälyllä tuotteita päivittäin. Kouluttaa pk-yrityksiä ottamaan tekoälyn oikeasti käyttöön hands-on-menetelmällä: yhdessä rakentaen, ei luennoiden.
