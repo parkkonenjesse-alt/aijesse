@@ -69,6 +69,11 @@
   .mobile-menu a { color: #fff; font-size: clamp(2rem, 9vw, 3rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.05; }
   .mobile-menu a:last-child { margin-top: 1rem; font-size: 1.1rem; font-weight: 600; opacity: .8; }
   .mm-close { position: absolute; top: 1.5rem; right: var(--gutter); background: none; border: 0; color: #fff; font: inherit; font-weight: 600; cursor: pointer; min-height: 44px; }
+  /* ---- hero video + fade-in choreography ---- */
+  .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  @keyframes heroIn { from { opacity: 0; transform: translateY(0.5em); } to { opacity: 1; transform: none; } }
+  .hero-anim { opacity: 0; animation: heroIn .95s cubic-bezier(.19,1,.22,1) both; animation-delay: var(--hd, 0s); }
+  @media (prefers-reduced-motion: reduce) { .hero-anim { opacity: 1 !important; animation: none !important; } }
 </style>
 </head>
 <body>
@@ -110,19 +115,24 @@
   <!-- ============ HERO ============ -->
   <c-hero-home class="c-hero-home block h-full w-full md:px-2 md:pt-2">
     <div class="relative flex h-svh w-full flex-col justify-between overflow-hidden px-3 pt-[40svh] pb-4 text-white md:flex-row md:items-end md:px-10 md:pt-0 md:pb-12" id="hero">
-      <h1 class="flex flex-col" data-hero-home="title">
-        <span class="display-lg md:display-xl">Tekoäly taloon.</span>
-        <span class="display-lg md:display-xl">Osaaminen jää teille.</span>
-      </h1>
-      <a class="c-hero-card group flex w-full flex-row gap-gutter rounded-lg bg-black/10 p-1 backdrop-blur-[18px] sm:w-70 sm:flex-col sm:gap-1" href="#yhteys" data-book>
+      <div data-hero-home="title">
+        <span class="label hero-anim" style="--hd:.2s;display:block;margin-bottom:clamp(.8rem,2vw,1.4rem);color:rgba(255,255,255,.78)">Hands·on tekoälykoulutus</span>
+        <h1 class="flex flex-col">
+          <span class="display-lg md:display-xl hero-anim" style="--hd:.42s">Tekoäly taloon.</span>
+          <span class="display-lg md:display-xl hero-anim" style="--hd:.62s">Osaaminen jää teille.</span>
+        </h1>
+        <p class="hero-anim" style="--hd:1.05s;margin-top:clamp(1rem,2.5vw,1.6rem);max-width:34ch;color:rgba(255,255,255,.85);font-size:var(--text-body-md)">Tiimisi rakentaa oikeita ratkaisuja, ei kalvosarjaa. Osaaminen jää taloon.</p>
+      </div>
+      <a class="c-hero-card group hero-anim flex w-full flex-row gap-gutter rounded-lg bg-black/10 p-1 backdrop-blur-[18px] sm:w-70 sm:flex-col sm:gap-1" style="--hd:.9s" href="#yhteys" data-book>
         <div class="ph ph-1 c-image aspect-[1.6] w-cols-2 sm:w-full overflow-hidden rounded-sm -cover"><div class="c-image_inner"></div></div>
         <div class="flex w-cols-2 flex-col justify-between py-1 sm:w-full sm:gap-10 sm:p-2">
           <span class="label">Aloita tästä</span>
           <div class="flex items-end justify-between"><span class="max-w-[70%] body-md font-bold sm:heading-2xs">Varaa 30 min keskustelu</span><span class="c-icon" aria-hidden="true">↗</span></div>
         </div>
       </a>
-      <div class="absolute top-0 left-0 -z-1 h-full w-full overflow-hidden md:rounded-2xl ph-hero" data-hero-home="background">
-        <div class="absolute top-0 left-0 h-full w-full" style="background:linear-gradient(180deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0) 22%),linear-gradient(0deg,rgba(0,0,0,0.45) 0%,rgba(0,0,0,0) 50%)"></div>
+      <div class="absolute top-0 left-0 -z-1 h-full w-full overflow-hidden md:rounded-2xl" data-hero-home="background">
+        <video class="hero-video" poster="/hero-poster.jpg" autoplay loop muted playsinline preload="auto" aria-hidden="true"><source src="/hero.mp4" type="video/mp4" /></video>
+        <div class="absolute top-0 left-0 h-full w-full" style="background:linear-gradient(180deg,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.05) 32%),linear-gradient(0deg,rgba(0,0,0,0.62) 0%,rgba(0,0,0,0) 55%)"></div>
       </div>
     </div>
   </c-hero-home>
