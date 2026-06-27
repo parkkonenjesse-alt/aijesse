@@ -603,6 +603,7 @@
           '<label class="bk-field"><span>Nimi</span><input type="text" data-name placeholder="Etunimi Sukunimi"></label>'+
           '<label class="bk-field"><span>Sähköposti</span><input type="email" data-email placeholder="sinä@yritys.fi"></label>'+
           '<label class="bk-field"><span>Lyhyt viesti (vapaaehtoinen)</span><textarea data-note rows="2" placeholder="Mitä haluaisit ratkaista?"></textarea></label>'+
+          '<input type="text" data-company tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">'+
           '<button type="button" class="c-button -white -small bk-confirm" data-confirm><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Vahvista varaus</span><span class="c-button_icon" aria-hidden="true">→</span></div></button>';
         root.querySelector('[data-back]').addEventListener('click',timeStep);
         root.querySelector('[data-confirm]').addEventListener('click',()=>{
@@ -617,13 +618,20 @@
           const mail='mailto:'+HOST_EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\n'));
           const start=new Date(sel); const tp=time.split(':'); start.setHours(+tp[0],+tp[1],0,0); const end=new Date(start.getTime()+30*60000);
           const g='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Tekoälykoulutus, keskustelu')+'&dates='+gfmt(start)+'/'+gfmt(end)+'&add='+encodeURIComponent(HOST_EMAIL)+'&details='+encodeURIComponent('Varaaja: '+name+' ('+email+')'+(note?'\n'+note:''));
-          window.location.href=mail; doneStep(g);
+          const payload={name:name,email:email,note:note,date:dstr(sel)+' '+sel.getFullYear(),time:time,company:(root.querySelector('[data-company]').value||'')};
+          const btn=root.querySelector('[data-confirm]'); btn.style.pointerEvents='none'; const lbl=btn.querySelector('.c-button_label'); if(lbl)lbl.textContent='Lähetetään…';
+          fetch('/api/booking',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+            .then(r=>{ if(r.ok){ doneStep(g,'sent'); } else { window.location.href=mail; doneStep(g,'mailto'); } })
+            .catch(()=>{ window.location.href=mail; doneStep(g,'mailto'); });
         });
       }
-      function doneStep(gLink){
+      function doneStep(gLink, mode){
+        const msg = mode==='sent'
+          ? 'Varauspyyntö lähetetty: '+dstr(sel)+' klo '+time+'. Vahvistus tulee sähköpostiisi.'
+          : 'Sähköpostiohjelmasi avautui valmiilla viestillä, '+dstr(sel)+' klo '+time+'. Lähetä se, niin vahvistan ajan pian.';
         root.innerHTML='<div class="bk-success"><div class="bk-success__check">✓</div>'+
           '<p style="font-weight:600;font-size:1.05rem;margin-bottom:.5rem">Varauspyyntö valmis</p>'+
-          '<p style="opacity:.82;font-size:.9rem;line-height:1.6;margin-bottom:1.2rem">Sähköpostiohjelmasi avautui valmiilla viestillä, '+dstr(sel)+' klo '+time+'. Lähetä se, niin vahvistan ajan pian.</p>'+
+          '<p style="opacity:.82;font-size:.9rem;line-height:1.6;margin-bottom:1.2rem">'+msg+'</p>'+
           '<a class="c-button -white -small" href="'+gLink+'" target="_blank" rel="noopener"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_label">Lisää Google-kalenteriin</span><span class="c-button_icon" aria-hidden="true">↗</span></div></a></div>';
       }
       calStep();
