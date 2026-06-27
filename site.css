@@ -171,3 +171,30 @@ body { font-family: var(--font-sans); background: #fff; }
   .book-modal__scrim, .book-modal__panel, .book-modal__close { transition: none !important; }
   .book-modal__panel { transform: none !important; }
 }
+
+/* glass-kalenteripicker (ajanvaraus) */
+.bk-sel-label { font-family: var(--font-mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .12em; opacity: .7; margin-bottom: .9rem; display: block; }
+.bk-cal__nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.bk-cal__month { font-weight: 600; letter-spacing: -.01em; text-transform: capitalize; font-size: 1.05rem; }
+.bk-cal__navbtn { width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.1); color: #fff; font-size: 1rem; cursor: pointer; display: grid; place-items: center; transition: background .25s cubic-bezier(.19,1,.22,1); }
+.bk-cal__navbtn:hover:not(:disabled) { background: rgba(255,255,255,.24); }
+.bk-cal__navbtn:disabled { opacity: .28; cursor: default; }
+.bk-cal__grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; }
+.bk-cal__wd { font-family: var(--font-mono); font-size: .58rem; text-transform: uppercase; letter-spacing: .1em; opacity: .55; text-align: center; padding: .3rem 0; }
+.bk-cal__day { aspect-ratio: 1; border: 0; border-radius: 10px; background: rgba(255,255,255,.08); color: #fff; font: inherit; font-size: .9rem; cursor: pointer; transition: background .2s cubic-bezier(.19,1,.22,1), transform .2s cubic-bezier(.19,1,.22,1); }
+.bk-cal__day:hover:not(:disabled) { background: rgba(255,255,255,.26); transform: translateY(-1px); }
+.bk-cal__day:disabled { opacity: .2; cursor: default; background: transparent; }
+.bk-cal__day.-empty { background: transparent; cursor: default; pointer-events: none; }
+.bk-slots { display: grid; grid-template-columns: repeat(auto-fill,minmax(76px,1fr)); gap: 8px; }
+.bk-slot { padding: .65rem .4rem; border-radius: 10px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.08); color: #fff; font: inherit; font-size: .85rem; cursor: pointer; transition: background .2s cubic-bezier(.19,1,.22,1), transform .2s cubic-bezier(.19,1,.22,1); }
+.bk-slot:hover { background: rgba(255,255,255,.26); transform: translateY(-1px); }
+.bk-back { background: none; border: 0; color: #fff; opacity: .75; font: inherit; cursor: pointer; margin-bottom: .9rem; padding: .2rem 0; transition: opacity .2s; }
+.bk-back:hover { opacity: 1; }
+.bk-field { display: block; margin-bottom: .85rem; }
+.bk-field > span { display: block; font-size: .72rem; opacity: .78; margin-bottom: .35rem; }
+.bk-field input, .bk-field textarea { width: 100%; border-radius: 10px; border: 1px solid rgba(255,255,255,.24); background: rgba(255,255,255,.1); color: #fff; font: inherit; padding: .7rem .85rem; resize: vertical; }
+.bk-field input::placeholder, .bk-field textarea::placeholder { color: rgba(255,255,255,.5); }
+.bk-field input:focus, .bk-field textarea:focus { outline: 2px solid rgba(255,255,255,.55); outline-offset: 1px; }
+.bk-confirm { margin-top: .3rem; }
+.bk-success { text-align: center; padding: 1.2rem 0 .5rem; }
+.bk-success__check { width: 56px; height: 56px; border-radius: 999px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.32); display: grid; place-items: center; margin: 0 auto 1.1rem; font-size: 1.5rem; }

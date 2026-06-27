@@ -110,18 +110,11 @@
     window.addEventListener('keydown', e => { if (e.key === 'Escape') setMM(false); });
   }
 
-  /* ---- Ajanvaraus: glass-modaali + Google Calendar -taustajärjestelmä ----
-     Aseta BOOKING_EMBED_URL Google Calendar "Appointment schedule" -upotuslinkkiin. */
+  /* ---- Ajanvaraus: glass-modaali + oma kalenteripicker ----
+     BOOKING_EMBED_URL tyhjä = oma kalenteri; aseta Appointment schedule -linkki jos haluat Googlen sivun. */
   const BOOKING_EMBED_URL = "";
-  const BOOKING_EMAIL = "mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%2C%20keskustelu";
+  const HOST_EMAIL = "parkkonen.jesse@gmail.com";
   (function setupBooking() {
-    const body = BOOKING_EMBED_URL
-      ? '<iframe class="book-modal__frame" src="' + BOOKING_EMBED_URL + '" title="Google-ajanvaraus" loading="lazy"></iframe>'
-      : '<div class="book-modal__fallback">' +
-          '<p>Ajanvarauskalenteri kytketään käyttöön pian. Sillä välin varaa aika sähköpostitse, niin vahvistan ajan saman päivän aikana.</p>' +
-          '<a class="c-button -white -small" href="' + BOOKING_EMAIL + '"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Lähetä sähköpostia</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>' +
-          '<p class="book-modal__steps"><b>Käyttöönotto:</b> Google Kalenteri → uusi → <b>Ajanvaraus</b> → julkaise → kopioi varaussivun linkki → liitä <b>BOOKING_EMBED_URL</b>-vakioon. Varaukset tulevat suoraan kalenteriisi.</p>' +
-        '</div>';
     const m = document.createElement('div');
     m.className = 'book-modal'; m.id = 'bookmodal';
     m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');
@@ -130,13 +123,75 @@
       '<div class="book-modal__panel">' +
         '<div class="book-modal__head"><div><span class="book-modal__eyebrow">Ajanvaraus</span><h2 class="book-modal__title">Varaa 30 min keskustelu</h2></div>' +
         '<button class="book-modal__close" type="button" data-book-close aria-label="Sulje">✕</button></div>' +
-        '<div class="book-modal__body">' + body + '</div></div>';
+        '<div class="book-modal__body"></div></div>';
     document.body.appendChild(m);
+    const bodyEl = m.querySelector('.book-modal__body');
+    if (BOOKING_EMBED_URL) bodyEl.innerHTML = '<iframe class="book-modal__frame" src="' + BOOKING_EMBED_URL + '" title="Google-ajanvaraus" loading="lazy"></iframe>';
+    else renderCalendar(bodyEl);
     let lastFocus = null;
     const openBook = () => { lastFocus = document.activeElement; m.classList.add('open'); m.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; if (lenis) lenis.stop(); const c = m.querySelector('.book-modal__close'); c && c.focus(); };
     const closeBook = () => { m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; if (lenis) lenis.start(); lastFocus && lastFocus.focus && lastFocus.focus(); };
     document.querySelectorAll('[data-book]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); openBook(); }));
     m.querySelectorAll('[data-book-close]').forEach(el => el.addEventListener('click', closeBook));
     window.addEventListener('keydown', e => { if (e.key === 'Escape' && m.classList.contains('open')) closeBook(); });
+
+    function renderCalendar(root) {
+      const MONTHS = ['tammikuu','helmikuu','maaliskuu','huhtikuu','toukokuu','kesäkuu','heinäkuu','elokuu','syyskuu','lokakuu','marraskuu','joulukuu'];
+      const WD = ['Ma','Ti','Ke','To','Pe','La','Su'];
+      const SLOTS = ['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00'];
+      const today = new Date(); today.setHours(0,0,0,0);
+      let vy = today.getFullYear(), vm = today.getMonth(), sel = null, time = null;
+      const two = n => String(n).padStart(2,'0');
+      const dstr = d => d.getDate() + '. ' + MONTHS[d.getMonth()];
+      const gfmt = d => d.getFullYear() + two(d.getMonth()+1) + two(d.getDate()) + 'T' + two(d.getHours()) + two(d.getMinutes()) + '00';
+      function calStep() {
+        const first = new Date(vy,vm,1); const lead = (first.getDay()+6)%7; const dim = new Date(vy,vm+1,0).getDate();
+        const curMonth = vy===today.getFullYear() && vm===today.getMonth();
+        let cells = ''; for (let i=0;i<lead;i++) cells += '<span class="bk-cal__day -empty"></span>';
+        for (let d=1;d<=dim;d++) { const date = new Date(vy,vm,d); const dow = date.getDay(); const dis = date<today||dow===0||dow===6; cells += '<button class="bk-cal__day" data-day="'+d+'"'+(dis?' disabled':'')+'>'+d+'</button>'; }
+        root.innerHTML = '<div class="bk-cal"><span class="bk-sel-label">Valitse päivä</span>' +
+          '<div class="bk-cal__nav"><button class="bk-cal__navbtn" data-mv="-1"'+(curMonth?' disabled':'')+' aria-label="Edellinen kuukausi">‹</button>' +
+          '<span class="bk-cal__month">'+MONTHS[vm]+' '+vy+'</span>' +
+          '<button class="bk-cal__navbtn" data-mv="1" aria-label="Seuraava kuukausi">›</button></div>' +
+          '<div class="bk-cal__grid">'+WD.map(w=>'<span class="bk-cal__wd">'+w+'</span>').join('')+cells+'</div></div>';
+        root.querySelectorAll('[data-mv]').forEach(b => b.addEventListener('click', () => { if (b.disabled) return; vm += +b.dataset.mv; if (vm<0){vm=11;vy--;} if (vm>11){vm=0;vy++;} calStep(); }));
+        root.querySelectorAll('.bk-cal__day[data-day]').forEach(b => { if (b.disabled) return; b.addEventListener('click', () => { sel = new Date(vy,vm,+b.dataset.day); timeStep(); }); });
+      }
+      function timeStep() {
+        root.innerHTML = '<button class="bk-back" data-back>‹ Takaisin</button><span class="bk-sel-label">'+dstr(sel)+' · valitse aika</span>' +
+          '<div class="bk-slots">'+SLOTS.map(s=>'<button class="bk-slot" data-t="'+s+'">'+s+'</button>').join('')+'</div>';
+        root.querySelector('[data-back]').addEventListener('click', calStep);
+        root.querySelectorAll('.bk-slot').forEach(b => b.addEventListener('click', () => { time = b.dataset.t; formStep(); }));
+      }
+      function formStep() {
+        root.innerHTML = '<button class="bk-back" data-back>‹ Takaisin</button><span class="bk-sel-label">'+dstr(sel)+' klo '+time+'</span>' +
+          '<label class="bk-field"><span>Nimi</span><input type="text" data-name placeholder="Etunimi Sukunimi"></label>' +
+          '<label class="bk-field"><span>Sähköposti</span><input type="email" data-email placeholder="sinä@yritys.fi"></label>' +
+          '<label class="bk-field"><span>Lyhyt viesti (vapaaehtoinen)</span><textarea data-note rows="2" placeholder="Mitä haluaisit ratkaista?"></textarea></label>' +
+          '<button type="button" class="c-button -white -small bk-confirm" data-confirm><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Vahvista varaus</span><span class="c-button_icon" aria-hidden="true">→</span></div></button>';
+        root.querySelector('[data-back]').addEventListener('click', timeStep);
+        root.querySelector('[data-confirm]').addEventListener('click', () => {
+          const ni = root.querySelector('[data-name]'), ei = root.querySelector('[data-email]');
+          const name = (ni.value||'').trim(), email = (ei.value||'').trim(), note = (root.querySelector('[data-note]').value||'').trim();
+          [ni,ei].forEach(x => x.style.outline = ''); let bad = false;
+          if (!name) { ni.style.outline = '2px solid #ff6b6b'; bad = true; }
+          if (!email || !/.+@.+\..+/.test(email)) { ei.style.outline = '2px solid #ff6b6b'; bad = true; }
+          if (bad) return;
+          const subject = 'Ajanvaraus: ' + dstr(sel) + ' klo ' + time;
+          const lines = ['Nimi: '+name, 'Sähköposti: '+email, 'Aika: '+dstr(sel)+' klo '+time]; if (note) lines.push('Viesti: '+note);
+          const mail = 'mailto:' + HOST_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
+          const start = new Date(sel); const tp = time.split(':'); start.setHours(+tp[0],+tp[1],0,0); const end = new Date(start.getTime()+30*60000);
+          const g = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent('Tekoälykoulutus, keskustelu') + '&dates=' + gfmt(start) + '/' + gfmt(end) + '&add=' + encodeURIComponent(HOST_EMAIL) + '&details=' + encodeURIComponent('Varaaja: '+name+' ('+email+')'+(note?'\n'+note:''));
+          window.location.href = mail; doneStep(g);
+        });
+      }
+      function doneStep(gLink) {
+        root.innerHTML = '<div class="bk-success"><div class="bk-success__check">✓</div>' +
+          '<p style="font-weight:600;font-size:1.05rem;margin-bottom:.5rem">Varauspyyntö valmis</p>' +
+          '<p style="opacity:.82;font-size:.9rem;line-height:1.6;margin-bottom:1.2rem">Sähköpostiohjelmasi avautui valmiilla viestillä, '+dstr(sel)+' klo '+time+'. Lähetä se, niin vahvistan ajan pian.</p>' +
+          '<a class="c-button -white -small" href="'+gLink+'" target="_blank" rel="noopener"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_label">Lisää Google-kalenteriin</span><span class="c-button_icon" aria-hidden="true">↗</span></div></a></div>';
+      }
+      calStep();
+    }
   })();
 })();
