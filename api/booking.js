@@ -75,16 +75,19 @@ module.exports = async (req, res) => {
         '<b>Sähköposti:</b> ' + esc(email) + '</p>' +
         (note ? '<p style="font-family:sans-serif"><b>Viesti:</b><br>' + esc(note).replace(/\n/g, '<br>') + '</p>' : ''),
     });
-    // 2) Vahvistus varaajalle (vaatii Resendissä vahvistetun domainin tuotannossa)
-    await sendEmail({
-      from: FROM,
-      to: [email],
-      subject: 'Varausvahvistus: ' + when,
-      html:
-        '<p style="font-family:sans-serif">Kiitos ' + esc(name) + '!</p>' +
-        '<p style="font-family:sans-serif">Varauspyyntösi on vastaanotettu: <b>' + esc(when) + '</b> (30 min keskustelu). Vahvistan ajan pian sähköpostitse.</p>' +
-        '<p style="font-family:sans-serif">Terveisin,<br>Jesse Parkkonen</p>',
-    });
+    // 2) Vahvistus varaajalle — best-effort. Vaatii Resendissä vahvistetun domainin;
+    //    ilman domainia tämä epäonnistuu hiljaa eikä kaada varauspyyntöä (host sai jo ilmoituksen).
+    try {
+      await sendEmail({
+        from: FROM,
+        to: [email],
+        subject: 'Varausvahvistus: ' + when,
+        html:
+          '<p style="font-family:sans-serif">Kiitos ' + esc(name) + '!</p>' +
+          '<p style="font-family:sans-serif">Varauspyyntösi on vastaanotettu: <b>' + esc(when) + '</b> (30 min keskustelu). Vahvistan ajan pian sähköpostitse.</p>' +
+          '<p style="font-family:sans-serif">Terveisin,<br>Jesse Parkkonen</p>',
+      });
+    } catch (_) { /* domain ei vahvistettu vielä; ohitetaan */ }
     res.status(200).json({ ok: true });
   } catch (e) {
     res.status(502).json({ ok: false, error: 'send_failed' });
