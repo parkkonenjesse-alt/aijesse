@@ -38,7 +38,7 @@ Mallina Wolverinen sisäsivurakenne: lyhyt **dark page-header-bändi** (`.x-page
 
 **Jaetut tiedostot:** `site.css` (alasivujen chrome + interiöörikomponentit, omat luokat prefiksi `x-`) ja `site.js` (sama motion/UI kuin indexin inline-JS). Etusivu pitää oman inline-tyylin/JS:n (toinen terminaali omistaa index.html:n).
 
-**Avoin IA-päätös:** etusivun navi = in-page-ankkurit, alasivujen navi = sivut. Yhtenäistys tehdään index.html-puolella (ks. STATUS.md).
+**IA yhtenäistetty (27.6.):** koko sivuston päänavi (header + mobiili + footer) osoittaa alasivuihin (/palvelut /hinnasto /prosessi /tietoa /yhteystiedot). Etusivun header-CTA "Varaa keskustelu" → #yhteys (oma osio), alasivuilla → /yhteystiedot.html. Etusivun sisältösektiot säilyivät scrollerina. Lisätty `robots.txt`, `sitemap.xml`, `404.html`.
 
 ## TODO (prioriteettijärjestys)
 

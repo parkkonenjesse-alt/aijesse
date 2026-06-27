@@ -32,7 +32,8 @@ Sivusto sai perussivuston pakolliset alasivut, mallina Wolverinen sisäsivuraken
 - **Jaetut:** `site.css` (alasivujen chrome + interiöörikomponentit, prefiksi `x-`), `site.js` (sama motion/UI kuin indexin inline-JS). Etusivu pitää oman inline-tyylin/JS:n.
 - Sama `wolv-comp.css` + Wolverinen luokat + Archivo + dark page-header `.x-page-header.ph.ph-hero` + gradientti-placeholderit.
 - Header valkoinen aina (site.css) koska alasivun yläbändi + scrollattu pilleri ovat tummia. Verifioitu Playwrightilla (200, ei konsolivirheitä, header näkyy top+scroll, 390/1440 responsiivinen).
-- **TODO SINULLE (index.html):** päänavin IA-yhtenäistys. Etusivun navi = in-page-ankkurit (#ratkaisu/#esimerkit/#polku/#paketit), alasivujen navi = sivut (/palvelut.html /hinnasto.html /prosessi.html /tietoa.html /yhteystiedot.html). Päätetään yhtenäinen rakenne (joko etusivu scroller + alasivulinkit, tai etusivun navi → alasivut). `data-book` + `BOOKING_URL` toimivat samoin.
+- **RATKAISTU 27.6. (Jessen pyyntö "hoida kaikki korjaukset"):** päänavin IA yhtenäistetty koko sivustolla. **Kosketin index.html:ää** (header-nav + mobiilivalikko + footer-nav → /palvelut.html /hinnasto.html /prosessi.html /tietoa.html /yhteystiedot.html; footer-brands → hinnasto/ukk/tietosuoja). Etusivun header-CTA "Varaa keskustelu" → #yhteys (etusivun oma konversio-osio säilyy); alasivuilla CTA → /yhteystiedot.html. Etusivun sisältösektioiden id:t (#ratkaisu/#esimerkit/#paketit/#polku/#yhteys) ja in-content-napit ENNALLAAN. Galaxy-osio koskematon. HUOM: jos sinulla oli index.html-muutoksia työn alla, `git pull --rebase` ja tarkista nämä nav-rivit.
+- **Lisätty perussivuston tiedostot:** `robots.txt`, `sitemap.xml` (7 URLia, tietosuoja noindex pois), `404.html` (custom not-found, sama chrome).
 
 ## Deploy
 - Repo: `parkkonenjesse-alt/aijesse` → Vercel auto-deploy.
