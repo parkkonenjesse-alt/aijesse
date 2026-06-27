@@ -1,642 +1,2665 @@
 <!DOCTYPE html>
-<html lang="fi">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Hands-on Tekoälykoulutus</title>
-<meta name="description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Osaaminen jää taloon, ei kalvosarjaa." />
-<meta property="og:title" content="Hands-on Tekoälykoulutus" />
-<meta property="og:description" content="Hands-on tekoälykoulutuksia pk-yrityksille. Osaaminen jää taloon, ei kalvosarjaa." />
-<meta property="og:image" content="https://parkkonen.vercel.app/og.png" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<!-- WOLVERINE REAL CSS (base) -->
-<link rel="stylesheet" href="/wolv-comp.css" />
-<style>
-  /* font override (ABC Diatype -> Archivo, free) + image placeholders */
-  :root { --font-sans: "Archivo", system-ui, sans-serif; --font-mono: "JetBrains Mono", ui-monospace, monospace; }
-  body { font-family: var(--font-sans); background: #fff; }
-  /* gradient placeholders where brand photos go */
-  .ph { position: relative; overflow: hidden; }
-  .ph .c-image_img, .ph img { display: none !important; }
-  .ph .c-image_inner { position: absolute; inset: 0; }
-  .ph-1 .c-image_inner, .ph-1 { background: linear-gradient(150deg,#d2c6b2,#8c7e6c); }
-  .ph-2 .c-image_inner, .ph-2 { background: linear-gradient(150deg,#a3acb1,#59636a); }
-  .ph-3 .c-image_inner, .ph-3 { background: linear-gradient(150deg,#b7c0a8,#6e7860); }
-  .ph-4 .c-image_inner, .ph-4 { background: linear-gradient(150deg,#cda88f,#886851); }
-  .ph-5 .c-image_inner, .ph-5 { background: linear-gradient(150deg,#c0bab0,#6c675e); }
-  .ph-6 .c-image_inner, .ph-6 { background: linear-gradient(150deg,#3b3b3b,#0b0b0b); }
-  .ph-hero { background: radial-gradient(120% 90% at 78% 6%, #3a2c1a 0%, rgba(58,44,26,0) 50%), radial-gradient(90% 80% at 6% 98%, #16261f 0%, rgba(22,38,31,0) 52%), linear-gradient(180deg, #16110a 0%, #060503 100%); }
-  .ph-push { background: radial-gradient(100% 100% at 50% 0%, #2a2018 0%, #0a0806 70%); }
-  /* hide loader cover */
-  [data-page-cover] { display: none; }
-  /* page-load cover (Wolverine entrance) */
-  .page-cover { position: fixed; inset: 0; z-index: 9999; background: #fff; pointer-events: none; opacity: 1; transition: opacity .6s cubic-bezier(.19,1,.22,1); }
-  .page-cover.lifted { opacity: 0; }
-  @media (prefers-reduced-motion: reduce) { .page-cover { display: none; } }
+<html  lang="en">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
+        <meta name="referrer" content="origin-when-cross-origin" />
 
-  /* ---- fixes & a11y ---- */
-  /* header CTA readable on dark header (hero + scrolled dark pill) */
-  .c-header .c-button .c-button_label, .c-header .c-button .c-button_icon { color: #fff; }
-  .c-header .c-button .c-button_bg { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.36); }
-  .c-header .c-button:hover .c-button_bg { background: rgba(255,255,255,0.22); }
-  .c-header_logo { white-space: nowrap; }
-  /* focus-visible for unstyled buttons */
-  .c-button.-unstyled:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
-  /* skip link */
-  .skip-link { position: fixed; left: 12px; top: 12px; z-index: 9999; background: #010101; color: #fff; padding: .7rem 1.1rem; border-radius: 8px; font-weight: 600; transform: translateY(-160%); transition: transform .2s ease; }
-  .skip-link:focus { transform: none; }
-  /* reduced motion: reveal instantly */
-  @media (prefers-reduced-motion: reduce) {
-    .anim-fade, .anim-up, .anim-up-scale, .anim-fade-scale { opacity: 1 !important; transform: none !important; transition: none !important; }
-    .anim-text-item { transform: none !important; transition: none !important; }
-  }
-  /* FIX: card image placeholder collapsed (no <img> = no intrinsic height) */
-  .c-card_image.ph { aspect-ratio: 1.33; }
-  /* anchor targets clear the fixed header */
-  #ratkaisu, #esimerkit, #polku, #paketit, #yhteys { scroll-margin-top: 96px; }
-  /* header CTA min touch target */
-  .c-header .c-button { min-height: 44px; }
-  /* ---- mobile menu ---- */
-  .mobile-toggle { display: none; align-items: center; gap: .4rem; background: none; border: 0; color: inherit; font: inherit; font-weight: 600; font-size: .92rem; cursor: pointer; padding: .5rem .2rem; min-height: 44px; }
-  @media (max-width: 999px) {
-    .mobile-toggle { display: inline-flex; }
-    .c-header_head > .c-button { display: none; } /* CTA siirtyy mobiilivalikkoon */
-  }
-  .mobile-menu { position: fixed; inset: 0; z-index: 120; background: rgba(1,1,1,0.97); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); display: flex; flex-direction: column; justify-content: flex-start; gap: 0; padding: 6rem var(--spacing-gutter) 2rem; transform: translateY(-101%); transition: transform .55s cubic-bezier(.19,1,.22,1); visibility: hidden; }
-  .mobile-menu.open { transform: none; visibility: visible; }
-  .mobile-menu a { color: #fff; font-size: clamp(1.8rem, 8vw, 2.6rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.05; padding: 0.9rem 0; border-bottom: 1px solid rgba(255,255,255,0.14); }
-  .mobile-menu a:last-child { font-size: 1.1rem; font-weight: 600; opacity: .85; border-bottom: 0; margin-top: 1rem; }
-  .mm-close { position: absolute; top: 1.5rem; right: var(--spacing-gutter); background: none; border: 0; color: #fff; font: inherit; font-weight: 600; cursor: pointer; min-height: 44px; }
-  /* ---- Wolverine-fidelity fixes (EI standoutia - toinen terminaali tekee galaxyn) ---- */
-  .c-header .c-button { --button-hocus-background: rgba(255,255,255,0.22); --button-hocus-text-color: #fff; }
-  .c-hero-card .c-icon { transition: transform .6s cubic-bezier(.19,1,.22,1); }
-  .c-hero-card:hover .c-icon { transform: scale(1.25); }
-  .c-hero-card .c-image_inner { transition: transform .6s cubic-bezier(.19,1,.22,1); }
-  .c-hero-card:hover .c-image_inner { transform: scale(1.05); }
-  .c-hero-card { flex-shrink: 0; } /* estä kortin kutistuminen -> pysyy sm:w-70 = 280px kuten Wolverine */
-  .c-footer_logo { max-width: none; aspect-ratio: auto; height: auto; white-space: nowrap; }
-  .c-footer_menu-link .c-icon { opacity: 0; transform: translateX(-8px); transition: opacity .3s cubic-bezier(.19,1,.22,1), transform .3s cubic-bezier(.19,1,.22,1); }
-  .c-footer_menu-link:hover .c-icon { opacity: 1; transform: none; }
-  /* ---- hero-intro: Wolverine HeroHome -timeline (ease expo.out) tarkoilla arvoilla ----
-     tausta scale .6->1 + yPercent 20->0; video scale 1.15->1; otsikkorivit yPercent 40->0 stagger .1; kortti scale .9 + yPercent 10->0 */
-  .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  @keyframes heroBgIn   { from { opacity:0; transform: translateY(20%) scale(.6); } to { opacity:1; transform: translateY(0) scale(1); } }
-  @keyframes heroVideoIn{ from { transform: scale(1.15); } to { transform: scale(1); } }
-  @keyframes heroLineIn { from { opacity:0; transform: translateY(40%); } to { opacity:1; transform: translateY(0); } }
-  @keyframes heroCardIn { from { opacity:0; transform: translateY(10%) scale(.9); } to { opacity:1; transform: translateY(0) scale(1); } }
-  .hero-bg-in   { animation: heroBgIn 1.2s cubic-bezier(.19,1,.22,1) both; }
-  .hero-video   { animation: heroVideoIn 1.2s cubic-bezier(.19,1,.22,1) both; }
-  .hero-line    { opacity:0; animation: heroLineIn .8s cubic-bezier(.19,1,.22,1) both; animation-delay: var(--hd, .5s); }
-  .hero-card-in { animation: heroCardIn .8s cubic-bezier(.19,1,.22,1) both; animation-delay: .9s; }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bg-in, .hero-video, .hero-line, .hero-card-in { animation: none !important; opacity: 1 !important; transform: none !important; }
-  }
-  /* ---- standout-image-galaxy: scattered photos (Wolverine) ---- */
-  .c-standout-image-galaxy { position: relative; }
-  .galaxy-scatter { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-  .galaxy-scatter .g-img { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 8px; overflow: hidden; box-shadow: 0 18px 40px -18px rgba(0,0,0,.5); }
-  .c-standout-image-galaxy_inner { position: relative; z-index: 1; }
-  @media (max-width: 760px) { .galaxy-scatter .g-img { transform: scale(.58); opacity: .9; } }
+        
+        
+        
+        
+        <link rel="manifest" href="/favicon/site.webmanifest" />
 
-  /* ---- ajanvaraus: glassmorphism-modaali (oma design) + Google Calendar backend ---- */
-  .book-modal { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: clamp(1rem,4vw,2.5rem); visibility: hidden; }
-  .book-modal__scrim { position: absolute; inset: 0; background: rgba(12,9,6,.5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; transition: opacity .55s cubic-bezier(.19,1,.22,1); }
-  .book-modal__panel { position: relative; width: min(580px,100%); max-height: 90svh; display: flex; flex-direction: column; overflow: hidden; border-radius: 24px; color: #fff;
-    background: linear-gradient(155deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
-    -webkit-backdrop-filter: blur(30px) saturate(150%); backdrop-filter: blur(30px) saturate(150%);
-    border: 1px solid rgba(255,255,255,.3); box-shadow: 0 40px 90px -32px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.45);
-    opacity: 0; transform: translateY(26px) scale(.95); transition: opacity .6s cubic-bezier(.19,1,.22,1), transform .6s cubic-bezier(.19,1,.22,1); }
-  .book-modal.open { visibility: visible; }
-  .book-modal.open .book-modal__scrim { opacity: 1; }
-  .book-modal.open .book-modal__panel { opacity: 1; transform: none; }
-  .book-modal__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: clamp(1.4rem,3vw,2rem) clamp(1.4rem,3vw,2rem) .9rem; }
-  .book-modal__eyebrow { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .14em; font-size: .66rem; opacity: .72; display: block; margin-bottom: .55rem; }
-  .book-modal__title { font-size: clamp(1.5rem,4vw,2rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.02; }
-  .book-modal__close { flex: none; width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255,255,255,.32); background: rgba(255,255,255,.12); color: #fff; font-size: 1.05rem; cursor: pointer; display: grid; place-items: center; transition: background .3s cubic-bezier(.19,1,.22,1), transform .4s cubic-bezier(.19,1,.22,1); }
-  .book-modal__close:hover { background: rgba(255,255,255,.24); transform: rotate(90deg); }
-  .book-modal__body { padding: 0 clamp(1.4rem,3vw,2rem) clamp(1.4rem,3vw,2rem); overflow: auto; }
-  .book-modal__frame { width: 100%; height: min(62svh,580px); border: 0; border-radius: 16px; background: #fff; display: block; }
-  .book-modal__fallback p { opacity: .88; line-height: 1.6; margin-bottom: 1.2rem; }
-  .book-modal__steps { margin-top: 1.3rem; font-size: .8rem; line-height: 1.7; opacity: .7; border-top: 1px solid rgba(255,255,255,.18); padding-top: 1rem; }
-  .book-modal__steps b { font-weight: 600; opacity: .9; }
-  /* glass-kalenteripicker */
-  .bk-sel-label { font-family: var(--font-mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .12em; opacity: .7; margin-bottom: .9rem; display: block; }
-  .bk-cal__nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-  .bk-cal__month { font-weight: 600; letter-spacing: -.01em; text-transform: capitalize; font-size: 1.05rem; }
-  .bk-cal__navbtn { width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.1); color: #fff; font-size: 1rem; cursor: pointer; display: grid; place-items: center; transition: background .25s cubic-bezier(.19,1,.22,1); }
-  .bk-cal__navbtn:hover:not(:disabled) { background: rgba(255,255,255,.24); }
-  .bk-cal__navbtn:disabled { opacity: .28; cursor: default; }
-  .bk-cal__grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; }
-  .bk-cal__wd { font-family: var(--font-mono); font-size: .58rem; text-transform: uppercase; letter-spacing: .1em; opacity: .55; text-align: center; padding: .3rem 0; }
-  .bk-cal__day { aspect-ratio: 1; border: 0; border-radius: 10px; background: rgba(255,255,255,.08); color: #fff; font: inherit; font-size: .9rem; cursor: pointer; transition: background .2s cubic-bezier(.19,1,.22,1), transform .2s cubic-bezier(.19,1,.22,1); }
-  .bk-cal__day:hover:not(:disabled) { background: rgba(255,255,255,.26); transform: translateY(-1px); }
-  .bk-cal__day:disabled { opacity: .2; cursor: default; background: transparent; }
-  .bk-cal__day.-empty { background: transparent; cursor: default; pointer-events: none; }
-  .bk-slots { display: grid; grid-template-columns: repeat(auto-fill,minmax(76px,1fr)); gap: 8px; }
-  .bk-slot { padding: .65rem .4rem; border-radius: 10px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.08); color: #fff; font: inherit; font-size: .85rem; cursor: pointer; transition: background .2s cubic-bezier(.19,1,.22,1), transform .2s cubic-bezier(.19,1,.22,1); }
-  .bk-slot:hover { background: rgba(255,255,255,.26); transform: translateY(-1px); }
-  .bk-back { background: none; border: 0; color: #fff; opacity: .75; font: inherit; cursor: pointer; margin-bottom: .9rem; padding: .2rem 0; transition: opacity .2s; }
-  .bk-back:hover { opacity: 1; }
-  .bk-field { display: block; margin-bottom: .85rem; }
-  .bk-field > span { display: block; font-size: .72rem; opacity: .78; margin-bottom: .35rem; }
-  .bk-field input, .bk-field textarea { width: 100%; border-radius: 10px; border: 1px solid rgba(255,255,255,.24); background: rgba(255,255,255,.1); color: #fff; font: inherit; padding: .7rem .85rem; resize: vertical; }
-  .bk-field input::placeholder, .bk-field textarea::placeholder { color: rgba(255,255,255,.5); }
-  .bk-field input:focus, .bk-field textarea:focus { outline: 2px solid rgba(255,255,255,.55); outline-offset: 1px; }
-  .bk-confirm { margin-top: .3rem; }
-  .bk-success { text-align: center; padding: 1.2rem 0 .5rem; }
-  .bk-success__check { width: 56px; height: 56px; border-radius: 999px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.32); display: grid; place-items: center; margin: 0 auto 1.1rem; font-size: 1.5rem; }
-  @media (prefers-reduced-motion: reduce) {
-    .book-modal__scrim, .book-modal__panel { transition: none !important; }
-    .book-modal__panel { transform: none !important; }
-    .book-modal__close { transition: none !important; }
-  }
-</style>
-</head>
-<body>
-<a href="#main" class="skip-link">Siirry pääsisältöön</a>
-<div class="page-cover" id="pagecover" aria-hidden="true"></div>
-<div class="grain" aria-hidden="true" style="position:fixed;inset:0;z-index:300;pointer-events:none;opacity:.045;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);background-size:160px"></div>
+        <title>Hands-on Tekoälykoulutus</title>
+    <meta name="og:title" content="Home | [ yrityksen nimi ]" />
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <!-- Google Tag Manager -->
+        
 
-<!-- ============ HEADER (pill) ============ -->
-<header>
-  <c-header class="c-header" id="header">
-    <div class="c-header_inner" data-header-inner>
-      <div class="c-header_head">
-        <a href="#hero" class="c-header_logo" style="font-weight:800;letter-spacing:-.04em">[ yrityksen nimi ]</a>
-        <nav class="c-header_nav" data-header-nav aria-label="Päävalikko">
-          <ul class="contents">
-            <li class="c-header_nav-item"><a class="c-header_nav-link" href="/palvelut.html">Palvelut</a></li>
-            <li class="c-header_nav-item"><a class="c-header_nav-link" href="/hinnasto.html">Hinnasto</a></li>
-            <li class="c-header_nav-item"><a class="c-header_nav-link" href="/prosessi.html">Prosessi</a></li>
-            <li class="c-header_nav-item"><a class="c-header_nav-link" href="/tietoa.html">Tietoa</a></li>
-            <li class="c-header_nav-item"><a class="c-header_nav-link" href="#yhteys" data-book>Varaa keskustelu</a></li>
-          </ul>
+        <script type="module">!function(){const e=document.createElement("link").relList;if(!(e&&e.supports&&e.supports("modulepreload"))){for(const e of document.querySelectorAll('link[rel="modulepreload"]'))r(e);new MutationObserver((e=>{for(const o of e)if("childList"===o.type)for(const e of o.addedNodes)if("LINK"===e.tagName&&"modulepreload"===e.rel)r(e);else if(e.querySelectorAll)for(const o of e.querySelectorAll("link[rel=modulepreload]"))r(o)})).observe(document,{childList:!0,subtree:!0})}function r(e){if(e.ep)return;e.ep=!0;const r=function(e){const r={};return e.integrity&&(r.integrity=e.integrity),e.referrerpolicy&&(r.referrerPolicy=e.referrerpolicy),"use-credentials"===e.crossorigin?r.credentials="include":"anonymous"===e.crossorigin?r.credentials="omit":r.credentials="same-origin",r}(e);fetch(e.href,r)}}();</script>
+<script type="module" src="/dist/main-DEWcZEWU.js" crossorigin onload="e=new CustomEvent(&#039;vite-script-loaded&#039;, {detail:{path: &#039;src/scripts/main.ts&#039;}});document.dispatchEvent(e);"></script>
+<link href="/dist/Scroll-Oyywjts5.js" rel="modulepreload" crossorigin>
+<link href="/dist/scroll-B-NtrwPX.js" rel="modulepreload" crossorigin>
+<link href="/dist/screen-DnVIF3Jm.js" rel="modulepreload" crossorigin>
+<link href="/dist/component-manager.modern-D6dkbpDa.js" rel="modulepreload" crossorigin>
+<link href="/dist/dom-D-2hUXOQ.js" rel="modulepreload" crossorigin>
+<link href="/dist/index-B_r9C59b.js" rel="modulepreload" crossorigin>
+<link href="/dist/animations-DiDraIfW.js" rel="modulepreload" crossorigin>
+<link href="/dist/index-5B9hMlRm.js" rel="modulepreload" crossorigin>
+<link href="/dist/SplitText-B_sAOQpb.js" rel="modulepreload" crossorigin>
+<link href="/dist/focus-trap.esm-BcIBZGDc.js" rel="modulepreload" crossorigin>
+<link href="/dist/main-DRDZlMXm.css" rel="stylesheet">
+<link href="/dist/main-bTb3VakF.css" rel="stylesheet">
+
+        
+        
+                <!-- End Google Tag Manager -->
+    <link rel="icon" href="/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>:root{--font-sans:'Archivo',system-ui,sans-serif !important;--font-mono:'Archivo',monospace !important;}</style><style>.brand-wordmark{font-family:'Archivo',sans-serif;font-weight:800;letter-spacing:-.04em;white-space:nowrap;line-height:1;display:inline-block}.c-footer_logo .brand-wordmark{font-size:clamp(2rem,7vw,6rem);letter-spacing:-.05em}.c-header_logo .brand-wordmark{font-size:1.05rem}</style><style>/* img-grade */ img.c-image_img{filter:grayscale(.4) contrast(1.03) brightness(1.01) saturate(.95);transition:filter .4s cubic-bezier(.19,1,.22,1)} .c-card:hover img.c-image_img,.c-large-card:hover img.c-image_img{filter:grayscale(.15) contrast(1.02)}</style></head>
+    <body>
+        <!-- Google Tag Manager (noscript) -->
+        
+        <!-- End Google Tag Manager (noscript) -->
+
+        <div data-page-cover class="pointer-events-none fixed inset-0 z-[9999] bg-white"></div>
+        <div id="swup" class="transition-default">
+            <header>
+    <c-header class="c-header">
+        <div class="c-header_inner" data-header-inner>
+            <div class="c-header_head">
+                <a href="/" class="c-header_logo" data-header-logo>
+                    <div class="sr-only">
+                        Home
+                    </div>
+                    
+
+
+
+    <span class="c-icon c-header_logo-icon -large-desktop">                <span class="brand-wordmark">[ yrityksen nimi ]</span>
+    </span>                    
+
+
+
+    <span class="c-icon c-header_logo-icon -large-mobile">                <span class="brand-wordmark">[ yrityksen nimi ]</span>
+    </span>                    
+
+
+
+    <span id="menu-logo" class="c-icon c-header_logo-icon -small">                <span class="brand-wordmark">[ yrityksen nimi ]</span>
+    </span>                </a>
+
+                <nav class="c-header_nav" data-header-nav>
+                    <ul class="contents">
+                                                                                    
+                                <li class="c-header_nav-item">
+                                    
+
+
+        
+    <a class="c-header_nav-link" href="#" target="_self">        Ratkaisu    </a>                                </li>
+                                                                                                                
+                                <li class="c-header_nav-item">
+                                    
+
+
+        
+    <a class="c-header_nav-link" href="#" target="_self">        Esimerkit    </a>                                </li>
+                                                                                                                
+                                <li class="c-header_nav-item">
+                                    
+
+
+        
+    <a class="c-header_nav-link" href="#" target="_self">        Polku    </a>                                </li>
+                                                                                                                                                
+                                                                <li class="c-header_nav-item">
+                                    <button
+                                         type="button" id="header-dropdown-toggler-99" class="c-header_nav-dropdown-toggler c-header_nav-link" data-header-dropdown-toggler="header-dropdown-99" aria-expanded="false" aria-controls="header-dropdown-99"
+                                    >
+                                        <span>Menetelmä
+
+
+
+    <span class="c-icon c-header_nav-dropdown-toggler-icon">                <svg class="svg-chevron-down" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#chevron-down"></use>
+        </svg>
+    </span>                                        </span>
+                                    </button>
+                                </li>
+                                                                                                                
+                                <li class="c-header_nav-item">
+                                    
+    
+
+                    
+    <a class="c-header_nav-link -external" href="#" target="_blank">        Varaa keskustelu                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                                </li>
+                                                                        </ul>
+                </nav>
+
+                <button class="c-header_toggle-mobile" data-mobile-menu="toggler">
+                    <span>Valikko</span>
+                    <span aria-hidden="true">+</span>
+                </button>
+            </div>
+
+            <span class="c-header_bg" data-header-nav-bg></span>
+
+            <div class="c-header_dropdowns" data-header-dropdowns>
+                                                                                                                                                                                                
+                        
+
+
+<div  id="header-dropdown-99" class="c-header_dropdown" aria-labelled-by="#header-dropdown-toggler-99" data-header-dropdown="">
+                        <div class="c-header_tile c-header_tile--text">
+                <div class="c-header_tile-text-content">
+                                            <p class="c-header_tile-text-title">
+                            Menetelmä
+                        </p>
+                                                                <p class="c-header_tile-text-description">
+                            Yhdessä rakennetaan tekoälyosaaminen talon sisälle
+                        </p>
+                                    </div>
+                                    
+
+
+    
+
+
+
+<a class="c-button -glass" href="#" data-header-dropdown-link="">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                    
+        <span class="c-button_label" >Avaa</span>
+
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                        </div>
+</a>                            </div>
+                                <div class="c-header_tile">
+                                    
+
+
+    
+
+
+    <div class="c-image c-header_tile-image -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p01.jpg" width="600" height="400" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                
+                                    <a
+                        href="#"
+                        class="c-header_tile-cta"
+                        data-header-dropdown-link
+                    >
+                        <span class="c-header_tile-cta-label">Strategia</span>
+                    </a>
+                            </div>
+                                <div class="c-header_tile">
+                                    
+
+
+    
+
+
+    <div class="c-image c-header_tile-image -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p02.jpg" width="600" height="400" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                
+                                    <a
+                        href="#"
+                        class="c-header_tile-cta"
+                        data-header-dropdown-link
+                    >
+                        <span class="c-header_tile-cta-label">Käytäntö</span>
+                    </a>
+                            </div>
+                                <div class="c-header_tile">
+                                    
+
+
+    
+
+
+    <div class="c-image c-header_tile-image -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p03.jpg" width="600" height="400" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                
+                                    <a
+                        href="#"
+                        class="c-header_tile-cta"
+                        data-header-dropdown-link
+                    >
+                        <span class="c-header_tile-cta-label">Työkalut</span>
+                    </a>
+                            </div>
+            </div>
+                                                                                    </div>
+        </div>
+    </c-header>
+
+    <c-mobile-menu class="c-mobile-menu">
+        <nav class="c-mobile-menu_outer" data-lenis-prevent data-mobile-menu="target">
+            <button class="c-mobile-menu_close" data-mobile-menu="close">
+                <span>Sulje</span>
+                
+
+
+
+    <span class="c-icon c-mobile-menu_close-icon">                <svg class="svg-cross" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#cross"></use>
+        </svg>
+    </span>            </button>
+
+            <div class="c-mobile-menu_inner">
+                <a
+                    href="/"
+                    class="c-mobile-menu_logo-link"
+                    aria-label="Home"
+                    data-mobile-menu="logo"
+                >
+                    
+
+
+
+    <span class="c-icon c-mobile-menu_logo" aria-hidden="true">                <span class="brand-wordmark">[ yrityksen nimi ]</span>
+    </span>                </a>
+
+                <ul class="c-mobile-menu_main">
+                                                                                                    <li class="c-mobile-menu_main-item">
+                                
+    
+
+                    
+    <a class="c-mobile-menu_main-link" href="#" target="_self">        Ratkaisu                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-→" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#→"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                                                                                            <li class="c-mobile-menu_main-item">
+                                
+    
+
+                    
+    <a class="c-mobile-menu_main-link" href="#" target="_self">        Esimerkit                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-→" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#→"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                                                                                            <li class="c-mobile-menu_main-item">
+                                
+    
+
+                    
+    <a class="c-mobile-menu_main-link" href="#" target="_self">        Polku                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-→" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#→"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                                                                                            <li class="c-mobile-menu_main-item">
+                                <c-accordion>
+                                    <details>
+                                        <summary
+                                             class="c-mobile-menu_main-link c-mobile-menu_main-dropdown-toggler"
+                                        >
+                                            <span>Menetelmä</span>
+                                            <span
+                                                class="c-mobile-menu_main-dropdown-toggler-icon"
+                                                aria-hidden="true"
+                                            >
+
+                                            </span>
+                                        </summary>
+                                        <ul
+                                            class="c-mobile-menu_main-dropdown"
+                                            data-accordion="content"
+                                        >
+                                            
+                                                                                            <li class="c-mobile-menu_main-dropdown-item">
+                                                                                                            
+                    
+
+    
+
+
+
+<a class="c-button -small -outline -full c-mobile-menu_main-dropdown-button" href="#" target="_self" data-mobile-menu-link="">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                    
+        <span class="c-button_label" >Avaa</span>
+
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                        </div>
+</a>                                                                                                    </li>
+                                                                                            <li class="c-mobile-menu_main-dropdown-item">
+                                                                                                            
+                    
+
+    
+
+
+
+<a class="c-button -small -outline -full c-mobile-menu_main-dropdown-button" href="#" target="_self" data-mobile-menu-link="">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                    
+        <span class="c-button_label" >Strategia</span>
+
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                        </div>
+</a>                                                                                                    </li>
+                                                                                            <li class="c-mobile-menu_main-dropdown-item">
+                                                                                                            
+                    
+
+    
+
+
+
+<a class="c-button -small -outline -full c-mobile-menu_main-dropdown-button" href="#" target="_self" data-mobile-menu-link="">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                    
+        <span class="c-button_label" >Käytäntö</span>
+
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                        </div>
+</a>                                                                                                    </li>
+                                                                                            <li class="c-mobile-menu_main-dropdown-item">
+                                                                                                            
+                    
+
+    
+
+
+
+<a class="c-button -small -outline -full c-mobile-menu_main-dropdown-button" href="#" target="_self" data-mobile-menu-link="">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                    
+        <span class="c-button_label" >Työkalut</span>
+
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                        </div>
+</a>                                                                                                    </li>
+                                                                                    </ul>
+                                    </details>
+                                </c-accordion>
+                            </li>
+                                                                                                                            <li class="c-mobile-menu_main-item">
+                                
+    
+
+                    
+    <a class="c-mobile-menu_main-link" href="#" target="_blank">        Varaa keskustelu                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                            </ul>
+
+                                    <div class="c-mobile-menu_secondary-wrapper">
+                        <ul class="c-mobile-menu_secondary">
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="http://www.merrell.com/" target="_blank">        ChatGPT    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="http://www.saucony.com/" target="_blank">        Claude    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="#" target="_blank">        Copilot    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="https://www.sweatybetty.com/" target="_blank">        Gemini    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="http://www.catfootwear.com/" target="_blank">        Cursor    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="http://www.chacos.com/" target="_blank">        n8n    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="http://www.hushpuppies.com/" target="_blank">        Make    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="https://www.striderite.com/" target="_blank">        Midjourney    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="https://www.hytest.com/" target="_blank">        Perplexity    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="https://www.harley-davidson.com/us/en/shop/c/mens-motorcycle-footwear" target="_blank">        NotebookLM    </a>                                </li>
+                                                            <li class="c-mobile-menu_secondary-item">
+                                    
+
+
+        
+    <a class="c-mobile-menu_secondary-link" href="#" target="_blank">        Zapier    </a>                                </li>
+                                                    </ul>
+                    </div>
+                            </div>
         </nav>
-        <button class="mobile-toggle" aria-expanded="false" aria-controls="mobilemenu" data-mm-open>Valikko <span aria-hidden="true">+</span></button>
-      </div>
-      <span class="c-header_bg" data-header-nav-bg></span>
-    </div>
-  </c-header>
+    </c-mobile-menu>
 </header>
 
-<div class="mobile-menu" id="mobilemenu" aria-hidden="true">
-  <button class="mm-close" data-mm-close aria-label="Sulje valikko">Sulje <span aria-hidden="true">✕</span></button>
-  <a href="/palvelut.html" data-mm-link>Palvelut</a>
-  <a href="/hinnasto.html" data-mm-link>Hinnasto</a>
-  <a href="/prosessi.html" data-mm-link>Prosessi</a>
-  <a href="/tietoa.html" data-mm-link>Tietoa</a>
-  <a href="#yhteys" data-mm-link data-book>Varaa keskustelu →</a>
+            
+            
+            <main>
+                    
+
+
+<c-hero-home  class="c-hero-home || block h-full w-full md:px-2 md:pt-2">
+    <div
+        class="relative flex h-svh w-full flex-col justify-between overflow-hidden px-3 pt-[40svh] pb-4 text-white md:flex-row md:items-end md:px-10 md:pt-0 md:pb-12"
+    >
+                    <h1 class="flex flex-col" data-hero-home="title">                    <span class="display-lg md:display-xl">Tekoäly.</span>
+                                    <span class="display-lg md:display-xl">Osaaminen.</span>
+                                    <span class="display-lg md:display-xl">Taloon.</span>
+                </h1>        
+                    
+
+    
+<a class="c-hero-card group || flex w-full flex-row gap-gutter rounded-lg bg-black/10 p-1 backdrop-blur-[18px] sm:w-70 sm:flex-col sm:gap-1" href="#yhteys" rel="noopener noreferrer" data-hero-home="card" target="_blank">            
+
+
+    
+
+
+    <div class="c-image aspect-[1.6] w-cols-2 sm:w-full overflow-hidden rounded-sm [&amp;_img]:transition-transform [&amp;_img]:duration-slow [&amp;_img]:ease-expo-out group-hover:[&amp;_img]:scale-105 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p04.jpg" width="400" height="300" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>    
+    <div class="flex w-cols-2 flex-col justify-between py-1 sm:w-full sm:gap-10 sm:p-2">
+                    <span class="label">aloita tästä</span>
+                <div class="flex items-end justify-between">
+            <span class="max-w-[70%] body-md font-bold sm:heading-2xs">Varaa 30 min
+keskustelu</span>
+                            
+
+
+
+    <span class="c-icon pb-1 transition-transform duration-slow ease-expo-out group-hover:scale-125">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>                    </div>
+    </div>
+</a>        
+                    <div
+                data-hero-home="background"
+                class="pointer-events-none absolute top-0 left-0 -z-1 h-full w-full overflow-hidden md:rounded-2xl"
+            >
+                
+
+
+
+
+
+<c-inline-video  id="hero-home-video" class="relative block w-full h-full" data-scroll="" data-scroll-repeat="" data-scroll-call="inline-video-inview-hero-home-video">
+    <video  class="absolute inset-0 object-cover w-full h-full" poster="/hero-poster.jpg" autoplay loop muted playsinline disablepictureinpicture disableremoteplayback preload="none" tabindex="-1" data-hero-home="video">
+                <source src="/hero.mp4" type="video/mp4" />
+    </video>
+</c-inline-video>
+
+<script type="module" src="/dist/InlineVideo-VxD0xbSK.js" crossorigin onload="e=new CustomEvent(&#039;vite-script-loaded&#039;, {detail:{path: &#039;src/scripts/components/InlineVideo.ts&#039;}});document.dispatchEvent(e);"></script>
+<link href="/dist/component-manager.modern-D6dkbpDa.js" rel="modulepreload" crossorigin>
+<link href="/dist/animations-DiDraIfW.js" rel="modulepreload" crossorigin>
+<link href="/dist/index-B_r9C59b.js" rel="modulepreload" crossorigin>
+                <div
+                    class="absolute top-0 left-0 h-full w-full bg-[linear-gradient(180deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0)_22%),linear-gradient(0deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.2)_100%)]"
+                ></div>
+            </div>
+            </div>
+</c-hero-home>
+
+<script type="module" src="/dist/HeroHome-CZIa6_lW.js" crossorigin onload="e=new CustomEvent(&#039;vite-script-loaded&#039;, {detail:{path: &#039;src/scripts/components/HeroHome.ts&#039;}});document.dispatchEvent(e);"></script>
+<link href="/dist/index-5B9hMlRm.js" rel="modulepreload" crossorigin>
+<link href="/dist/SplitText-B_sAOQpb.js" rel="modulepreload" crossorigin>
+<link href="/dist/component-manager.modern-D6dkbpDa.js" rel="modulepreload" crossorigin>
+<link href="/dist/animations-DiDraIfW.js" rel="modulepreload" crossorigin>
+<link href="/dist/index-B_r9C59b.js" rel="modulepreload" crossorigin>
+<link href="/dist/dom-D-2hUXOQ.js" rel="modulepreload" crossorigin>
+
+    
+
+    
+
+
+
+
+<div  class="c-text-two-columns container flex flex-col gap-fluid-lg my-fluid-3xl">
+    
+    
+    <div class="grid gap-fluid-4xl md:grid-cols-2 md:gap-gutter">
+        <div class="max-w-[grid-space(2/4)] md:max-w-[grid-space(4/12)]">
+                    </div>
+
+        <div class="flex flex-col items-start gap-fluid-md">
+                            <div
+                     class="anim-fade heading-md sm:heading-xs md:w-cols-4" data-scroll data-scroll-offset="15%,0%" style="--anim-delay: 0.2s"
+                >
+                    <p>Rakennetaan oikeita tekoälyratkaisuja yhdessä tiimisi kanssa, ei kalvosarjoja. Käytännönläheinen ote jättää osaamisen taloon, ei konsultin laukkuun.</p>
+                </div>
+            
+                            <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
+                    
+                                
+
+    
+
+
+
+<a class="c-button" href="#" target="_self">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                    
+        <span class="c-button_label" >Lue lähestymistavasta</span>
+
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                        </div>
+</a>                </div>
+                    </div>
+    </div>
 </div>
+        
 
-<main id="main">
-  <!-- ============ HERO ============ -->
-  <c-hero-home class="c-hero-home block h-full w-full md:px-2 md:pt-2">
-    <div class="relative flex h-svh w-full flex-col justify-between overflow-hidden px-3 pt-[40svh] pb-4 text-white md:flex-row md:items-end md:px-10 md:pt-0 md:pb-12" id="hero">
-      <div data-hero-home="title">
-        <span class="label hero-line" style="--hd:.45s;display:block;margin-bottom:clamp(.8rem,2vw,1.4rem);color:rgba(255,255,255,.78)">Hands·on tekoälykoulutus</span>
-        <h1 class="flex flex-col">
-          <span class="display-lg md:display-xl hero-line" style="--hd:.55s">Tekoäly taloon.</span>
-          <span class="display-lg md:display-xl hero-line" style="--hd:.65s">Osaaminen jää teille.</span>
-        </h1>
-        <p class="hero-line" style="--hd:.78s;margin-top:clamp(1rem,2.5vw,1.6rem);max-width:34ch;color:rgba(255,255,255,.85);font-size:var(--text-body-md)">Tiimisi rakentaa oikeita ratkaisuja, ei kalvosarjaa. Osaaminen jää taloon.</p>
-      </div>
-      <a class="c-hero-card group hero-card-in flex w-full flex-row gap-gutter rounded-lg bg-black/10 p-1 backdrop-blur-[18px] sm:w-70 sm:flex-col sm:gap-1" href="#yhteys" data-book>
-        <div class="ph ph-1 c-image aspect-[1.6] w-cols-2 sm:w-full overflow-hidden rounded-sm -cover"><div class="c-image_inner"></div></div>
-        <div class="flex w-cols-2 flex-col justify-between py-1 sm:w-full sm:gap-10 sm:p-2">
-          <span class="label">Aloita tästä</span>
-          <div class="flex items-end justify-between"><span class="max-w-[70%] body-md font-bold sm:heading-2xs">Varaa 30 min keskustelu</span><span class="c-icon" aria-hidden="true">↗</span></div>
+
+
+
+<c-standout-image-galaxy  class="c-standout-image-galaxy">
+    <div
+        class="c-standout-image-galaxy_inner"
+        data-scroll
+        data-scroll-offset="15%,0"
+        data-anim-parent
+    >
+                    <h2 class="c-standout-image-galaxy_title" data-standout-image-galaxy="title">                                    <span
+                        class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]"
+                        style="--pl: 0; --pl-sm: 0"
+                    >
+                        Opitaan
+                    </span>
+                                    <span
+                        class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]"
+                        style="--pl: 2.5em; --pl-sm: 1.5em"
+                    >
+                        rakentamalla,
+                    </span>
+                                    <span
+                        class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]"
+                        style="--pl: 3.75em; --pl-sm: 2.25em"
+                    >
+                        ei katsomalla.
+                    </span>
+                            </h2>        
+                    
+
+
+    
+
+
+
+<a class="c-button c-standout-image-galaxy_button" href="#" target="_self">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                    
+        <span class="c-button_label" >Katso paketit</span>
+
+                                    <span class="c-button_icon" aria-hidden="true">→</span>
+                        </div>
+</a>            </div>
+    <div class="c-standout-image-galaxy_overlay"></div>
+
+            
+
+
+            
+                            
+
+
+<c-particles  class="c-particles">
+    <div
+        data-particles="container"
+        class="absolute top-[-25%] left-0 -z-1 h-[150%] w-full perspective-[800px]"
+    >
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p05.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
         </div>
-      </a>
-      <div class="hero-bg-in absolute top-0 left-0 -z-1 h-full w-full overflow-hidden md:rounded-2xl" data-hero-home="background">
-        <video class="hero-video" poster="/hero-poster.jpg" autoplay loop muted playsinline preload="auto" aria-hidden="true"><source src="/hero.mp4" type="video/mp4" /></video>
-        <div class="absolute top-0 left-0 h-full w-full" style="background:linear-gradient(180deg,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.05) 32%),linear-gradient(0deg,rgba(0,0,0,0.62) 0%,rgba(0,0,0,0) 55%)"></div>
-      </div>
-    </div>
-  </c-hero-home>
 
-  <!-- ============ STATEMENT (two columns) ============ -->
-  <div class="c-text-two-columns container flex flex-col gap-fluid-lg my-fluid-3xl">
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p06.jpg" width="400" height="286" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p07.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p08.jpg" width="400" height="225" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p09.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p10.jpg" width="400" height="300" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p11.jpg" width="400" height="225" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p12.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p13.jpg" width="400" height="292" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p14.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p01.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p02.jpg" width="400" height="351" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p03.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p04.jpg" width="400" height="351" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p05.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p06.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p07.jpg" width="400" height="300" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p08.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p09.jpg" width="400" height="600" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p10.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p11.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p12.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p13.jpg" width="400" height="600" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p14.jpg" width="400" height="600" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p01.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p02.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p03.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p04.jpg" width="400" height="300" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p05.jpg" width="400" height="292" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p06.jpg" width="400" height="300" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p07.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p08.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p09.jpg" width="400" height="280" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p10.jpg" width="400" height="280" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p11.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p12.jpg" width="400" height="375" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p13.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p14.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p01.jpg" width="400" height="500" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p02.jpg" width="400" height="375" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p03.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p04.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p05.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p06.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p07.jpg" width="400" height="600" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p08.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p09.jpg" width="400" height="287" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p10.jpg" width="400" height="286" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p11.jpg" width="400" height="287" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p12.jpg" width="400" height="600" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p13.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p14.jpg" width="400" height="310" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p01.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p02.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p03.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p04.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p05.jpg" width="400" height="600" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p06.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p07.jpg" width="400" height="500" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p08.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p09.jpg" width="400" height="310" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+                    <div class="absolute aspect-square w-[50px] md:w-[104px]" data-particles="image">
+                
+
+
+    
+
+
+    <div class="c-image absolute inset-0 -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p10.jpg" width="400" height="267" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                <div
+                    data-particles="overlay"
+                    class="pointer-events-none absolute inset-0 bg-white"
+                ></div>
+            </div>
+            </div>
+</c-particles>
+
+<script type="module" src="/dist/Particles-0BM77DBr.js" crossorigin onload="e=new CustomEvent(&#039;vite-script-loaded&#039;, {detail:{path: &#039;src/scripts/components/Particles.ts&#039;}});document.dispatchEvent(e);"></script>
+<link href="/dist/index-5B9hMlRm.js" rel="modulepreload" crossorigin>
+<link href="/dist/component-manager.modern-D6dkbpDa.js" rel="modulepreload" crossorigin>
+<link href="/dist/scroll-B-NtrwPX.js" rel="modulepreload" crossorigin>
+<link href="/dist/screen-DnVIF3Jm.js" rel="modulepreload" crossorigin>
+<link href="/dist/dom-D-2hUXOQ.js" rel="modulepreload" crossorigin>
+<link href="/dist/index-B_r9C59b.js" rel="modulepreload" crossorigin>
+    </c-standout-image-galaxy>
+
+<script type="module" src="/dist/StandoutImageGalaxy-B2el79Mz.js" crossorigin onload="e=new CustomEvent(&#039;vite-script-loaded&#039;, {detail:{path: &#039;src/scripts/components/StandoutImageGalaxy.ts&#039;}});document.dispatchEvent(e);"></script>
+<link href="/dist/SplitText-B_sAOQpb.js" rel="modulepreload" crossorigin>
+<link href="/dist/index-5B9hMlRm.js" rel="modulepreload" crossorigin>
+<link href="/dist/component-manager.modern-D6dkbpDa.js" rel="modulepreload" crossorigin>
+        
+
+
+
+
+<div  class="c-large-card || sm:container my-fluid-2xl">
+    <div
+        class="flex flex-col gap-4 overflow-hidden rounded-lg bg-black p-1 text-white sm:grid sm:grid-cols-2 sm:gap-gutter sm:rounded-2xl"
+    >
+        
+
+
+    
+
+
+    <div class="c-image h-full w-full aspect-[1.6] sm:aspect-square rounded-sm sm:rounded-xl overflow-hidden -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p11.jpg" width="1000" height="1000" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>
+        <div class="flex flex-col gap-2 px-2 sm:justify-between sm:gap-8 sm:px-0">
+                            <h2 class="heading-md mt-4 sm:mt-unit-md anim-text" data-scroll="" data-scroll-offset="15%,0%" data-animation="split">2025<br />
+Annual Report</h2>            
+            <div class="flex flex-col gap-3.5 md:flex-row md:justify-between md:gap-gutter">
+                                    <p
+                        class="w-full body-sm anim-fade md:w-58"
+                        data-scroll
+                        data-scroll-offset="15%,0%"
+                    >
+                        Konkreettinen case: tiimi rakensi koulutuksessa oman tekoälytyökalun kahdessa päivässä ja säästää nyt tunteja joka viikko. Näin se tehtiin.
+                    </p>
+                
+                                    
+                    <a
+                         class="group relative w-cols-2 sm:w-cols-3 sm:min-w-55 h-40 flex flex-col justify-between rounded-xl bg-[rgba(255,255,255,0.1)] p-unit-sm ml-auto md:ml-0 anim-up-scale" href="#yhteys" rel="noopener noreferrer" target="_blank" data-load="false" data-scroll="" data-scroll-offset="15%,0%"
+                    >
+                        <span
+                            class="pointer-events-none absolute inset-0 rounded-xl bg-white/10 opacity-0 transition-opacity duration-(--transition-duration) ease-power2-out group-hover:opacity-100"
+                            aria-hidden="true"
+                        >
+
+                        </span>
+                                                    <span class="label uppercase">CASE</span>
+                                                <div class="flex items-end justify-between">
+                            <span class="body-md font-bold sm:heading-2xs">Lue case</span>
+                            
+
+
+
+    <span class="c-icon block [&amp;_svg]:[--icon-width:16px] sm:[&amp;_svg]:[--icon-width:24px] transition-transform duration-slow ease-expo-out group-hover:scale-125">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>                        </div>
+                    </a>
+                            </div>
+        </div>
+    </div>
+</div>
+        
+
+
+
+
+<div  class="c-text-two-columns container flex flex-col gap-fluid-lg my-fluid-3xl">
+    
+    
     <div class="grid gap-fluid-4xl md:grid-cols-2 md:gap-gutter">
-      <div class="max-w-[grid-space(2/4)] md:max-w-[grid-space(4/12)]"></div>
-      <div class="flex flex-col items-start gap-fluid-md">
-        <div class="anim-fade heading-md sm:heading-xs md:w-cols-4" data-scroll data-scroll-offset="15%,0%" style="--anim-delay:0.2s">
-          <p>Tiimisi oppii rakentamaan itse. Istutaan saman pöydän ääreen, kädet näppäimistöllä, ja rakennetaan juuri se mitä arkenne tarvitsee. Kun koulutus päättyy, taito jää teille.</p>
-        </div>
-        <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
-          <a class="c-button" href="#esimerkit"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Näin se toimii</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="max-w-[grid-space(2/4)] md:max-w-[grid-space(4/12)]">
+                            <h2 class="heading-md sm:heading-xs anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split">Yksi tiimi,  <br />
+yhteinen tavoite,  <br />
+rajaton osaaminen.</h2>                    </div>
 
-  <!-- ============ STANDOUT (staggered title) ============ -->
-  <c-standout-image-galaxy class="c-standout-image-galaxy" id="ratkaisu">
-    <div class="galaxy-scatter" data-scroll data-scroll-offset="15%,0" data-anim-parent aria-hidden="true">
-      <div class="ph ph-1 g-img anim-up-scale" data-scroll style="--x:5%;--y:12%;--s:108px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-2 g-img anim-up-scale" data-scroll style="--x:78%;--y:9%;--s:120px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-3 g-img anim-up-scale" data-scroll style="--x:14%;--y:55%;--s:92px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-4 g-img anim-up-scale" data-scroll style="--x:69%;--y:60%;--s:128px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-5 g-img anim-up-scale" data-scroll style="--x:89%;--y:40%;--s:84px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-6 g-img anim-up-scale" data-scroll style="--x:41%;--y:7%;--s:80px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-2 g-img anim-up-scale" data-scroll style="--x:2%;--y:75%;--s:100px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-3 g-img anim-up-scale" data-scroll style="--x:90%;--y:75%;--s:96px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-1 g-img anim-up-scale" data-scroll style="--x:55%;--y:83%;--s:88px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-5 g-img anim-up-scale" data-scroll style="--x:28%;--y:84%;--s:76px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-4 g-img anim-up-scale" data-scroll style="--x:82%;--y:24%;--s:72px"><div class="c-image_inner"></div></div>
-      <div class="ph ph-6 g-img anim-up-scale" data-scroll style="--x:19%;--y:25%;--s:84px"><div class="c-image_inner"></div></div>
-    </div>
-    <div class="c-standout-image-galaxy_inner" data-scroll data-scroll-offset="15%,0" data-anim-parent>
-      <h2 class="c-standout-image-galaxy_title" data-standout-image-galaxy="title">
-        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:0;--pl-sm:0">Opitaan rakentamalla,</span>
-        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:2.5em;--pl-sm:1.5em">ei kalvoja</span>
-        <span class="pl-[var(--pl-sm)] sm:pl-[var(--pl)]" style="--pl:3.75em;--pl-sm:2.25em">katsomalla.</span>
-      </h2>
-      <a class="c-button c-standout-image-galaxy_button" href="#paketit"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Katso paketit</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
-    </div>
-  </c-standout-image-galaxy>
+        <div class="flex flex-col items-start gap-fluid-md">
+                            <div
+                     class="anim-fade heading-md sm:heading-xs md:w-cols-5" data-scroll data-scroll-offset="15%,0%" style="--anim-delay: 0.2s"
+                >
+                    <p>Koulutus rakentuu uteliaisuudelle ja yhdessä tekemiselle. Käydään läpi tiimisi oikeat työnkulut ja rakennetaan niihin tekoälyratkaisut, jotka jäävät käyttöön koulutuksen jälkeenkin.</p>
+                </div>
+            
+                            <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
+                    
+                                
 
-  <!-- ============ LARGE CARD ============ -->
-  <div class="c-large-card sm:container my-fluid-2xl">
-    <div class="flex flex-col gap-4 overflow-hidden rounded-lg bg-black p-1 text-white sm:grid sm:grid-cols-2 sm:gap-gutter sm:rounded-2xl">
-      <div class="ph ph-4 c-image h-full w-full aspect-[1.6] sm:aspect-square rounded-sm sm:rounded-xl overflow-hidden -cover"><div class="c-image_inner"></div></div>
-      <div class="flex flex-col gap-2 px-2 sm:justify-between sm:gap-8 sm:px-0">
-        <h2 class="heading-md mt-4 sm:mt-unit-md anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split">Tekoälyllä rakennetaan tuotteita joka päivä.</h2>
-        <div class="flex flex-col gap-3.5 md:flex-row md:justify-between md:gap-gutter">
-          <p class="w-full body-sm anim-fade md:w-58" data-scroll data-scroll-offset="15%,0%">Ei teoriaa diaesityksestä. Koulutuksessa käytetään samoja menetelmiä, joilla rakennetaan tuotannossa olevia ratkaisuja. Opitte sen mikä toimii.</p>
-          <a class="group relative w-cols-2 sm:w-cols-3 sm:min-w-55 h-40 flex flex-col justify-between rounded-xl bg-[rgba(255,255,255,0.1)] p-unit-sm ml-auto md:ml-0 anim-up-scale" href="#yhteys" data-scroll data-scroll-offset="15%,0%" data-book>
-            <span class="pointer-events-none absolute inset-0 rounded-xl bg-white/10 opacity-0 transition-opacity duration-(--transition-duration) ease-power2-out group-hover:opacity-100" aria-hidden="true"></span>
-            <span class="label uppercase">Aloita</span>
-            <div class="flex items-end justify-between"><span class="body-md font-bold sm:heading-2xs">Varaa keskustelu</span><span class="c-icon" aria-hidden="true">↗</span></div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+    
 
-  <!-- ============ STATEMENT 2 ============ -->
-  <div class="c-text-two-columns container flex flex-col gap-fluid-lg my-fluid-3xl">
-    <div class="grid gap-fluid-4xl md:grid-cols-2 md:gap-gutter">
-      <div class="max-w-[grid-space(2/4)] md:max-w-[grid-space(4/12)]">
-        <h2 class="heading-md sm:heading-xs anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split">Kolme asiaa jää käyttöön.</h2>
-      </div>
-      <div class="flex flex-col items-start gap-fluid-md">
-        <div class="anim-fade heading-md sm:heading-xs md:w-cols-5" data-scroll data-scroll-offset="15%,0%" style="--anim-delay:0.2s">
-          <p>Toistuvat rutiinit siirtyvät automaatille, tiimi rakentaa omat työkalunsa ja tuotteensa, ja osaaminen jää taloon. Ei riippuvuutta yhdestäkään konsultista.</p>
-        </div>
-        <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
-          <a class="c-button" href="#esimerkit"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Katso esimerkit</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ============ PAKETIT (market snapshot layout) ============ -->
-  <div class="c-market-snapshot my-fluid-3xl" id="paketit">
+
+<a class="c-button" href="#" target="_blank">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    
+
+
+
+    <span class="c-icon c-button_icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>                    
+        <span class="c-button_label" >Tutustu polkuun</span>
+
+                                    
+
+
+
+    <span class="c-icon c-button_icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>                        </div>
+</a>                </div>
+                    </div>
+    </div>
+</div>
+        
+
+            
+    
+
+
+<div  class="c-market-snapshot || my-fluid-3xl">
     <div class="c-market-snapshot_inner">
-      <div class="c-market-snapshot_summary">
-        <h2 class="c-market-snapshot_title anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split">Valitse lähtötaso.</h2>
-        <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
-          <a class="c-button -outline -small" href="#yhteys" data-book><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
-        </div>
-      </div>
-      <div class="c-market-snapshot_details">
-        <div class="c-market-snapshot_header" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
-          <h3 class="c-market-snapshot_stock anim-fade">Rakennusjakso · suosituin</h3>
-          <span class="c-market-snapshot_type anim-fade" style="--anim-delay:0.15s">4 viikkoa</span>
-        </div>
-        <div class="c-market-snapshot_body anim-fade-scale" data-scroll data-scroll-offset="15%,0%">
-          <div><span class="c-market-snapshot_value">8 900</span> <span class="c-market-snapshot_unit">€ + alv</span></div>
-        </div>
-        <dl class="c-market-snapshot_footer" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
-          <div class="c-market-snapshot_item anim-up" style="--anim-delay:0.15s"><dt>Startti</dt><dd>1 900 €</dd></div>
-          <div class="c-market-snapshot_item anim-up" style="--anim-delay:0.2s"><dt>Rakennusjakso</dt><dd>8 900 €</dd></div>
-          <div class="c-market-snapshot_item anim-up" style="--anim-delay:0.25s"><dt>Kumppani</dt><dd>alk. 1 500 € / kk</dd></div>
-        </dl>
-      </div>
-    </div>
-  </div>
+        <div class="c-market-snapshot_summary">
+                            <h2 class="c-market-snapshot_title anim-text" data-scroll="" data-scroll-offset="15%,0%" data-animation="split">Tulokset</h2>            
+                            <div class="anim-up-scale" data-scroll data-scroll-offset="15%,0%">
+                    
+                    
 
-  <!-- ============ ESIMERKIT (cards carousel) ============ -->
-  <c-carousel data-slides-visible="3" id="esimerkit" role="region" aria-label="Esimerkit mitä voit rakentaa">
-    <div class="c-cards-carousel flex flex-col gap-fluid-lg my-fluid-2xl">
-      <div class="container items-end sm:grid-layout">
-        <div class="flex items-center justify-between gap-fluid-sm sm:col-span-6 sm:col-start-1 sm:items-end sm:justify-start" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
-          <h2 class="heading-xs anim-text" data-animation="split">Mitä voitte rakentaa</h2>
-          <span class="group relative inline-flex">
-            <a class="c-button -unstyled body-md text-gray-600 gap-fluid-2xs anim-fade" href="#yhteys" data-book style="--anim-delay:0.15s"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">↗</span></div></a>
-          </span>
-        </div>
-        <div class="col-span-1 col-start-11 hidden text-right body-md anim-fade sm:block" data-scroll data-scroll-offset="15%,0%">
-          <button class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400" data-carousel="prev" aria-controls="esim-track"><span class="flex items-center gap-1">Edellinen</span></button>
-        </div>
-        <div class="col-span-1 col-start-12 hidden text-right body-md anim-fade sm:block" data-scroll data-scroll-offset="15%,0%">
-          <button class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400" data-carousel="next" aria-controls="esim-track"><span class="flex items-center gap-1">Seuraava</span></button>
-        </div>
-      </div>
-      <div class="overflow-hidden">
-        <div class="flex cursor-grab overflow-x-auto pl-unit-sm select-none sm:pl-unit-lg [&amp;::-webkit-scrollbar]:hidden" data-carousel="track" id="esim-track" role="list" tabindex="0" aria-label="Esimerkkikortit, vieritä nuolilla" style="scrollbar-width:none">
-          <article class="c-card" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-1 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Myynti</span><h3 class="c-card_title">Tarjouslaskuri, joka tekee luonnoksen minuuteissa.</h3></div></article>
-          <article class="c-card" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-2 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Asiakaspalvelu</span><h3 class="c-card_title">Avustaja yleisimpiin kysymyksiin, joka oppii teidän tyylinne.</h3></div></article>
-          <article class="c-card" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-5 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Raportointi</span><h3 class="c-card_title">Raporttien ja palautteiden automaattinen kooste.</h3></div></article>
-          <article class="c-card" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-3 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Sisältö</span><h3 class="c-card_title">Sisällöntuotanto somen ja uutiskirjeen pohjiksi.</h3></div></article>
-          <article class="c-card" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-4 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Data</span><h3 class="c-card_title">Datan siirto ja siivous järjestelmien välillä.</h3></div></article>
-          <article class="c-card" data-carousel="slide" role="listitem"><div class="c-card_inner"><div class="ph ph-6 c-image c-card_image -rounded"><div class="c-image_inner"></div></div><span class="c-card_eyebrow">Tieto</span><h3 class="c-card_title">Sisäinen hakutyökalu omiin dokumentteihin.</h3></div></article>
-        </div>
-      </div>
-    </div>
-  </c-carousel>
+    
 
-  <!-- ============ POLKU ============ -->
-  <div class="container my-fluid-3xl" id="polku">
-    <span class="label anim-fade" data-scroll data-scroll-offset="15%,0%">Miten etenemme</span>
-    <h2 class="heading-md anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split" style="margin-top:1rem">Selkeä polku alusta käyttöön.</h2>
-    <div class="grid gap-fluid-lg sm:grid-cols-4" data-scroll data-scroll-offset="15%,0%" data-anim-parent style="margin-top:var(--spacing-fluid-2xl,3rem);border-top:1px solid var(--color-gray-200);padding-top:2rem">
-      <div class="anim-up"><span class="label">Kartoitus</span><h3 class="heading-2xs" style="margin:.6rem 0">Etsitään hyöty</h3><p class="body-sm text-gray-500">Käydään arkenne läpi ja etsitään paikat, joissa tekoäly tuo eniten hyötyä.</p></div>
-      <div class="anim-up" style="--anim-delay:.1s"><span class="label">Työpaja</span><h3 class="heading-2xs" style="margin:.6rem 0">Rakennetaan yhdessä</h3><p class="body-sm text-gray-500">Kädet näppäimistöllä. Jokainen tekee itse, ei katso vierestä.</p></div>
-      <div class="anim-up" style="--anim-delay:.2s"><span class="label">Käyttöönotto</span><h3 class="heading-2xs" style="margin:.6rem 0">Viedään tuotantoon</h3><p class="body-sm text-gray-500">Ratkaisu viedään oikeaan käyttöön ja varmistetaan, että se pysyy pystyssä.</p></div>
-      <div class="anim-up" style="--anim-delay:.3s"><span class="label">Jatko</span><h3 class="heading-2xs" style="margin:.6rem 0">Sparrataan eteenpäin</h3><p class="body-sm text-gray-500">Tiimiä sparrataan ja tuetaan seuraavissa ratkaisuissa tarpeen mukaan.</p></div>
-    </div>
-  </div>
 
-  <!-- ============ PUSH / CTA ============ -->
-  <div class="c-push relative pt-6 sm:pt-4 pb-32 sm:pb-50 min-h-svh rounded-t-2xl overflow-hidden mt-fluid-3xl" id="yhteys" data-scroll data-scroll-css-progress>
-    <div class="ph-push" style="position:absolute;left:0;top:-10%;width:100%;height:120%;z-index:-2;transform:scale(calc(1.15 - var(--progress,0)*0.15)) translateY(calc((var(--progress,0)*2 - 1)*8%))"></div>
-    <div class="absolute inset-0 -z-1" style="background:linear-gradient(0deg,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.5) 100%)"></div>
+
+<a class="c-button -outline -small" href="#" rel="noopener noreferrer" target="_blank" data-load="false">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    
+
+
+
+    <span class="c-icon c-button_icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>                    
+        <span class="c-button_label" >Vaikuttavuus</span>
+
+                                    
+
+
+
+    <span class="c-icon c-button_icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>                        </div>
+</a>                </div>
+                    </div>
+
+        <div class="c-market-snapshot_details">
+            <div
+                class="c-market-snapshot_header"
+                data-scroll
+                data-scroll-offset="15%,0%"
+                data-anim-parent
+            >
+                                    <h3 class="c-market-snapshot_stock anim-fade">[ yrityksen nimi ]</h3>                
+                                    <span class="c-market-snapshot_type anim-fade" style="--anim-delay: 0.15s">
+                        Keskimääräinen ajansäästö
+                    </span>
+                            </div>
+
+            <div
+                class="c-market-snapshot_body anim-fade-scale"
+                data-scroll
+                data-scroll-offset="15%,0%"
+            >
+                <div>
+                    <span class="c-market-snapshot_value">
+                        12 h
+                    </span>
+                    <span class="c-market-snapshot_unit">/ viikko / tiimi</span>
+                </div>
+            </div>
+
+            <dl
+                class="c-market-snapshot_footer"
+                data-scroll
+                data-scroll-offset="15%,0%"
+                data-anim-parent
+            >
+                                    <div class="c-market-snapshot_item anim-up" style="--anim-delay: 0.15s">
+                        <dt>
+                            TYYTYVÄISYYS
+                        </dt>
+                        <dd>4.8 / 5</dd>
+                    </div>
+                
+                                    <div class="c-market-snapshot_item anim-up" style="--anim-delay: 0.2s">
+                        <dt>
+                            KÄYTTÖÖNOTTO
+                        </dt>
+                        <dd>2 vk</dd>
+                    </div>
+                
+                                    <div class="c-market-snapshot_item anim-up" style="--anim-delay: 0.25s">
+                        <dt>
+                            KOULUTETTUJA
+                        </dt>
+                        <dd>250+</dd>
+                    </div>
+                
+                                    <div class="c-market-snapshot_item anim-up" style="--anim-delay: 0.3s">
+                        <dt>
+                            SUOSITTELU (NPS)
+                        </dt>
+                        <dd>72</dd>
+                    </div>
+                            </dl>
+        </div>
+    </div>
+</div>
+        
+
+
+
+
+<c-carousel data-slides-visible="3">
+    <div  class="c-cards-carousel || flex flex-col gap-fluid-lg my-fluid-2xl">
+        <div class="container items-end sm:grid-layout">
+            <div
+                class="flex items-center justify-between gap-fluid-sm sm:col-span-6 sm:col-start-1 sm:items-end sm:justify-start"
+                data-scroll
+                data-scroll-offset="15%,0%"
+                data-anim-parent
+            >
+                <h2 class="heading-xs anim-text" data-animation="split">Ajankohtaista</h2>                                    <span class="group relative inline-flex">
+                        
+                    
+
+    
+
+
+
+<a class="c-button -unstyled body-md text-gray-600 gap-fluid-2xs anim-fade" href="https://tekoalykoulutus.gcs-web.com/press-releases" rel="noopener noreferrer" target="_blank" data-load="false" style="--anim-delay: 0.15s;">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+        
+        <span class="c-button_label" >Katso kaikki</span>
+
+                                    
+
+
+
+    <span class="c-icon c-button_icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>                        </div>
+</a>                        <span
+                            class="pointer-events-none absolute inset-[-0.5em] rounded-md bg-current/10 opacity-0 transition-opacity duration-(--transition-duration) ease-power2-out group-hover:opacity-100"
+                            aria-hidden="true"
+                        >
+
+                        </span>
+                    </span>
+                            </div>
+
+            <div
+                class="col-span-1 col-start-11 hidden text-right body-md anim-fade sm:block"
+                data-scroll
+                data-scroll-offset="15%,0%"
+            >
+                <button
+                    class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400"
+                    data-carousel="prev"
+                >
+                    <span class="flex items-center gap-1">Edellinen</span>
+                    <span
+                        class="absolute inset-[-0.5em] rounded-md bg-current/10 opacity-0 transition-opacity duration-(--transition-duration) ease-power2-out group-focus:opacity-100 group-hover:opacity-100"
+                    />
+                </button>
+            </div>
+            <div
+                class="col-span-1 col-start-12 hidden text-right body-md anim-fade sm:block"
+                data-scroll
+                data-scroll-offset="15%,0%"
+            >
+                <button
+                    class="group relative cursor-pointer outline-offset-[-0.25em] disabled:text-gray-400"
+                    data-carousel="next"
+                >
+                    <span class="flex items-center gap-1">Seuraava</span>
+                    <span
+                        class="absolute inset-[-0.5em] rounded-md bg-current/10 opacity-0 transition-opacity duration-(--transition-duration) ease-power2-out group-focus:opacity-100 group-hover:opacity-100"
+                    />
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-hidden">
+            <div
+                class="flex cursor-grab snap-x snap-mandatory [scroll-padding-inline:var(--spacing-unit-sm)] overflow-x-auto pl-unit-sm select-none [scrollbar-width:none] sm:[scroll-padding-inline:var(--spacing-unit-lg)] sm:pl-unit-lg [&.is-dragging]:cursor-grabbing [&::-webkit-scrollbar]:hidden"
+                data-carousel="track"
+            >
+                                    
+
+
+<article  class="c-card snap-start" data-carousel="slide">
+    <div class="c-card_inner">
+                    
+
+
+    
+
+
+    <div class="c-image c-card_image -rounded -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p12.jpg" width="900" height="676" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>        
+                    <span class="c-card_eyebrow">Markkinointitiimi automatisoi viikkoraportoinnin</span>
+        
+        <h3 class="c-card_title">            Viikkoraportti syntyy nyt minuuteissa. Tiimi rakensi koulutuksessa oman koosteautomaation ja vapautti aikaa varsinaiseen työhön.        </h3>
+            </div>
+</article>
+                                    
+
+
+<article  class="c-card snap-start" data-carousel="slide">
+    <div class="c-card_inner">
+                    
+
+
+    
+
+
+    <div class="c-image c-card_image -rounded -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p13.jpg" width="900" height="676" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>        
+                    <span class="c-card_eyebrow">Asiakaspalvelu vastaa nopeammin tekoälyn avulla</span>
+        
+        <h3 class="c-card_title">            Yleisimpiin kysymyksiin syntyy laadukkaat vastausluonnokset sekunneissa. Sävy pysyy yrityksen omana, ihminen hyväksyy aina.        </h3>
+            </div>
+</article>
+                                    
+
+
+<article  class="c-card snap-start" data-carousel="slide">
+    <div class="c-card_inner">
+                    
+
+
+    
+
+
+    <div class="c-image c-card_image -rounded -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p14.jpg" width="900" height="676" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>        
+                    <span class="c-card_eyebrow">Myyntitiimi rakensi oman tarjousavustajan</span>
+        
+        <h3 class="c-card_title">            Tarjoukset syntyvät puolet nopeammin. Koulutuksessa tehtiin työkalu, joka kirjoittaa pohjan asiakastietojen perusteella.        </h3>
+            </div>
+</article>
+                                    
+
+
+<article  class="c-card snap-start" data-carousel="slide">
+    <div class="c-card_inner">
+                    
+
+
+    
+
+
+    <div class="c-image c-card_image -rounded -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p01.jpg" width="900" height="676" alt="" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>        
+                    <span class="c-card_eyebrow">Sisällöntuotanto nelinkertaisti tahdin</span>
+        
+        <h3 class="c-card_title">            Blogit, somepostaukset ja uutiskirjeet ideasta julkaisuun samassa istunnossa. Brändiääni säilyy.        </h3>
+            </div>
+</article>
+                                    
+
+
+<article  class="c-card snap-start" data-carousel="slide">
+    <div class="c-card_inner">
+                    
+
+
+    
+
+
+    <div class="c-image c-card_image -rounded -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p02.jpg" width="900" height="676" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>        
+                    <span class="c-card_eyebrow">HR nopeutti rekrytointia</span>
+        
+        <h3 class="c-card_title">            Työpaikkailmoitukset ja haastattelurungot syntyvät nopeasti. Hakijakokemus paranee, prosessi pysyy reiluna.        </h3>
+            </div>
+</article>
+                                    
+
+
+<article  class="c-card snap-start" data-carousel="slide">
+    <div class="c-card_inner">
+                    
+
+
+    
+
+
+    <div class="c-image c-card_image -rounded -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p03.jpg" width="900" height="676" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>        
+                    <span class="c-card_eyebrow">Talous automatisoi rutiinit</span>
+        
+        <h3 class="c-card_title">            Toistuvat täsmäytykset ja koosteet hoituvat automaattisesti. Virheet vähenivät, aikaa jää analyysiin.        </h3>
+            </div>
+</article>
+                                    
+
+
+<article  class="c-card snap-start" data-carousel="slide">
+    <div class="c-card_inner">
+                    
+
+
+    
+
+
+    <div class="c-image c-card_image -rounded -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p04.jpg" width="900" height="676" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>        
+                    <span class="c-card_eyebrow">Johto sai päätöksenteon tueksi koosteet</span>
+        
+        <h3 class="c-card_title">            Pitkät dokumentit tiivistyvät olennaiseen. Päätökset perustuvat tietoon, eivät arvauksiin.        </h3>
+            </div>
+</article>
+                                    
+
+
+<article  class="c-card snap-start" data-carousel="slide">
+    <div class="c-card_inner">
+                    
+
+
+    
+
+
+    <div class="c-image c-card_image -rounded -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p05.jpg" width="900" height="676" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>        
+                    <span class="c-card_eyebrow">Koko organisaatio puhuu samaa tekoälykieltä</span>
+        
+        <h3 class="c-card_title">            Yhteinen käytäntö ja työkalut otettiin käyttöön kahdessa viikossa. Osaaminen jäi taloon.        </h3>
+            </div>
+</article>
+                            </div>
+        </div>
+    </div>
+</c-carousel>
+
+<script type="module" src="/dist/Carousel-BQ8YF4PF.js" crossorigin onload="e=new CustomEvent(&#039;vite-script-loaded&#039;, {detail:{path: &#039;src/scripts/components/Carousel.ts&#039;}});document.dispatchEvent(e);"></script>
+<link href="/dist/component-manager.modern-D6dkbpDa.js" rel="modulepreload" crossorigin>
+<link href="/dist/screen-DnVIF3Jm.js" rel="modulepreload" crossorigin>
+    
+                                
+    
+                    
+
+
+<div  class="c-push relative pt-6 sm:pt-4 pb-32 sm:pb-50 min-h-svh rounded-t-2xl overflow-hidden mt-fluid-3xl translate-y-8" data-scroll data-scroll-css-progress>
+            <div class="absolute inset-0 -z-1 overflow-hidden" aria-hidden="true">
+            <div
+                class="absolute inset-0"
+                style="transform: scale(calc(1.15 - var(--progress, 0) * 0.15)) translateY(calc((var(--progress, 0) * 2 - 1) * 10%))"
+            >
+                
+
+
+    
+
+
+    <div class="c-image w-full h-full -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p06.jpg" width="1920" height="1281" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>            </div>
+        </div>
+        <div
+            class="absolute inset-0 -z-1"
+            style="background: linear-gradient(0deg, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0.60) 100%);"
+        ></div>
+    
     <div class="flex flex-col items-center gap-32 text-center text-white md:gap-50">
-      <h2 class="flex flex-col justify-center display-lg anim-text" data-scroll data-scroll-offset="15%,0%" data-animation="split"><span>Varataan</span><span>30 minuutin</span><span>keskustelu.</span></h2>
-      <div data-scroll data-scroll-offset="15%,0%" data-anim-parent>
-        <p class="w-82 body-md anim-fade" style="margin-inline:auto">Katsotaan yhdessä, mistä teidän kannattaa aloittaa. Ei sitoumuksia.</p>
-        <a class="c-button -white -small mt-fluid-xl anim-up-scale" href="mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%2C%20keskustelu" data-book><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Varaa keskustelu</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
-      </div>
+                    <h2 class="flex flex-col justify-center display-lg anim-text" data-scroll="" data-scroll-offset="15%,0%" data-animation="split">                                    <span>Rakennetaan</span>
+                                    <span>tekoäly-</span>
+                                    <span>osaaminen</span>
+                                    <span>yhdessä.</span>
+                            </h2>        
+        <div data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+                            <p class="w-82 body-md anim-fade">
+                    Roolista riippumatta tekoälystä saa konkreettista hyötyä arkeen. Aloitetaan tiimisi oikeista tarpeista.
+                </p>
+            
+                            
+
+
+    
+
+
+
+<a class="c-button -white -small mt-fluid-xl anim-up-scale" href="#" target="_blank">    <div class="c-button_bg"></div>
+
+    <div class="c-button_inner">
+                                    
+
+
+
+    <span class="c-icon c-button_icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>                    
+        <span class="c-button_label" >Varaa keskustelu</span>
+
+                                    
+
+
+
+    <span class="c-icon c-button_icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>                        </div>
+</a>                    </div>
     </div>
-  </div>
-</main>
+</div>
+                </main>
 
-<!-- ============ FOOTER ============ -->
-<footer class="c-footer">
-  <div class="c-footer_inner">
-    <div class="c-footer_header">
-      <a class="c-footer_logo" href="#hero" style="font-weight:800;font-size:1.4rem;letter-spacing:-.04em" data-scroll data-scroll-offset="15%,0%">[ yrityksen nimi ]</a>
-      <nav class="c-footer_menu" aria-label="Sivun osiot">
-        <ul class="c-footer_menu-list" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
-          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="/palvelut.html">Palvelut <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
-          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="/hinnasto.html">Hinnasto <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
-          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="/prosessi.html">Prosessi <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
-          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="/tietoa.html">Tietoa <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
-          <li class="c-footer_menu-item"><a class="c-footer_menu-link" href="/yhteystiedot.html">Yhteystiedot <span class="c-icon" aria-hidden="true">→</span></a><span class="c-footer_menu-link-border"></span></li>
-        </ul>
-      </nav>
+                            <footer
+    class="c-footer --has-pre-footer"
+    data-scroll
+    data-scroll-repeat
+    data-scroll-offset="-10%,0"
+    data-scroll-call="footerInAvaa"
+>
+    <div class="c-footer_inner">
+        <div class="c-footer_header">
+                        
+
+
+
+    <a class="c-icon c-footer_logo" href="/" data-scroll data-scroll-offset="15%,0%">                <span class="brand-wordmark">[ yrityksen nimi ]</span>
+    </a>
+                                        <nav class="c-footer_menu">
+                    <ul
+                        class="c-footer_menu-list"
+                        data-scroll
+                        data-scroll-offset="15%,0%"
+                        data-anim-parent
+                    >
+                                                    <li class="c-footer_menu-item">
+                                
+    
+
+                    
+    <a class="c-footer_menu-link" href="#" target="_self">        Ratkaisu                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-→" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#→"></use>
+        </svg>
+    </span>        
+            </a>                                <span class="c-footer_menu-link-border" />
+                            </li>
+                                                    <li class="c-footer_menu-item">
+                                
+    
+
+                    
+    <a class="c-footer_menu-link" href="#" target="_self">        Esimerkit                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-→" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#→"></use>
+        </svg>
+    </span>        
+            </a>                                <span class="c-footer_menu-link-border" />
+                            </li>
+                                                    <li class="c-footer_menu-item">
+                                
+    
+
+                    
+    <a class="c-footer_menu-link" href="#" target="_self">        Polku                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-→" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#→"></use>
+        </svg>
+    </span>        
+            </a>                                <span class="c-footer_menu-link-border" />
+                            </li>
+                                                    <li class="c-footer_menu-item">
+                                
+    
+
+                    
+    <a class="c-footer_menu-link" href="#" target="_self">        Menetelmä                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-→" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#→"></use>
+        </svg>
+    </span>        
+            </a>                                <span class="c-footer_menu-link-border" />
+                            </li>
+                                                    <li class="c-footer_menu-item">
+                                
+    
+
+                    
+    <a class="c-footer_menu-link" href="#" target="_blank">        Varaa keskustelu                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                                <span class="c-footer_menu-link-border" />
+                            </li>
+                                                    <li class="c-footer_menu-item">
+                                
+    
+
+                    
+    <a class="c-footer_menu-link" href="#" target="_self">        Yhteys                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-→" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#→"></use>
+        </svg>
+    </span>        
+            </a>                                <span class="c-footer_menu-link-border" />
+                            </li>
+                                            </ul>
+                </nav>
+                    </div>
+
+                <div class="c-footer_content">
+            <div class="c-footer_text">
+                                    <p
+                        class="c-footer_text-content anim-fade"
+                        data-scroll
+                        data-scroll-offset="15%,0%"
+                    >
+                        Käytännönläheistä tekoälykoulutusta tiimeille ja yrityksille. Rakennetaan oikeita ratkaisuja yhdessä, jotta osaaminen jää taloon.
+                    </p>
+                
+                                    <nav class="c-footer_socials">
+                        <ul
+                            class="c-footer_socials-list"
+                            data-scroll
+                            data-scroll-offset="15%,0%"
+                            data-anim-parent
+                        >
+                                                            <li class="c-footer_socials-item">
+                                    
+    
+
+                    
+    <a class="c-footer_socials-link" href="https://www.instagram.com/tekoalykoulutus" target="_blank">                    
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-instagram" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#instagram"></use>
+        </svg>
+    </span>        @tekoalykoulutus    </a>                                </li>
+                                                            <li class="c-footer_socials-item">
+                                    
+    
+
+                    
+    <a class="c-footer_socials-link" href="https://www.instagram.com/lifeatwww/" target="_blank">                    
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-instagram" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#instagram"></use>
+        </svg>
+    </span>        @tekoalykoulutus    </a>                                </li>
+                                                            <li class="c-footer_socials-item">
+                                    
+    
+
+                    
+    <a class="c-footer_socials-link" href="https://linkedin.com/company/tekoalykoulutus/" target="_blank">                    
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-linkedin" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#linkedin"></use>
+        </svg>
+    </span>        tekoalykoulutus    </a>                                </li>
+                                                    </ul>
+                    </nav>
+                            </div>
+
+                                        <nav class="c-footer_brands">
+                    <ul
+                        class="c-footer_brands-list"
+                        data-scroll
+                        data-scroll-offset="15%,0%"
+                        data-anim-parent
+                    >
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="http://www.merrell.com/" target="_blank">        ChatGPT                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="http://www.saucony.com/" target="_blank">        Claude                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="#" target="_blank">        Copilot                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="https://www.sweatybetty.com/" target="_blank">        Gemini                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="http://www.catfootwear.com/" target="_blank">        Cursor                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="http://www.chacos.com/" target="_blank">        n8n                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="http://www.hushpuppies.com/" target="_blank">        Make                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="https://www.striderite.com/" target="_blank">        Midjourney                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="https://www.hytest.com/" target="_blank">        Perplexity                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="https://www.harley-davidson.com/us/en/shop/c/mens-motorcycle-footwear" target="_blank">        NotebookLM                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                                    <li class="c-footer_brands-item">
+                                
+    
+
+                    
+    <a class="c-footer_brands-link" href="#" target="_blank">        Zapier                        
+
+
+
+    <span class="c-icon" aria-hidden="true">                <svg class="svg-external" focusable="false" aria-hidden="true">
+            <use xlink:href="/dist/sprite.svg?v=1782561814#external"></use>
+        </svg>
+    </span>        
+            </a>                            </li>
+                                            </ul>
+                </nav>
+                    </div>
+
+                <div class="c-footer_bottom" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
+            <div class="c-footer_bottom-item">
+                <div class="c-footer_bottom-copyright">
+                    © 2026 [ yrityksen nimi ]
+                </div>
+            </div>
+                            <div class="c-footer_bottom-item">
+                    
+
+
+        
+    <a class="c-footer_bottom-link" href="#" target="_self">        Käyttöehdot    </a>                </div>
+                            <div class="c-footer_bottom-item">
+                    
+
+
+        
+    <a class="c-footer_bottom-link" href="#" target="_self">        Saavutettavuusseloste    </a>                </div>
+                            <div class="c-footer_bottom-item">
+                    
+
+
+        
+    <a class="c-footer_bottom-link" href="#" target="_self">        Yhteystiedot    </a>                </div>
+                            <div class="c-footer_bottom-item">
+                    
+
+
+        
+    <a class="c-footer_bottom-link" href="#" target="_self">        Tietosuoja    </a>                </div>
+            
+            <div class="c-footer_bottom-item">
+                <button class="c-footer_bottom-link" data-cookie-consent="show-settings">
+                    Evästeet
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="c-footer_content">
-      <div class="c-footer_text">
-        <p class="c-footer_text-content anim-fade" data-scroll data-scroll-offset="15%,0%">Hands-on tekoälykoulutuksia pk-yrityksille. Tiimisi rakentaa oikeita ratkaisuja, ja osaaminen jää taloon. Ei kalvosarjaa.</p>
-        <nav class="c-footer_socials" aria-label="Yhteystiedot"><ul class="c-footer_socials-list" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
-          <li class="c-footer_socials-item"><a class="c-footer_socials-link" href="mailto:parkkonen.jesse@gmail.com">parkkonen.jesse@gmail.com</a></li>
-        </ul></nav>
-      </div>
-      <nav class="c-footer_brands" aria-label="Lisää">
-        <ul class="c-footer_brands-list" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
-          <li class="c-footer_brands-item"><a class="c-footer_brands-link" href="/hinnasto.html">Paketit ja hinnat</a></li>
-          <li class="c-footer_brands-item"><a class="c-footer_brands-link" href="/ukk.html">Usein kysytyt</a></li>
-          <li class="c-footer_brands-item"><a class="c-footer_brands-link" href="/tietosuoja.html">Tietosuoja</a></li>
-        </ul>
-      </nav>
+
+                    
+
+    <div
+        class="relative h-[80svh] w-full bg-black [clip-path:inset(0_round_16px_16px_0_0)]"
+        data-scroll
+        data-scroll-css-progress
+        data-scroll-position="start,start"
+        data-scroll-offset="0,20%"
+    >
+        <div class="relative top-[-100svh] h-[calc(80svh+100svh)]">
+            <div class="sticky top-[20svh] h-[80svh] overflow-hidden rounded-t-lg">
+                                <div
+                    class="pointer-events-none absolute inset-0 z-3 hidden items-center justify-center text-white sm:flex"
+                    aria-hidden="true"
+                >
+                    
+
+
+
+    <span class="c-icon [&amp;&gt;svg]:w-cols-10 [&amp;&gt;svg]:h-auto">                <span class="brand-wordmark">[ yrityksen nimi ]</span>
+    </span>                </div>
+
+                <div
+                    class="pointer-events-none relative z-2 h-full w-full [transform:scale(calc(1.3-var(--progress,0)*0.3))]"
+                >
+                    
+
+
+    
+
+
+    <div class="c-image w-full h-full -cover -lazy-load">        <div class="c-image_inner">
+            <img  class="c-image_img" src="/images/p07.jpg" width="1920" height="1080" style="--object-position: 50% 50%;" data-focalpoint-x="0.5" data-focalpoint-y="0.5" loading="lazy" onload="this.classList.add(&#039;is-loaded&#039;); this.parentNode.parentNode.classList.add(&#039;is-loaded&#039;);" />
+        </div>
+
+            </div>                    <div
+                        class="pointer-events-none absolute inset-0 bg-black/20"
+                        aria-hidden="true"
+                    ></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="c-footer_bottom" data-scroll data-scroll-offset="15%,0%" data-anim-parent>
-      <div class="c-footer_bottom-item"><div class="c-footer_bottom-copyright">© 2026 · [ Yrityksen nimi ]</div></div>
-      <div class="c-footer_bottom-item"><span class="c-footer_bottom-link">Helsinki</span></div>
-    </div>
-  </div>
-  <!-- sticky parallax image reveal (Wolverine footer) -->
-  <div class="relative h-[80svh] w-full bg-black" data-scroll data-scroll-css-progress data-scroll-position="start,start" data-scroll-offset="0,20%" style="clip-path:inset(0 round 16px 16px 0 0)">
-    <div class="relative" style="top:-100svh;height:calc(80svh + 100svh)">
-      <div class="sticky overflow-hidden rounded-t-lg" style="top:20svh;height:80svh">
-        <div class="ph-3" style="position:absolute;inset:0;transform:scale(calc(1.3 - var(--progress,0)*0.2))"></div>
-        <div style="position:absolute;inset:0;background:rgba(0,0,0,.2)"></div>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
-<script>
-  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* page-load cover fade (entrance) */
-  const pc = document.getElementById('pagecover');
-  if (pc) { requestAnimationFrame(()=>{ setTimeout(()=>pc.classList.add('lifted'), 60); setTimeout(()=>{ pc.style.display='none'; }, 800); }); }
-
-  /* Lenis smooth scroll (real engine Wolverine uses) */
-  let lenis;
-  if (!RM && window.Lenis) {
-    lenis = new Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: false });
-    function raf(t){ lenis.raf(t); requestAnimationFrame(raf); } requestAnimationFrame(raf);
-    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const el=document.querySelector(a.getAttribute('href'));if(el){e.preventDefault();lenis.scrollTo(el,{offset:0});}}));
-  }
-
-  /* line-split for .anim-text[data-animation=split] -> .anim-text-item per line (Wolverine SplitText) */
-  function splitLines(el){
-    const txt = el.textContent.trim();
-    // honor explicit <span> lines if present
-    const explicit = [...el.querySelectorAll(':scope > span')];
-    let lines;
-    if (explicit.length) { lines = explicit.map(s=>s.textContent.trim()); }
-    else {
-      // measure words into visual lines
-      const words = txt.split(/\s+/);
-      el.textContent = '';
-      const spans = words.map(w=>{ const s=document.createElement('span'); s.textContent=w+' '; s.style.display='inline-block'; el.append(s); return s; });
-      const map = []; let curTop=null, cur=[];
-      spans.forEach(s=>{ const t=s.offsetTop; if(curTop===null||Math.abs(t-curTop)<2){cur.push(s.textContent);curTop=(curTop===null?t:curTop);} else {map.push(cur.join(''));cur=[s.textContent];curTop=t;} });
-      if(cur.length) map.push(cur.join(''));
-      lines = map.map(l=>l.trim());
-    }
-    el.textContent='';
-    el.style.display = el.style.display || 'block';
-    lines.forEach((ln,i)=>{ const wrap=document.createElement('span'); wrap.style.display='block'; wrap.style.overflow='hidden'; const item=document.createElement('span'); item.className='anim-text-item'; item.style.display='block'; item.style.setProperty('--index',i); item.textContent=ln; wrap.appendChild(item); el.appendChild(wrap); });
-  }
-  document.querySelectorAll('.anim-text[data-animation="split"]').forEach(splitLines);
-
-  /* is-inview trigger (replicate Locomotive data-scroll) */
-  const io = new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('is-inview'); io.unobserve(e.target); } }); }, { threshold: 0, rootMargin: '0px 0px -15% 0px' });
-  document.querySelectorAll('[data-scroll]').forEach(el=>io.observe(el));
-  document.querySelectorAll('.c-image').forEach(el=>el.classList.add('is-loaded'));
-
-  const root = document.documentElement;
-  /* NOTE: älä aseta --vw:tä — CSS-fallbackit (100vw/1vw) hoitavat grid-matikan oikein */
-
-  /* header (Wolverine): html.has-scrolled = pill shrinks + bg; html.has-passed-fold + is-scrolling-down = hide; up = show */
-  let lastY = window.scrollY;
-  function headerState(){
-    const y = window.scrollY;
-    root.classList.toggle('has-scrolled', y > 40);
-    root.classList.toggle('has-passed-fold', y > window.innerHeight);
-    if (Math.abs(y - lastY) > 5) {
-      const down = y > lastY;
-      root.classList.toggle('is-scrolling-down', down);
-      root.classList.toggle('is-scrolling-up', !down);
-      lastY = y;
-    }
-  }
-  headerState(); window.addEventListener('scroll', headerState, { passive: true });
-
-  /* --progress parallax for [data-scroll-css-progress] (push + footer image scale) */
-  const prog = [...document.querySelectorAll('[data-scroll-css-progress]')];
-  function updProg(){
-    const vh = window.innerHeight;
-    prog.forEach(el=>{ const r = el.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (vh - r.top) / Math.max(r.height, 1))); el.style.setProperty('--progress', p.toFixed(4)); });
-  }
-  updProg(); window.addEventListener('scroll', updProg, { passive: true });
-
-  /* ---- standout-otsikko: SplitText sanoiksi (Wolverine StandoutImageGalaxy) ----
-     Lähteen tarkat arvot: offset-kuvio + --delay = i*0.1s. CSS (.word) hoitaa revealin. */
-  const GALAXY_OFFSETS = [{x:-40,y:0},{x:0,y:-40},{x:0,y:40},{x:40,y:0},{x:0,y:-40},{x:0,y:40}];
-  document.querySelectorAll('.c-standout-image-galaxy_title').forEach(title => {
-    let wi = 0;
-    [...title.querySelectorAll(':scope > span')].forEach(line => {
-      const words = line.textContent.trim().split(/\s+/);
-      line.textContent = '';
-      words.forEach((w, j) => {
-        const s = document.createElement('span');
-        s.className = 'word';
-        s.textContent = w;
-        const off = GALAXY_OFFSETS[wi % GALAXY_OFFSETS.length];
-        s.style.setProperty('--tx', off.x + 'px');
-        s.style.setProperty('--ty', off.y + 'px');
-        s.style.setProperty('--delay', (wi * 0.1).toFixed(2) + 's');
-        line.appendChild(s);
-        if (j < words.length - 1) line.appendChild(document.createTextNode(' '));
-        wi++;
-      });
-    });
-  });
-
-  /* carousel (drag + prev/next), Wolverine c-carousel */
-  document.querySelectorAll('c-carousel').forEach(root=>{
-    const track = root.querySelector('[data-carousel="track"]');
-    const cards = [...track.querySelectorAll('[data-carousel="slide"]')];
-    const prev = root.querySelector('[data-carousel="prev"]'); const next = root.querySelector('[data-carousel="next"]');
-    const step = ()=> (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : (cards[0]?cards[0].offsetWidth:300));
-    const sync = ()=>{ const max = track.scrollWidth - track.clientWidth; if(prev)prev.disabled = track.scrollLeft <= 1; if(next)next.disabled = track.scrollLeft >= max - 1; };
-    const go = dir=>{ track.scrollBy({ left: dir*step(), behavior: RM?'auto':'smooth' }); };
-    track.addEventListener('scroll', sync, { passive:true });
-    prev&&prev.addEventListener('click',()=>go(-1)); next&&next.addEventListener('click',()=>go(1));
-    let down=false,sx=0,sl=0,moved=false;
-    track.addEventListener('pointerdown',e=>{down=true;moved=false;sx=e.clientX;sl=track.scrollLeft;track.classList.add('is-dragging');track.setPointerCapture(e.pointerId);});
-    track.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-sx;if(Math.abs(dx)>4)moved=true;track.scrollLeft=sl-dx;});
-    const end=e=>{if(!down)return;down=false;track.classList.remove('is-dragging');try{track.releasePointerCapture(e.pointerId);}catch(_){}};
-    track.addEventListener('pointerup',end);track.addEventListener('pointercancel',end);
-    track.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopPropagation();}},true);
-    sync();
-  });
-
-  /* mobile menu */
-  const mm = document.getElementById('mobilemenu');
-  const mmToggle = document.querySelector('[data-mm-open]');
-  if (mm && mmToggle) {
-    const setMM = (open)=>{ mm.classList.toggle('open', open); mm.setAttribute('aria-hidden', String(!open)); mmToggle.setAttribute('aria-expanded', String(open)); document.body.style.overflow = open ? 'hidden' : ''; if (lenis) { open ? lenis.stop() : lenis.start(); } };
-    mmToggle.addEventListener('click', ()=> setMM(!mm.classList.contains('open')));
-    const c = mm.querySelector('[data-mm-close]'); c && c.addEventListener('click', ()=> setMM(false));
-    mm.querySelectorAll('[data-mm-link]').forEach(a=> a.addEventListener('click', ()=> setMM(false)));
-    window.addEventListener('keydown', e=>{ if(e.key==='Escape') setMM(false); });
-  }
-
-  /* ---- Ajanvaraus: glass-modaali + oma kalenteripicker ----
-     BOOKING_EMBED_URL tyhjä = oma kalenteri (varaus sähköpostiin + Google-kalenterikutsu).
-     Jos haluat Googlen oman varaussivun: aseta tähän Appointment schedule -upotuslinkki. */
-  const BOOKING_EMBED_URL = "";
-  const HOST_EMAIL = "parkkonen.jesse@gmail.com";
-  (function setupBooking(){
-    const m = document.createElement('div');
-    m.className = 'book-modal'; m.id = 'bookmodal';
-    m.setAttribute('role','dialog'); m.setAttribute('aria-modal','true');
-    m.setAttribute('aria-label','Varaa keskustelu'); m.setAttribute('aria-hidden','true');
-    m.innerHTML = '<div class="book-modal__scrim" data-book-close></div>' +
-      '<div class="book-modal__panel">' +
-        '<div class="book-modal__head"><div><span class="book-modal__eyebrow">Ajanvaraus</span><h2 class="book-modal__title">Varaa 30 min keskustelu</h2></div>' +
-        '<button class="book-modal__close" type="button" data-book-close aria-label="Sulje">✕</button></div>' +
-        '<div class="book-modal__body"></div></div>';
-    document.body.appendChild(m);
-    const bodyEl = m.querySelector('.book-modal__body');
-    if (BOOKING_EMBED_URL) bodyEl.innerHTML = '<iframe class="book-modal__frame" src="' + BOOKING_EMBED_URL + '" title="Google-ajanvaraus" loading="lazy"></iframe>';
-    else renderCalendar(bodyEl);
-    let lastFocus = null;
-    const openBook = () => { lastFocus = document.activeElement; m.classList.add('open'); m.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; if(typeof lenis!=='undefined'&&lenis)lenis.stop(); const c=m.querySelector('.book-modal__close'); c&&c.focus(); };
-    const closeBook = () => { m.classList.remove('open'); m.setAttribute('aria-hidden','true'); document.body.style.overflow=''; if(typeof lenis!=='undefined'&&lenis)lenis.start(); lastFocus&&lastFocus.focus&&lastFocus.focus(); };
-    document.querySelectorAll('[data-book]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); openBook(); }));
-    m.querySelectorAll('[data-book-close]').forEach(el => el.addEventListener('click', closeBook));
-    window.addEventListener('keydown', e => { if(e.key==='Escape' && m.classList.contains('open')) closeBook(); });
-
-    function renderCalendar(root){
-      const MONTHS=['tammikuu','helmikuu','maaliskuu','huhtikuu','toukokuu','kesäkuu','heinäkuu','elokuu','syyskuu','lokakuu','marraskuu','joulukuu'];
-      const WD=['Ma','Ti','Ke','To','Pe','La','Su'];
-      const SLOTS=['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00'];
-      const today=new Date(); today.setHours(0,0,0,0);
-      let vy=today.getFullYear(), vm=today.getMonth(), sel=null, time=null;
-      const two=n=>String(n).padStart(2,'0');
-      const dstr=d=>d.getDate()+'. '+MONTHS[d.getMonth()];
-      const gfmt=d=>d.getFullYear()+two(d.getMonth()+1)+two(d.getDate())+'T'+two(d.getHours())+two(d.getMinutes())+'00';
-      function calStep(){
-        const first=new Date(vy,vm,1); const lead=(first.getDay()+6)%7; const dim=new Date(vy,vm+1,0).getDate();
-        const curMonth = vy===today.getFullYear() && vm===today.getMonth();
-        let cells=''; for(let i=0;i<lead;i++) cells+='<span class="bk-cal__day -empty"></span>';
-        for(let d=1;d<=dim;d++){ const date=new Date(vy,vm,d); const dow=date.getDay(); const dis=date<today||dow===0||dow===6; cells+='<button class="bk-cal__day" data-day="'+d+'"'+(dis?' disabled':'')+'>'+d+'</button>'; }
-        root.innerHTML='<div class="bk-cal"><span class="bk-sel-label">Valitse päivä</span>'+
-          '<div class="bk-cal__nav"><button class="bk-cal__navbtn" data-mv="-1"'+(curMonth?' disabled':'')+' aria-label="Edellinen kuukausi">‹</button>'+
-          '<span class="bk-cal__month">'+MONTHS[vm]+' '+vy+'</span>'+
-          '<button class="bk-cal__navbtn" data-mv="1" aria-label="Seuraava kuukausi">›</button></div>'+
-          '<div class="bk-cal__grid">'+WD.map(w=>'<span class="bk-cal__wd">'+w+'</span>').join('')+cells+'</div></div>';
-        root.querySelectorAll('[data-mv]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled)return; vm+=+b.dataset.mv; if(vm<0){vm=11;vy--;} if(vm>11){vm=0;vy++;} calStep(); }));
-        root.querySelectorAll('.bk-cal__day[data-day]').forEach(b=>{ if(b.disabled)return; b.addEventListener('click',()=>{ sel=new Date(vy,vm,+b.dataset.day); timeStep(); }); });
-      }
-      function timeStep(){
-        root.innerHTML='<button class="bk-back" data-back>‹ Takaisin</button><span class="bk-sel-label">'+dstr(sel)+' · valitse aika</span>'+
-          '<div class="bk-slots">'+SLOTS.map(s=>'<button class="bk-slot" data-t="'+s+'">'+s+'</button>').join('')+'</div>';
-        root.querySelector('[data-back]').addEventListener('click',calStep);
-        root.querySelectorAll('.bk-slot').forEach(b=>b.addEventListener('click',()=>{ time=b.dataset.t; formStep(); }));
-      }
-      function formStep(){
-        root.innerHTML='<button class="bk-back" data-back>‹ Takaisin</button><span class="bk-sel-label">'+dstr(sel)+' klo '+time+'</span>'+
-          '<label class="bk-field"><span>Nimi</span><input type="text" data-name placeholder="Etunimi Sukunimi"></label>'+
-          '<label class="bk-field"><span>Sähköposti</span><input type="email" data-email placeholder="sinä@yritys.fi"></label>'+
-          '<label class="bk-field"><span>Lyhyt viesti (vapaaehtoinen)</span><textarea data-note rows="2" placeholder="Mitä haluaisit ratkaista?"></textarea></label>'+
-          '<input type="text" data-company tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">'+
-          '<button type="button" class="c-button -white -small bk-confirm" data-confirm><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Vahvista varaus</span><span class="c-button_icon" aria-hidden="true">→</span></div></button>';
-        root.querySelector('[data-back]').addEventListener('click',timeStep);
-        root.querySelector('[data-confirm]').addEventListener('click',()=>{
-          const ni=root.querySelector('[data-name]'), ei=root.querySelector('[data-email]');
-          const name=(ni.value||'').trim(), email=(ei.value||'').trim(), note=(root.querySelector('[data-note]').value||'').trim();
-          [ni,ei].forEach(x=>x.style.outline=''); let bad=false;
-          if(!name){ ni.style.outline='2px solid #ff6b6b'; bad=true; }
-          if(!email||!/.+@.+\..+/.test(email)){ ei.style.outline='2px solid #ff6b6b'; bad=true; }
-          if(bad)return;
-          const subject='Ajanvaraus: '+dstr(sel)+' klo '+time;
-          const lines=['Nimi: '+name,'Sähköposti: '+email,'Aika: '+dstr(sel)+' klo '+time]; if(note)lines.push('Viesti: '+note);
-          const mail='mailto:'+HOST_EMAIL+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\n'));
-          const start=new Date(sel); const tp=time.split(':'); start.setHours(+tp[0],+tp[1],0,0); const end=new Date(start.getTime()+30*60000);
-          const g='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent('Tekoälykoulutus, keskustelu')+'&dates='+gfmt(start)+'/'+gfmt(end)+'&add='+encodeURIComponent(HOST_EMAIL)+'&details='+encodeURIComponent('Varaaja: '+name+' ('+email+')'+(note?'\n'+note:''));
-          const payload={name:name,email:email,note:note,date:dstr(sel)+' '+sel.getFullYear(),time:time,company:(root.querySelector('[data-company]').value||'')};
-          const btn=root.querySelector('[data-confirm]'); btn.style.pointerEvents='none'; const lbl=btn.querySelector('.c-button_label'); if(lbl)lbl.textContent='Lähetetään…';
-          fetch('/api/booking',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-            .then(r=>{ if(r.ok){ doneStep(g,'sent'); } else { window.location.href=mail; doneStep(g,'mailto'); } })
-            .catch(()=>{ window.location.href=mail; doneStep(g,'mailto'); });
-        });
-      }
-      function doneStep(gLink, mode){
-        const msg = mode==='sent'
-          ? 'Varauspyyntö lähetetty: '+dstr(sel)+' klo '+time+'. Vahvistus tulee sähköpostiisi.'
-          : 'Sähköpostiohjelmasi avautui valmiilla viestillä, '+dstr(sel)+' klo '+time+'. Lähetä se, niin vahvistan ajan pian.';
-        root.innerHTML='<div class="bk-success"><div class="bk-success__check">✓</div>'+
-          '<p style="font-weight:600;font-size:1.05rem;margin-bottom:.5rem">Varauspyyntö valmis</p>'+
-          '<p style="opacity:.82;font-size:.9rem;line-height:1.6;margin-bottom:1.2rem">'+msg+'</p>'+
-          '<a class="c-button -white -small" href="'+gLink+'" target="_blank" rel="noopener"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_label">Lisää Google-kalenteriin</span><span class="c-button_icon" aria-hidden="true">↗</span></div></a></div>';
-      }
-      calStep();
-    }
-  })();
-</script>
-</body>
+    </footer>
+                    </div>
+    </body>
 </html>
