@@ -26,6 +26,14 @@ Sivu on **uskollinen Wolverine Worldwide -replika** rakennettuna heidän **oikea
 - Header-napin kosketuskorkeus ~41px (<44px) mobiilissa.
 - Käydään läpi lisää fidelity-eroja Wolverineen (button-hover-nuolianimaatio, kortti-leveydet, spacing, type-koot).
 
+## Alasivut (27.6., parkkonen-terminaali) — UUSI
+Sivusto sai perussivuston pakolliset alasivut, mallina Wolverinen sisäsivurakenne (lyhyt page-header-bändi → sisältösektiot → push-CTA → footer). EI kosketa `index.html`:ään.
+- **Uudet:** `palvelut.html`, `hinnasto.html`, `prosessi.html`, `tietoa.html`, `yhteystiedot.html`, `ukk.html`, `tietosuoja.html`.
+- **Jaetut:** `site.css` (alasivujen chrome + interiöörikomponentit, prefiksi `x-`), `site.js` (sama motion/UI kuin indexin inline-JS). Etusivu pitää oman inline-tyylin/JS:n.
+- Sama `wolv-comp.css` + Wolverinen luokat + Archivo + dark page-header `.x-page-header.ph.ph-hero` + gradientti-placeholderit.
+- Header valkoinen aina (site.css) koska alasivun yläbändi + scrollattu pilleri ovat tummia. Verifioitu Playwrightilla (200, ei konsolivirheitä, header näkyy top+scroll, 390/1440 responsiivinen).
+- **TODO SINULLE (index.html):** päänavin IA-yhtenäistys. Etusivun navi = in-page-ankkurit (#ratkaisu/#esimerkit/#polku/#paketit), alasivujen navi = sivut (/palvelut.html /hinnasto.html /prosessi.html /tietoa.html /yhteystiedot.html). Päätetään yhtenäinen rakenne (joko etusivu scroller + alasivulinkit, tai etusivun navi → alasivut). `data-book` + `BOOKING_URL` toimivat samoin.
+
 ## Deploy
 - Repo: `parkkonenjesse-alt/aijesse` → Vercel auto-deploy.
 - Projektit: **parkkonen.vercel.app** + **tekoalykoulutus-web.vercel.app** (molemmat synkattu).

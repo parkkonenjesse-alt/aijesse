@@ -18,9 +18,27 @@
 - Deploy: push `main` → auto-deploy. Molemmat projektit pidetään synkassa.
 - Paikallinen esikatselu: `npx live-server --port=5500` → http://localhost:5500 (hot reload). Huom: jos näkyy vanhentunutta, kova reload Cmd+Shift+R.
 
-## Rakenne (osiot)
+## Rakenne
 
+### Etusivu (index.html, single-page scroller)
 Hero (video) → Statement 1 → Standout-galaxy → Large-card → Statement 2 → Paketit (market-snapshot) → Esimerkit (karuselli) → Polku (timeline) → Push-CTA → Footer (+ sticky-kuva).
+
+### Alasivut (27.6., perussivuston pakolliset sivut)
+Mallina Wolverinen sisäsivurakenne: lyhyt **dark page-header-bändi** (`.x-page-header.ph.ph-hero`) → sisältösektiot Wolverinen komponenteilla → push-CTA → footer.
+
+| Sivu | Sisältö |
+|------|---------|
+| `palvelut.html` | Mitä asiakas saa, kolme arvoa, esimerkit-karuselli |
+| `hinnasto.html` | 3 hinnoittelukorttia (Startti/Rakennusjakso suosituin/Kumppani), mitä hintaan kuuluu |
+| `prosessi.html` | 4 vaihetta (kartoitus→työpaja→käyttöönotto→jatko) |
+| `tietoa.html` | Ydinlupaus, tekijä, miksi tarpeen (yritys-passiivi) |
+| `yhteystiedot.html` | Sähköposti, sijainti, varaus-CTA |
+| `ukk.html` | FAQ-accordion (natiivi details/summary) |
+| `tietosuoja.html` | GDPR-tietosuojaseloste (TODO: Y-tunnus/nimi/evästeet) |
+
+**Jaetut tiedostot:** `site.css` (alasivujen chrome + interiöörikomponentit, omat luokat prefiksi `x-`) ja `site.js` (sama motion/UI kuin indexin inline-JS). Etusivu pitää oman inline-tyylin/JS:n (toinen terminaali omistaa index.html:n).
+
+**Avoin IA-päätös:** etusivun navi = in-page-ankkurit, alasivujen navi = sivut. Yhtenäistys tehdään index.html-puolella (ks. STATUS.md).
 
 ## TODO (prioriteettijärjestys)
 

@@ -1,0 +1,147 @@
+/* ============================================================
+   site.css — jaetut tyylit alasivuille (palvelut, hinnasto, ...)
+   Etusivu (index.html) pitää oman inline-<style>-blokkinsa (toinen
+   terminaali omistaa sen). Tämä tiedosto kattaa alasivujen yhteisen
+   chromen + interiöörikomponentit. Pohja: Wolverine wolv-comp.css.
+   Omat luokat prefiksoitu x- jottei törmää Wolverinen c-*:ään.
+   ============================================================ */
+
+/* ---- font override (ABC Diatype -> Archivo) + pohja ---- */
+:root { --font-sans: "Archivo", system-ui, sans-serif; --font-mono: "JetBrains Mono", ui-monospace, monospace; }
+body { font-family: var(--font-sans); background: #fff; }
+
+/* ---- gradientti-placeholderit (oikeat valokuvat tähän myöhemmin) ---- */
+.ph { position: relative; overflow: hidden; }
+.ph .c-image_img, .ph img { display: none !important; }
+.ph .c-image_inner { position: absolute; inset: 0; }
+.ph-1 .c-image_inner, .ph-1 { background: linear-gradient(150deg,#d2c6b2,#8c7e6c); }
+.ph-2 .c-image_inner, .ph-2 { background: linear-gradient(150deg,#a3acb1,#59636a); }
+.ph-3 .c-image_inner, .ph-3 { background: linear-gradient(150deg,#b7c0a8,#6e7860); }
+.ph-4 .c-image_inner, .ph-4 { background: linear-gradient(150deg,#cda88f,#886851); }
+.ph-5 .c-image_inner, .ph-5 { background: linear-gradient(150deg,#c0bab0,#6c675e); }
+.ph-6 .c-image_inner, .ph-6 { background: linear-gradient(150deg,#3b3b3b,#0b0b0b); }
+.ph-hero { background: radial-gradient(120% 90% at 78% 6%, #3a2c1a 0%, rgba(58,44,26,0) 50%), radial-gradient(90% 80% at 6% 98%, #16261f 0%, rgba(22,38,31,0) 52%), linear-gradient(180deg, #16110a 0%, #060503 100%); }
+.ph-push { background: radial-gradient(100% 100% at 50% 0%, #2a2018 0%, #0a0806 70%); }
+
+/* ---- page-load-peite (Wolverine-entrance) ---- */
+.page-cover { position: fixed; inset: 0; z-index: 9999; background: #fff; pointer-events: none; opacity: 1; transition: opacity .6s cubic-bezier(.19,1,.22,1); }
+.page-cover.lifted { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .page-cover { display: none; } }
+
+/* ---- header: teksti aina valkoinen (alasivun yläbändi tumma JA scrollattu
+   pilleri tumma rgba(0,0,0,.8), kuten etusivulla) ---- */
+.c-header .c-header_logo, .c-header .c-header_nav-link { color: #fff; }
+.c-header .c-button .c-button_label, .c-header .c-button .c-button_icon { color: #fff; }
+.c-header .c-button .c-button_bg { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.36); }
+.c-header .c-button:hover .c-button_bg { background: rgba(255,255,255,0.22); }
+.c-header .c-button { --button-hocus-background: rgba(255,255,255,0.22); --button-hocus-text-color: #fff; min-height: 44px; }
+.c-header_logo { white-space: nowrap; }
+
+/* ---- a11y ---- */
+.c-button.-unstyled:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; border-radius: 2px; }
+.skip-link { position: fixed; left: 12px; top: 12px; z-index: 9999; background: #010101; color: #fff; padding: .7rem 1.1rem; border-radius: 8px; font-weight: 600; transform: translateY(-160%); transition: transform .2s ease; }
+.skip-link:focus { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade, .anim-up, .anim-up-scale, .anim-fade-scale { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .anim-text-item { transform: none !important; transition: none !important; }
+}
+.c-card_image.ph { aspect-ratio: 1.33; }
+
+/* ---- mobiilivalikko ---- */
+.mobile-toggle { display: none; align-items: center; gap: .4rem; background: none; border: 0; color: inherit; font: inherit; font-weight: 600; font-size: .92rem; cursor: pointer; padding: .5rem .2rem; min-height: 44px; }
+@media (max-width: 999px) {
+  .mobile-toggle { display: inline-flex; }
+  .c-header_head > .c-button { display: none; }
+}
+.mobile-menu { position: fixed; inset: 0; z-index: 120; background: rgba(1,1,1,0.97); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); display: flex; flex-direction: column; justify-content: flex-start; gap: 0; padding: 6rem var(--spacing-gutter) 2rem; transform: translateY(-101%); transition: transform .55s cubic-bezier(.19,1,.22,1); visibility: hidden; }
+.mobile-menu.open { transform: none; visibility: visible; }
+.mobile-menu a { color: #fff; font-size: clamp(1.8rem, 8vw, 2.6rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.05; padding: 0.9rem 0; border-bottom: 1px solid rgba(255,255,255,0.14); }
+.mobile-menu a:last-child { font-size: 1.1rem; font-weight: 600; opacity: .85; border-bottom: 0; margin-top: 1rem; }
+.mm-close { position: absolute; top: 1.5rem; right: var(--spacing-gutter); background: none; border: 0; color: #fff; font: inherit; font-weight: 600; cursor: pointer; min-height: 44px; }
+
+/* ---- footer-viilaukset (kuten etusivu) ---- */
+.c-footer_logo { max-width: none; aspect-ratio: auto; height: auto; white-space: nowrap; }
+.c-footer_menu-link .c-icon { opacity: 0; transform: translateX(-8px); transition: opacity .3s cubic-bezier(.19,1,.22,1), transform .3s cubic-bezier(.19,1,.22,1); }
+.c-footer_menu-link:hover .c-icon { opacity: 1; transform: none; }
+
+/* ============================================================
+   INTERIÖÖRIKOMPONENTIT (alasivut)
+   ============================================================ */
+
+/* ---- page-header-bändi: lyhyt tumma hero (ei full-screen video) ---- */
+.x-page-band { padding: 8px 8px 0; }
+@media (max-width: 767px) { .x-page-band { padding: 0; } }
+.x-page-header {
+  position: relative; display: flex; align-items: flex-end; overflow: hidden;
+  min-height: 56svh; border-radius: 16px; color: #fff;
+  padding: 0 clamp(1.1rem, 5vw, 2.6rem) clamp(2.4rem, 5vw, 4.4rem);
+}
+@media (max-width: 767px) { .x-page-header { border-radius: 0; min-height: 66svh; } }
+.x-page-header::after {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0) 42%), linear-gradient(0deg, rgba(0,0,0,.62), rgba(0,0,0,0) 56%);
+}
+.x-page-header_inner { position: relative; z-index: 1; max-width: 62ch; }
+/* interiöörisivun otsikko = pienempi kuin etusivun hero, jottei mene headerin alle */
+.x-page-header h1 { font-size: clamp(2.5rem, 5.6vw, 4.6rem); line-height: 1.03; letter-spacing: -.03em; max-width: 18ch; }
+.x-page-header .label { display: block; margin-bottom: clamp(.8rem, 2vw, 1.2rem); color: rgba(255,255,255,.78); }
+.x-page-header_intro { margin-top: clamp(1rem, 2.5vw, 1.6rem); max-width: 48ch; color: rgba(255,255,255,.86); font-size: var(--text-body-md); }
+
+/* ---- yleinen "feature/arvo" -kortti-grid (3-4 saraketta) ---- */
+.x-grid { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
+@media (min-width: 720px) { .x-grid-3 { grid-template-columns: repeat(3, 1fr); } .x-grid-4 { grid-template-columns: repeat(4, 1fr); } }
+.x-feature { border-top: 1px solid var(--color-gray-200); padding-top: 1.25rem; }
+.x-feature .label { display: block; color: var(--color-gray-600); }
+.x-feature h3 { margin: .6rem 0 .5rem; }
+.x-feature p { color: var(--color-gray-500); }
+
+/* ---- hinnoittelukortit ---- */
+.x-pricing { display: grid; gap: 1rem; }
+@media (min-width: 880px) { .x-pricing { grid-template-columns: repeat(3, 1fr); align-items: stretch; } }
+.x-price-card {
+  display: flex; flex-direction: column; gap: 1rem;
+  border: 1px solid var(--color-gray-200); border-radius: 16px; padding: clamp(1.5rem, 3vw, 2.2rem);
+  background: #fff; transition: border-color .3s cubic-bezier(.19,1,.22,1), transform .3s cubic-bezier(.19,1,.22,1);
+}
+.x-price-card:hover { border-color: var(--color-black); transform: translateY(-4px); }
+.x-price-card.-featured { background: var(--color-black); color: #fff; border-color: var(--color-black); }
+.x-price-card.-featured .x-price-meta, .x-price-card.-featured .x-price-card_desc { color: rgba(255,255,255,.78); }
+.x-price-eyebrow { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.x-price-meta { color: var(--color-gray-600); }
+.x-price-tag { display: inline-block; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; border: 1px solid currentColor; border-radius: 999px; padding: .25rem .6rem; opacity: .9; }
+.x-price-amount { display: flex; align-items: baseline; gap: .4rem; line-height: 1; margin-top: .4rem; }
+.x-price-amount b { font-size: clamp(2.6rem, 6vw, 3.6rem); font-weight: 700; letter-spacing: -.04em; }
+.x-price-amount span { color: inherit; opacity: .7; font-size: .95rem; }
+.x-price-card_desc { color: var(--color-gray-500); }
+.x-price-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .55rem; }
+.x-price-card li { display: flex; gap: .6rem; align-items: flex-start; font-size: var(--text-body-sm); }
+.x-price-card li::before { content: "→"; opacity: .55; }
+.x-price-card .c-button { margin-top: auto; }
+
+/* ---- UKK (natiivi details/summary -accordion) ---- */
+.x-faq { border-top: 1px solid var(--color-gray-200); }
+.x-faq-item { border-bottom: 1px solid var(--color-gray-200); }
+.x-faq-item summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+  padding: clamp(1.1rem, 2.5vw, 1.6rem) 0; font-weight: 600; letter-spacing: -.01em;
+}
+.x-faq-item summary::-webkit-details-marker { display: none; }
+.x-faq-item summary::after { content: "+"; font-weight: 400; font-size: 1.4em; line-height: 1; transition: transform .3s cubic-bezier(.19,1,.22,1); flex: none; }
+.x-faq-item[open] summary::after { transform: rotate(45deg); }
+.x-faq-item summary:focus-visible { outline: 2px solid var(--color-black); outline-offset: 4px; border-radius: 2px; }
+.x-faq-answer { padding: 0 0 clamp(1.1rem, 2.5vw, 1.6rem); max-width: 70ch; color: var(--color-gray-500); }
+
+/* ---- yhteystieto-grid ---- */
+.x-contact { display: grid; gap: clamp(1.5rem, 4vw, 3rem); }
+@media (min-width: 820px) { .x-contact { grid-template-columns: 1.1fr 1fr; align-items: start; } }
+.x-contact-item { border-top: 1px solid var(--color-gray-200); padding-top: 1.1rem; margin-bottom: 1.6rem; }
+.x-contact-item .label { display: block; color: var(--color-gray-600); margin-bottom: .4rem; }
+.x-contact-item a { font-weight: 600; }
+
+/* ---- legal/prose (tietosuoja) ---- */
+.x-legal { max-width: 72ch; }
+.x-legal h2 { margin: clamp(2rem, 4vw, 3rem) 0 .8rem; }
+.x-legal h3 { margin: 1.6rem 0 .5rem; }
+.x-legal p, .x-legal li { color: var(--color-gray-500); line-height: 1.7; }
+.x-legal ul { padding-left: 1.2rem; display: flex; flex-direction: column; gap: .4rem; margin: .6rem 0; }
+.x-legal .x-legal-meta { color: var(--color-gray-600); font-family: var(--font-mono); font-size: .78rem; letter-spacing: .04em; }
