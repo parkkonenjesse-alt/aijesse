@@ -43,6 +43,8 @@ Sivusto sai perussivuston pakolliset alasivut, mallina Wolverinen sisäsivuraken
 ## Motion-audit (27.6.) — TOISELLE TERMINAALILLE: standout-galaxy
 Motion-agentit mittasivat: reveal/hover/Lenis/header = identtisiä Wolverinen kanssa. Korjattu (parkkonen-terminaali): push-parallax, footer-parallaxin valmistuminen, page-load-peite.
 
+**TARKKA LÄHDESPEC (27.6.):** koko Wolverine-liikejärjestelmä luettu lähteestä (16 JS-moduulia) + 150 freimiä → `docs/wolverine-motion-spec.md`. Galaxy = Wolverinen **Particles**-komponentti: 32 kuvaa, z `[-200..200]px`, nopeudet `[.8..1.2]`, config `speed:.15 ease:.1 scaleEase:.25 scrollMultiplier:.05 scaleMin:.5 scaleMax:1.4`, jatkuva velocity-driven drift `gsap.ticker`-loopissa, scale .5→1.4 position/containerHeight:stä. **Tarkat arvot speksissä — käytä niitä, älä arvaa.** (Korjattu päärunko: poistettu virheellinen globaali data-scroll-speed-parallax jota Wolverine EI tee; hero-intro + standout-sanareveal toteutettu lähdetarkasti.)
+
 **JÄLJELLÄ sinun galaxy-osiossasi (suurin motion-harppaus):**
 - Wolverinen scattered-kuvat ovat **jatkuva 3D-scroll-parallax**: jokainen `.g-img` `translate3d(0, <scroll-linkattu Y>, <translateZ −200…+200px>)` + `perspective` parentilla → syvyys-eriytetty drift scrollatessa. Sinun `.g-img` tekevät vain kerta-`anim-up-scale`-revealin ja jäävät staattisiksi (identity-matriisi joka scroll-Y:llä).
 - Lisäksi kaikilla 12 kuvalla `--anim-delay:0s` → pop-paavat yhtä aikaa. Lisää nouseva `--anim-delay` (esim. .04s-portain) → porrastettu scatter-cascade.

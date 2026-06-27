@@ -60,8 +60,8 @@
   let lastY = window.scrollY;
   function headerState() {
     const y = window.scrollY;
-    root.classList.toggle('has-scrolled', y > 10);
-    root.classList.toggle('has-passed-fold', y > window.innerHeight * 0.85);
+    root.classList.toggle('has-scrolled', y > 40);
+    root.classList.toggle('has-passed-fold', y > window.innerHeight);
     if (Math.abs(y - lastY) > 5) {
       const down = y > lastY;
       root.classList.toggle('is-scrolling-down', down);

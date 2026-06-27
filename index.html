@@ -80,11 +80,20 @@
   .c-footer_logo { max-width: none; aspect-ratio: auto; height: auto; white-space: nowrap; }
   .c-footer_menu-link .c-icon { opacity: 0; transform: translateX(-8px); transition: opacity .3s cubic-bezier(.19,1,.22,1), transform .3s cubic-bezier(.19,1,.22,1); }
   .c-footer_menu-link:hover .c-icon { opacity: 1; transform: none; }
-  /* ---- hero video + fade-in choreography ---- */
+  /* ---- hero-intro: Wolverine HeroHome -timeline (ease expo.out) tarkoilla arvoilla ----
+     tausta scale .6->1 + yPercent 20->0; video scale 1.15->1; otsikkorivit yPercent 40->0 stagger .1; kortti scale .9 + yPercent 10->0 */
   .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  @keyframes heroIn { from { opacity: 0; transform: translateY(0.5em); } to { opacity: 1; transform: none; } }
-  .hero-anim { opacity: 0; animation: heroIn .95s cubic-bezier(.19,1,.22,1) both; animation-delay: var(--hd, 0s); }
-  @media (prefers-reduced-motion: reduce) { .hero-anim { opacity: 1 !important; animation: none !important; } }
+  @keyframes heroBgIn   { from { opacity:0; transform: translateY(20%) scale(.6); } to { opacity:1; transform: translateY(0) scale(1); } }
+  @keyframes heroVideoIn{ from { transform: scale(1.15); } to { transform: scale(1); } }
+  @keyframes heroLineIn { from { opacity:0; transform: translateY(40%); } to { opacity:1; transform: translateY(0); } }
+  @keyframes heroCardIn { from { opacity:0; transform: translateY(10%) scale(.9); } to { opacity:1; transform: translateY(0) scale(1); } }
+  .hero-bg-in   { animation: heroBgIn 1.2s cubic-bezier(.19,1,.22,1) both; }
+  .hero-video   { animation: heroVideoIn 1.2s cubic-bezier(.19,1,.22,1) both; }
+  .hero-line    { opacity:0; animation: heroLineIn .8s cubic-bezier(.19,1,.22,1) both; animation-delay: var(--hd, .5s); }
+  .hero-card-in { animation: heroCardIn .8s cubic-bezier(.19,1,.22,1) both; animation-delay: .9s; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg-in, .hero-video, .hero-line, .hero-card-in { animation: none !important; opacity: 1 !important; transform: none !important; }
+  }
   /* ---- standout-image-galaxy: scattered photos (Wolverine) ---- */
   .c-standout-image-galaxy { position: relative; }
   .galaxy-scatter { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
@@ -134,21 +143,21 @@
   <c-hero-home class="c-hero-home block h-full w-full md:px-2 md:pt-2">
     <div class="relative flex h-svh w-full flex-col justify-between overflow-hidden px-3 pt-[40svh] pb-4 text-white md:flex-row md:items-end md:px-10 md:pt-0 md:pb-12" id="hero">
       <div data-hero-home="title">
-        <span class="label hero-anim" style="--hd:.2s;display:block;margin-bottom:clamp(.8rem,2vw,1.4rem);color:rgba(255,255,255,.78)">Hands·on tekoälykoulutus</span>
+        <span class="label hero-line" style="--hd:.45s;display:block;margin-bottom:clamp(.8rem,2vw,1.4rem);color:rgba(255,255,255,.78)">Hands·on tekoälykoulutus</span>
         <h1 class="flex flex-col">
-          <span class="display-lg md:display-xl hero-anim" style="--hd:.42s">Tekoäly taloon.</span>
-          <span class="display-lg md:display-xl hero-anim" style="--hd:.62s">Osaaminen jää teille.</span>
+          <span class="display-lg md:display-xl hero-line" style="--hd:.55s">Tekoäly taloon.</span>
+          <span class="display-lg md:display-xl hero-line" style="--hd:.65s">Osaaminen jää teille.</span>
         </h1>
-        <p class="hero-anim" style="--hd:1.05s;margin-top:clamp(1rem,2.5vw,1.6rem);max-width:34ch;color:rgba(255,255,255,.85);font-size:var(--text-body-md)">Tiimisi rakentaa oikeita ratkaisuja, ei kalvosarjaa. Osaaminen jää taloon.</p>
+        <p class="hero-line" style="--hd:.78s;margin-top:clamp(1rem,2.5vw,1.6rem);max-width:34ch;color:rgba(255,255,255,.85);font-size:var(--text-body-md)">Tiimisi rakentaa oikeita ratkaisuja, ei kalvosarjaa. Osaaminen jää taloon.</p>
       </div>
-      <a class="c-hero-card group hero-anim flex w-full flex-row gap-gutter rounded-lg bg-black/10 p-1 backdrop-blur-[18px] sm:w-70 sm:flex-col sm:gap-1" style="--hd:.9s" href="#yhteys" data-book>
+      <a class="c-hero-card group hero-card-in flex w-full flex-row gap-gutter rounded-lg bg-black/10 p-1 backdrop-blur-[18px] sm:w-70 sm:flex-col sm:gap-1" href="#yhteys" data-book>
         <div class="ph ph-1 c-image aspect-[1.6] w-cols-2 sm:w-full overflow-hidden rounded-sm -cover"><div class="c-image_inner"></div></div>
         <div class="flex w-cols-2 flex-col justify-between py-1 sm:w-full sm:gap-10 sm:p-2">
           <span class="label">Aloita tästä</span>
           <div class="flex items-end justify-between"><span class="max-w-[70%] body-md font-bold sm:heading-2xs">Varaa 30 min keskustelu</span><span class="c-icon" aria-hidden="true">↗</span></div>
         </div>
       </a>
-      <div class="absolute top-0 left-0 -z-1 h-full w-full overflow-hidden md:rounded-2xl" data-hero-home="background">
+      <div class="hero-bg-in absolute top-0 left-0 -z-1 h-full w-full overflow-hidden md:rounded-2xl" data-hero-home="background">
         <video class="hero-video" poster="/hero-poster.jpg" autoplay loop muted playsinline preload="auto" aria-hidden="true"><source src="/hero.mp4" type="video/mp4" /></video>
         <div class="absolute top-0 left-0 h-full w-full" style="background:linear-gradient(180deg,rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.05) 32%),linear-gradient(0deg,rgba(0,0,0,0.62) 0%,rgba(0,0,0,0) 55%)"></div>
       </div>
@@ -410,8 +419,8 @@
   let lastY = window.scrollY;
   function headerState(){
     const y = window.scrollY;
-    root.classList.toggle('has-scrolled', y > 10);
-    root.classList.toggle('has-passed-fold', y > window.innerHeight * 0.85);
+    root.classList.toggle('has-scrolled', y > 40);
+    root.classList.toggle('has-passed-fold', y > window.innerHeight);
     if (Math.abs(y - lastY) > 5) {
       const down = y > lastY;
       root.classList.toggle('is-scrolling-down', down);
@@ -428,6 +437,29 @@
     prog.forEach(el=>{ const r = el.getBoundingClientRect(); const p = Math.min(1, Math.max(0, (vh - r.top) / Math.max(r.height, 1))); el.style.setProperty('--progress', p.toFixed(4)); });
   }
   updProg(); window.addEventListener('scroll', updProg, { passive: true });
+
+  /* ---- standout-otsikko: SplitText sanoiksi (Wolverine StandoutImageGalaxy) ----
+     Lähteen tarkat arvot: offset-kuvio + --delay = i*0.1s. CSS (.word) hoitaa revealin. */
+  const GALAXY_OFFSETS = [{x:-40,y:0},{x:0,y:-40},{x:0,y:40},{x:40,y:0},{x:0,y:-40},{x:0,y:40}];
+  document.querySelectorAll('.c-standout-image-galaxy_title').forEach(title => {
+    let wi = 0;
+    [...title.querySelectorAll(':scope > span')].forEach(line => {
+      const words = line.textContent.trim().split(/\s+/);
+      line.textContent = '';
+      words.forEach((w, j) => {
+        const s = document.createElement('span');
+        s.className = 'word';
+        s.textContent = w;
+        const off = GALAXY_OFFSETS[wi % GALAXY_OFFSETS.length];
+        s.style.setProperty('--tx', off.x + 'px');
+        s.style.setProperty('--ty', off.y + 'px');
+        s.style.setProperty('--delay', (wi * 0.1).toFixed(2) + 's');
+        line.appendChild(s);
+        if (j < words.length - 1) line.appendChild(document.createTextNode(' '));
+        wi++;
+      });
+    });
+  });
 
   /* carousel (drag + prev/next), Wolverine c-carousel */
   document.querySelectorAll('c-carousel').forEach(root=>{
