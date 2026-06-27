@@ -17,7 +17,7 @@
   /* Lenis smooth scroll (sama moottori kuin Wolverine) */
   let lenis;
   if (!RM && window.Lenis) {
-    lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    lenis = new Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: false });
     function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
     document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
@@ -110,7 +110,33 @@
     window.addEventListener('keydown', e => { if (e.key === 'Escape') setMM(false); });
   }
 
-  /* Varaus: Google Calendar -ajanvarauslinkki. Tyhjä = pidä href (yhteystiedot/mailto). */
-  const BOOKING_URL = "";
-  if (BOOKING_URL) document.querySelectorAll('[data-book]').forEach(a => { a.href = BOOKING_URL; a.target = '_blank'; a.rel = 'noopener'; });
+  /* ---- Ajanvaraus: glass-modaali + Google Calendar -taustajärjestelmä ----
+     Aseta BOOKING_EMBED_URL Google Calendar "Appointment schedule" -upotuslinkkiin. */
+  const BOOKING_EMBED_URL = "";
+  const BOOKING_EMAIL = "mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%2C%20keskustelu";
+  (function setupBooking() {
+    const body = BOOKING_EMBED_URL
+      ? '<iframe class="book-modal__frame" src="' + BOOKING_EMBED_URL + '" title="Google-ajanvaraus" loading="lazy"></iframe>'
+      : '<div class="book-modal__fallback">' +
+          '<p>Ajanvarauskalenteri kytketään käyttöön pian. Sillä välin varaa aika sähköpostitse, niin vahvistan ajan saman päivän aikana.</p>' +
+          '<a class="c-button -white -small" href="' + BOOKING_EMAIL + '"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Lähetä sähköpostia</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>' +
+          '<p class="book-modal__steps"><b>Käyttöönotto:</b> Google Kalenteri → uusi → <b>Ajanvaraus</b> → julkaise → kopioi varaussivun linkki → liitä <b>BOOKING_EMBED_URL</b>-vakioon. Varaukset tulevat suoraan kalenteriisi.</p>' +
+        '</div>';
+    const m = document.createElement('div');
+    m.className = 'book-modal'; m.id = 'bookmodal';
+    m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');
+    m.setAttribute('aria-label', 'Varaa keskustelu'); m.setAttribute('aria-hidden', 'true');
+    m.innerHTML = '<div class="book-modal__scrim" data-book-close></div>' +
+      '<div class="book-modal__panel">' +
+        '<div class="book-modal__head"><div><span class="book-modal__eyebrow">Ajanvaraus</span><h2 class="book-modal__title">Varaa 30 min keskustelu</h2></div>' +
+        '<button class="book-modal__close" type="button" data-book-close aria-label="Sulje">✕</button></div>' +
+        '<div class="book-modal__body">' + body + '</div></div>';
+    document.body.appendChild(m);
+    let lastFocus = null;
+    const openBook = () => { lastFocus = document.activeElement; m.classList.add('open'); m.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; if (lenis) lenis.stop(); const c = m.querySelector('.book-modal__close'); c && c.focus(); };
+    const closeBook = () => { m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; if (lenis) lenis.start(); lastFocus && lastFocus.focus && lastFocus.focus(); };
+    document.querySelectorAll('[data-book]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); openBook(); }));
+    m.querySelectorAll('[data-book-close]').forEach(el => el.addEventListener('click', closeBook));
+    window.addEventListener('keydown', e => { if (e.key === 'Escape' && m.classList.contains('open')) closeBook(); });
+  })();
 })();

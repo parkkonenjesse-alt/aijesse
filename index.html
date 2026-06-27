@@ -100,6 +100,33 @@
   .galaxy-scatter .g-img { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 8px; overflow: hidden; box-shadow: 0 18px 40px -18px rgba(0,0,0,.5); }
   .c-standout-image-galaxy_inner { position: relative; z-index: 1; }
   @media (max-width: 760px) { .galaxy-scatter .g-img { transform: scale(.58); opacity: .9; } }
+
+  /* ---- ajanvaraus: glassmorphism-modaali (oma design) + Google Calendar backend ---- */
+  .book-modal { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: clamp(1rem,4vw,2.5rem); visibility: hidden; }
+  .book-modal__scrim { position: absolute; inset: 0; background: rgba(12,9,6,.5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; transition: opacity .55s cubic-bezier(.19,1,.22,1); }
+  .book-modal__panel { position: relative; width: min(580px,100%); max-height: 90svh; display: flex; flex-direction: column; overflow: hidden; border-radius: 24px; color: #fff;
+    background: linear-gradient(155deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
+    -webkit-backdrop-filter: blur(30px) saturate(150%); backdrop-filter: blur(30px) saturate(150%);
+    border: 1px solid rgba(255,255,255,.3); box-shadow: 0 40px 90px -32px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.45);
+    opacity: 0; transform: translateY(26px) scale(.95); transition: opacity .6s cubic-bezier(.19,1,.22,1), transform .6s cubic-bezier(.19,1,.22,1); }
+  .book-modal.open { visibility: visible; }
+  .book-modal.open .book-modal__scrim { opacity: 1; }
+  .book-modal.open .book-modal__panel { opacity: 1; transform: none; }
+  .book-modal__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: clamp(1.4rem,3vw,2rem) clamp(1.4rem,3vw,2rem) .9rem; }
+  .book-modal__eyebrow { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .14em; font-size: .66rem; opacity: .72; display: block; margin-bottom: .55rem; }
+  .book-modal__title { font-size: clamp(1.5rem,4vw,2rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.02; }
+  .book-modal__close { flex: none; width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255,255,255,.32); background: rgba(255,255,255,.12); color: #fff; font-size: 1.05rem; cursor: pointer; display: grid; place-items: center; transition: background .3s cubic-bezier(.19,1,.22,1), transform .4s cubic-bezier(.19,1,.22,1); }
+  .book-modal__close:hover { background: rgba(255,255,255,.24); transform: rotate(90deg); }
+  .book-modal__body { padding: 0 clamp(1.4rem,3vw,2rem) clamp(1.4rem,3vw,2rem); overflow: auto; }
+  .book-modal__frame { width: 100%; height: min(62svh,580px); border: 0; border-radius: 16px; background: #fff; display: block; }
+  .book-modal__fallback p { opacity: .88; line-height: 1.6; margin-bottom: 1.2rem; }
+  .book-modal__steps { margin-top: 1.3rem; font-size: .8rem; line-height: 1.7; opacity: .7; border-top: 1px solid rgba(255,255,255,.18); padding-top: 1rem; }
+  .book-modal__steps b { font-weight: 600; opacity: .9; }
+  @media (prefers-reduced-motion: reduce) {
+    .book-modal__scrim, .book-modal__panel { transition: none !important; }
+    .book-modal__panel { transform: none !important; }
+    .book-modal__close { transition: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -379,7 +406,7 @@
   /* Lenis smooth scroll (real engine Wolverine uses) */
   let lenis;
   if (!RM && window.Lenis) {
-    lenis = new Lenis({ duration: 1.2, easing: (t)=>Math.min(1,1.001-Math.pow(2,-10*t)) });
+    lenis = new Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: false });
     function raf(t){ lenis.raf(t); requestAnimationFrame(raf); } requestAnimationFrame(raf);
     document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const el=document.querySelector(a.getAttribute('href'));if(el){e.preventDefault();lenis.scrollTo(el,{offset:0});}}));
   }
@@ -492,8 +519,40 @@
   }
 
   /* Booking: Google Calendar appointment link. Tyhjä = mailto. */
-  const BOOKING_URL = "";
-  if (BOOKING_URL) document.querySelectorAll('[data-book]').forEach(a=>{a.href=BOOKING_URL;a.target='_blank';a.rel='noopener';});
+  /* ---- Ajanvaraus: glass-modaali + Google Calendar -taustajärjestelmä ----
+     Aseta BOOKING_EMBED_URL Google Calendar "Appointment schedule" -upotuslinkkiin
+     (muotoa https://calendar.google.com/calendar/appointments/schedules/XXXX?gv=true).
+     Tyhjänä modaali näyttää siistin fallbackin (sähköposti) + käyttöönotto-ohjeen. */
+  const BOOKING_EMBED_URL = "";
+  const BOOKING_EMAIL = "mailto:parkkonen.jesse@gmail.com?subject=Tekoälykoulutus%2C%20keskustelu";
+  (function setupBooking(){
+    const body = BOOKING_EMBED_URL
+      ? `<iframe class="book-modal__frame" src="${BOOKING_EMBED_URL}" title="Google-ajanvaraus" loading="lazy"></iframe>`
+      : `<div class="book-modal__fallback">
+           <p>Ajanvarauskalenteri kytketään käyttöön pian. Sillä välin varaa aika sähköpostitse, niin vahvistan ajan saman päivän aikana.</p>
+           <a class="c-button -white -small" href="${BOOKING_EMAIL}"><div class="c-button_bg"></div><div class="c-button_inner"><span class="c-button_icon" aria-hidden="true">→</span><span class="c-button_label">Lähetä sähköpostia</span><span class="c-button_icon" aria-hidden="true">→</span></div></a>
+           <p class="book-modal__steps"><b>Käyttöönotto:</b> Google Kalenteri → uusi → <b>Ajanvaraus</b> (Appointment schedule) → julkaise → kopioi varaussivun linkki → liitä se <b>BOOKING_EMBED_URL</b>-vakioon. Tämän jälkeen varaukset tulevat suoraan kalenteriisi ja vahvistus lähtee automaattisesti.</p>
+         </div>`;
+    const m = document.createElement('div');
+    m.className = 'book-modal'; m.id = 'bookmodal';
+    m.setAttribute('role','dialog'); m.setAttribute('aria-modal','true');
+    m.setAttribute('aria-label','Varaa keskustelu'); m.setAttribute('aria-hidden','true');
+    m.innerHTML = `<div class="book-modal__scrim" data-book-close></div>
+      <div class="book-modal__panel">
+        <div class="book-modal__head">
+          <div><span class="book-modal__eyebrow">Ajanvaraus</span><h2 class="book-modal__title">Varaa 30 min keskustelu</h2></div>
+          <button class="book-modal__close" type="button" data-book-close aria-label="Sulje">✕</button>
+        </div>
+        <div class="book-modal__body">${body}</div>
+      </div>`;
+    document.body.appendChild(m);
+    let lastFocus = null;
+    const openBook = () => { lastFocus = document.activeElement; m.classList.add('open'); m.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; if(typeof lenis!=='undefined'&&lenis)lenis.stop(); const c=m.querySelector('.book-modal__close'); c&&c.focus(); };
+    const closeBook = () => { m.classList.remove('open'); m.setAttribute('aria-hidden','true'); document.body.style.overflow=''; if(typeof lenis!=='undefined'&&lenis)lenis.start(); lastFocus&&lastFocus.focus&&lastFocus.focus(); };
+    document.querySelectorAll('[data-book]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); openBook(); }));
+    m.querySelectorAll('[data-book-close]').forEach(el => el.addEventListener('click', closeBook));
+    window.addEventListener('keydown', e => { if(e.key==='Escape' && m.classList.contains('open')) closeBook(); });
+  })();
 </script>
 </body>
 </html>
